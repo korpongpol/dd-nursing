@@ -291,7 +291,7 @@ async function saveRequisition() {
   btn.disabled=true; btn.textContent="กำลังบันทึก...";
   showStatus("กำลังบันทึก...", "info");
   try {
-    const key = selectedCustId.replace(/\//g,"_")+"_"+selectedMonth;
+    const key = selectedCustId.replace(/\//g,"_") + "_" + selectedMonth;
     const payload = reqEntries.map(e=>({itemId:e.itemId, qty:e.qty, savedAt:e.date, staffSaved:true}));
     await set(ref(db,"requisitions/"+key), payload);
     showStatus("✓ บันทึกสำเร็จแล้วค่ะ", "ok");

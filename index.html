@@ -2272,7 +2272,7 @@ let reqSelectedType = 'cloth'; // current category tab
 let reqCustId = '';
 let reqMonth  = '';
 
-function reqKey(custId, month) { return `${custId}_${month}`; }
+function reqKey(custId, month) { return `${custId.replace(/\//g,'_')}_${month}`; }
 
 // ---- populate selects on page open ----
 let _reqCustList = []; // cached sorted list for dropdown
