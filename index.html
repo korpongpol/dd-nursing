@@ -948,8 +948,22 @@ if (sessionStorage.getItem("dd_admin") === "1") {
       </div>
       <div class="form-section">ข้อมูลธนาคาร</div>
       <div class="form-row">
-        <div class="form-group"><label>ธนาคาร</label><select id="add-bank"><option>ธนาคารกรุงเทพ</option><option>ธนาคารไทยพาณิชย์</option><option>ธนาคารกรุงไทย</option><option>ธนาคารกสิกรไทย</option><option>ธนาคารกรุงศรีอยุธยา</option></select></div>
-        <div class="form-group"><label>เลขที่บัญชี</label><input type="text" id="add-accno"></div>
+        <div class="form-group"><label>ธนาคาร</label>
+          <select id="add-bank" onchange="onBankChange('add')">
+            <option value="">— เลือกธนาคาร —</option>
+            <option>ธนาคารกรุงเทพ</option>
+            <option>ธนาคารไทยพาณิชย์</option>
+            <option>ธนาคารกรุงไทย</option>
+            <option>ธนาคารกรุงศรีอยุธยา</option>
+            <option>ธนาคารกสิกรไทย</option>
+          </select>
+        </div>
+        <div class="form-group"><label>เลขที่บัญชี + ชื่อบัญชี</label>
+          <select id="add-acc-sel" onchange="onAccSelChange('add')" style="display:none">
+            <option value="">— เลือกบัญชี —</option>
+          </select>
+          <input type="text" id="add-accno" placeholder="เลขที่บัญชี">
+        </div>
       </div>
       <div class="form-row">
         <div class="form-group"><label>ชื่อบัญชี</label><input type="text" id="add-accname"></div>
@@ -2064,7 +2078,16 @@ function savePay(){
 }
 
 // ADD CUSTOMER
-function openAddModal(){ document.getElementById('add-modal').classList.add('open'); }
+function openAddModal(){
+  // Reset bank fields
+  const bankSel = document.getElementById('add-bank');
+  const accSel  = document.getElementById('add-acc-sel');
+  const accNo   = document.getElementById('add-accno');
+  if (bankSel)  bankSel.value = '';
+  if (accSel)   { accSel.style.display='none'; accSel.innerHTML='<option value="">— เลือกบัญชี —</option>'; }
+  if (accNo)    { accNo.style.display='block'; accNo.value=''; }
+  document.getElementById('add-modal').classList.add('open');
+}
 function saveCustomer(){
   const c = {
     id: document.getElementById('add-id').value.trim(),
@@ -3793,6 +3816,65 @@ function goPage(id) {
   if(id==='history')      renderHistory();
   if(id==='issues')       renderIssues();
   if(id==='dashboard')    updateDashboard();
+}
+
+// ========== BANK ACCOUNTS ==========
+const BANK_ACCOUNTS = {
+  'ธนาคารไทยพาณิชย์': [
+    { no: '328-2-11366-9', name: 'นายเศรษฐศักดิ์ สถิรวงศ์วรรณ' },
+    { no: '829-2-57154-8', name: 'นางพนมกร พลราชม' },
+    { no: '376-2-54240-1', name: 'บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด' },
+  ],
+  'ธนาคารกรุงเทพ': [
+    { no: '082-0-37942-8', name: 'นางพนมกร พลราชม' },
+    { no: '101-7-60365-3', name: 'นายเศรษฐศักดิ์ สถิรวงศ์วรรณ' },
+  ],
+  'ธนาคารกรุงไทย': [
+    { no: '467-0-94588-2', name: 'นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ' },
+  ],
+  'ธนาคารกรุงศรีอยุธยา': [
+    { no: '626-1-05076-5', name: 'นายเศรษฐศักดิ์ สถิรวงศ์วรรณ' },
+  ],
+  'ธนาคารกสิกรไทย': [
+    { no: '762-2-42050-8', name: 'นายเศรษฐศักดิ์ สถิรวงศ์วรรณ' },
+  ],
+};
+
+function onBankChange(prefix) {
+  const bank    = document.getElementById(`${prefix}-bank`)?.value;
+  const accSel  = document.getElementById(`${prefix}-acc-sel`);
+  const accNo   = document.getElementById(`${prefix}-accno`);
+  const accName = document.getElementById(`${prefix}-accname`);
+
+  const accounts = BANK_ACCOUNTS[bank] || [];
+  if (accounts.length > 0) {
+    // Show dropdown
+    accSel.style.display = 'block';
+    accNo.style.display  = 'none';
+    accSel.innerHTML = `<option value="">— เลือกบัญชี —</option>` +
+      accounts.map((a,i) => `<option value="${i}">${a.no} · ${a.name}</option>`).join('');
+    accNo.value   = '';
+    accName.value = '';
+  } else {
+    // No preset accounts — show manual input
+    accSel.style.display = 'none';
+    accNo.style.display  = 'block';
+    accNo.value   = '';
+    accName.value = '';
+  }
+}
+
+function onAccSelChange(prefix) {
+  const bank    = document.getElementById(`${prefix}-bank`)?.value;
+  const accSel  = document.getElementById(`${prefix}-acc-sel`);
+  const accNo   = document.getElementById(`${prefix}-accno`);
+  const accName = document.getElementById(`${prefix}-accname`);
+  const idx     = parseInt(accSel.value);
+  const accounts = BANK_ACCOUNTS[bank] || [];
+  if (!isNaN(idx) && accounts[idx]) {
+    accNo.value   = accounts[idx].no;
+    accName.value = accounts[idx].name;
+  }
 }
 
 // ========== INIT ==========
