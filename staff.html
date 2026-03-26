@@ -93,13 +93,14 @@ async function loadData() {
 
 function buildMonthSelect() {
   const sel = document.getElementById("month-sel");
-  const months = [];
-  for (let i=-1; i<=1; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth()+i, 1);
-    months.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"));
-  }
   const thaiM = ["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
-  const cur = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
+  // Fixed range: Apr–Dec 2026 (เม.ย.–ธ.ค. 2569)
+  const months = [];
+  for (let mo = 4; mo <= 12; mo++) {
+    months.push("2026-" + String(mo).padStart(2,"0"));
+  }
+  const curRaw = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
+  const cur = months.includes(curRaw) ? curRaw : "2026-04";
   sel.innerHTML = months.map(m => {
     const [y,mo] = m.split("-");
     return `<option value="${m}" ${m===cur?"selected":""}>${thaiM[+mo]} ${+y+543}</option>`;

@@ -1659,7 +1659,12 @@ let payHistory = [];
 
 // Init current month
 const now = new Date();
-currentMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+// Default to current month, but clamp to Apr-Dec 2026 range
+{
+  const cm = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const validMonths = ['2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+  currentMonth = validMonths.includes(cm) ? cm : '2026-04';
+}
 
 function fmt(n) { return n.toLocaleString('th-TH'); }
 function branchTag(b) {
@@ -1802,10 +1807,10 @@ function renderTable() {
 
 // BILLING
 function renderMonthTabs() {
+  // Fixed range: Apr–Dec 2026 (เม.ย.–ธ.ค. 2569)
   const months = [];
-  for(let i=-1;i<=2;i++){
-    const d = new Date(now.getFullYear(), now.getMonth()+i, 1);
-    months.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+  for (let mo = 4; mo <= 12; mo++) {
+    months.push(`2026-${String(mo).padStart(2,'0')}`);
   }
   document.getElementById('month-tabs').innerHTML = months.map(m=>`
     <div class="month-tab ${m===currentMonth?'active':''}" onclick="setMonth('${m}')">${thaiMonth(m)}</div>
@@ -2323,10 +2328,10 @@ function initReqSelects() {
     if (c) searchEl.value = `${c.name}  (${c.id})`;
   }
 
+  // Fixed range: เม.ย.–ธ.ค. 2569
   const months = [];
-  for (let i = -2; i <= 1; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-    months.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+  for (let mo = 4; mo <= 12; mo++) {
+    months.push(`2026-${String(mo).padStart(2,'0')}`);
   }
   const mSel = document.getElementById('req-month-sel');
   if (mSel) mSel.innerHTML = months.map(m =>
@@ -2962,9 +2967,8 @@ function printReceipt(custId, month) {
   // Init month select (current ± 3 months)
   const mSel = document.getElementById('rcpt-override-month');
   const months = [];
-  for (let i = -3; i <= 3; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-    months.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+  for (let mo = 4; mo <= 12; mo++) {
+    months.push(`2026-${String(mo).padStart(2,'0')}`);
   }
   mSel.innerHTML = months.map(m =>
     `<option value="${m}" ${m === targetMonth ? 'selected' : ''}>${thaiMonth(m)}</option>`
