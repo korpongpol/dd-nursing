@@ -1247,13 +1247,14 @@ if (sessionStorage.getItem("dd_admin") === "1") {
 
 <!-- Requisition Detail Modal (read-only per customer per month) -->
 <div class="modal-overlay" id="req-detail-modal">
-  <div class="modal" style="width:520px">
+  <div class="modal" style="width:560px">
     <div class="modal-head">
       <h2 id="rdm-title">รายละเอียดการเบิก</h2>
       <span class="modal-close" onclick="closeModal('req-detail-modal')">×</span>
     </div>
     <div class="modal-body" id="rdm-body"></div>
-    <div class="modal-foot">
+    <div class="modal-foot" id="rdm-foot">
+      <button class="btn btn-primary" onclick="saveReqEdit()">💾 บันทึกการแก้ไข</button>
       <button class="btn" onclick="closeModal('req-detail-modal')">ปิด</button>
     </div>
   </div>
@@ -2678,35 +2679,123 @@ function renderReqSummary() {
   }).join('');
 }
 
-function openReqDetail(custId, month) {
-  const c    = customers.find(x => x.id === custId);
-  const list = requisitions[reqKey(custId, month)] || [];
-  document.getElementById('rdm-title').textContent = `การเบิก — ${c?.name} (${thaiMonth(month)})`;
+let _rdmCustId = '', _rdmMonth = '';
 
-  const grouped = {};
-  list.forEach(e => {
+function openReqDetail(custId, month) {
+  _rdmCustId = custId;
+  _rdmMonth  = month;
+  renderReqDetailModal();
+  document.getElementById('req-detail-modal').classList.add('open');
+}
+
+function renderReqDetailModal() {
+  const c    = customers.find(x => x.id === _rdmCustId);
+  const list = [...(requisitions[reqKey(_rdmCustId, _rdmMonth)] || [])];
+  document.getElementById('rdm-title').textContent = `แก้ไขการเบิก — ${c?.name} (${thaiMonth(_rdmMonth)})`;
+
+  // Group entries by itemId for display, but keep individual entries editable
+  const byItem = {};
+  list.forEach((e, realIdx) => {
     const item = catalog.find(x => x.id === e.itemId);
     if (!item) return;
-    if (!grouped[item.type]) grouped[item.type] = [];
-    grouped[item.type].push({ ...item, qty: e.qty, savedAt: e.savedAt });
+    if (!byItem[item.type]) byItem[item.type] = [];
+    byItem[item.type].push({ ...item, qty: e.qty, savedAt: e.savedAt, realIdx });
   });
 
-  document.getElementById('rdm-body').innerHTML = Object.entries(grouped).map(([type, items]) => {
-    const meta = CAT_META[type];
-    return `
-      <div style="margin-bottom:14px">
-        <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${meta.icon} ${meta.label}</div>
-        ${items.map(i => `<div class="req-summary-row">
-          <div style="display:flex;align-items:center;gap:6px;flex:1">
-            <span class="req-dot" style="background:${meta.color}"></span>${i.name}
-          </div>
-          ${i.savedAt ? `<span style="font-size:11px;color:var(--text3);margin-right:12px">${fmtDateThai(i.savedAt)}</span>` : ''}
-          <span style="font-weight:600;font-family:'IBM Plex Mono',monospace">${i.qty} ${i.unit}</span>
-        </div>`).join('')}
-      </div>`;
-  }).join('') || '<div class="empty"><div class="empty-text">ไม่มีข้อมูลการเบิก</div></div>';
+  const todayISO = new Date().toISOString().split('T')[0];
 
-  document.getElementById('req-detail-modal').classList.add('open');
+  document.getElementById('rdm-body').innerHTML = `
+    <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:12px;color:var(--text3)">${list.length} รายการ</span>
+      <button class="btn btn-sm btn-primary" onclick="rdmAddRow()">+ เพิ่มรายการ</button>
+    </div>
+    <div id="rdm-rows">
+      ${Object.entries(byItem).length === 0
+        ? '<div class="empty"><div class="empty-text">ไม่มีข้อมูลการเบิก</div></div>'
+        : Object.entries(byItem).map(([type, items]) => {
+            const meta = CAT_META[type];
+            return `<div style="margin-bottom:12px">
+              <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${meta.icon} ${meta.label}</div>
+              ${items.map(i => `
+                <div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:.5px solid var(--border)">
+                  <span style="flex:1;font-size:13px">${i.name}</span>
+                  <input type="date" value="${i.savedAt||''}" onchange="rdmUpdateEntry(${i.realIdx},'savedAt',this.value)"
+                    style="padding:3px 6px;border:1px solid var(--border);border-radius:5px;font-size:12px;color:var(--text2)">
+                  <button onclick="rdmAdj(${i.realIdx},-1)" style="width:26px;height:26px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:var(--surface);font-size:15px">−</button>
+                  <input type="number" min="1" value="${i.qty}" onchange="rdmUpdateEntry(${i.realIdx},'qty',this.value)"
+                    style="width:50px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;font-size:13px;text-align:center">
+                  <button onclick="rdmAdj(${i.realIdx},1)" style="width:26px;height:26px;border:1px solid var(--accent);border-radius:5px;cursor:pointer;background:var(--accent-light);font-size:15px;color:var(--accent)">+</button>
+                  <span style="font-size:12px;color:var(--text3);min-width:28px">${i.unit}</span>
+                  <button onclick="rdmRemove(${i.realIdx})" style="width:24px;height:24px;border:1px solid #f5b8b0;border-radius:5px;cursor:pointer;font-size:13px;color:var(--danger);background:var(--danger-light)">×</button>
+                </div>`).join('')}
+            </div>`;
+          }).join('')}
+    </div>
+    <!-- Add new row area -->
+    <div id="rdm-add-area" style="display:none;margin-top:12px;padding:12px;background:var(--surface2);border-radius:8px">
+      <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:8px">เพิ่มรายการใหม่</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <select id="rdm-new-item" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-width:160px">
+          <option value="">— เลือกรายการ —</option>
+          ${Object.entries(CAT_META).map(([type,meta]) =>
+            `<optgroup label="${meta.icon} ${meta.label}">
+              ${catalog.filter(c=>c.type===type).map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}
+            </optgroup>`
+          ).join('')}
+        </select>
+        <input type="date" id="rdm-new-date" value="${todayISO}" style="padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+        <input type="number" id="rdm-new-qty" min="1" value="1" placeholder="จำนวน" style="width:60px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;text-align:center">
+        <button class="btn btn-sm btn-primary" onclick="rdmConfirmAdd()">เพิ่ม</button>
+        <button class="btn btn-sm" onclick="document.getElementById('rdm-add-area').style.display='none'">ยกเลิก</button>
+      </div>
+    </div>`;
+}
+
+function rdmUpdateEntry(realIdx, field, val) {
+  const k = reqKey(_rdmCustId, _rdmMonth);
+  if (!requisitions[k] || !requisitions[k][realIdx]) return;
+  requisitions[k][realIdx][field] = field === 'qty' ? Math.max(1, parseInt(val)||1) : val;
+}
+
+function rdmAdj(realIdx, delta) {
+  const k = reqKey(_rdmCustId, _rdmMonth);
+  if (!requisitions[k] || !requisitions[k][realIdx]) return;
+  requisitions[k][realIdx].qty = Math.max(1, (requisitions[k][realIdx].qty||1) + delta);
+  renderReqDetailModal();
+}
+
+function rdmRemove(realIdx) {
+  const k = reqKey(_rdmCustId, _rdmMonth);
+  if (!requisitions[k]) return;
+  requisitions[k].splice(realIdx, 1);
+  renderReqDetailModal();
+}
+
+function rdmAddRow() {
+  document.getElementById('rdm-add-area').style.display = 'block';
+}
+
+function rdmConfirmAdd() {
+  const itemId = document.getElementById('rdm-new-item').value;
+  const date   = document.getElementById('rdm-new-date').value;
+  const qty    = parseInt(document.getElementById('rdm-new-qty').value) || 1;
+  if (!itemId) { alert('กรุณาเลือกรายการ'); return; }
+  const k = reqKey(_rdmCustId, _rdmMonth);
+  if (!requisitions[k]) requisitions[k] = [];
+  requisitions[k].push({ itemId, qty, savedAt: date });
+  renderReqDetailModal();
+}
+
+async function saveReqEdit() {
+  const k    = reqKey(_rdmCustId, _rdmMonth);
+  const list = requisitions[k] || [];
+  // Save to Firebase if available
+  if (window._fbSave) {
+    await window._fbSave('requisitions/' + k, list.length > 0 ? list : null);
+  }
+  closeModal('req-detail-modal');
+  renderReqSummary();
+  showReqToast('✓ แก้ไขการเบิกสำเร็จ');
 }
 
 function exportReqCSV() {
