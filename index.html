@@ -958,9 +958,9 @@ if (sessionStorage.getItem("dd_admin") === "1") {
             <option>ธนาคารกสิกรไทย</option>
           </select>
         </div>
-        <div class="form-group"><label>เลขที่บัญชี + ชื่อบัญชี</label>
+        <div class="form-group"><label>เลขที่บัญชี</label>
           <select id="add-acc-sel" onchange="onAccSelChange('add')" style="display:none">
-            <option value="">— เลือกบัญชี —</option>
+            <option value="">— เลือกเลขที่บัญชี —</option>
           </select>
           <input type="text" id="add-accno" placeholder="เลขที่บัญชี">
         </div>
@@ -3851,8 +3851,8 @@ function onBankChange(prefix) {
     // Show dropdown
     accSel.style.display = 'block';
     accNo.style.display  = 'none';
-    accSel.innerHTML = `<option value="">— เลือกบัญชี —</option>` +
-      accounts.map((a,i) => `<option value="${i}">${a.no} · ${a.name}</option>`).join('');
+    accSel.innerHTML = `<option value="">— เลือกเลขที่บัญชี —</option>` +
+      accounts.map((a,i) => `<option value="${i}">${a.no}</option>`).join('');
     accNo.value   = '';
     accName.value = '';
   } else {
