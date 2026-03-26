@@ -268,6 +268,10 @@ async function fbLoad() {
     if (d.requisitions) { requisitions = d.requisitions; }
     if (d.discharged)   { discharged   = d.discharged;   }
     if (d.refunds && Array.isArray(d.refunds)) { refunds = d.refunds; }
+    if (d.catalog) {
+      catalog = Object.values(d.catalog);
+      catalog.sort((a,b) => a.name.localeCompare(b.name,'th'));
+    }
     if (d.customers_extra) {
       // Merge extra customer data (edits) back
       Object.entries(d.customers_extra).forEach(([id, extra]) => {
@@ -2905,12 +2909,24 @@ function saveCatalogItem() {
   }
   closeModal('catalog-modal');
   renderCatalog();
+  // Sync catalog to Firebase
+  if (window._fbSave) {
+    const catObj = {};
+    catalog.forEach(c => { catObj[c.id] = c; });
+    window._fbSave('catalog', catObj);
+  }
 }
 
 function deleteCatalogItem(id) {
   if (!confirm('ต้องการลบรายการนี้?')) return;
   catalog = catalog.filter(c=>c.id!==id);
   renderCatalog();
+  // Sync catalog to Firebase
+  if (window._fbSave) {
+    const catObj = {};
+    catalog.forEach(c => { catObj[c.id] = c; });
+    window._fbSave('catalog', catObj);
+  }
 }
 
 // ========== RECEIPT / PRINT SYSTEM ==========
