@@ -290,19 +290,18 @@ function renderItems() {
     const entries = reqEntries.filter(e=>e.itemId===item.id);
     const hasEntries = entries.length > 0;
     const entryRows = entries.map((e,ei) => {
-      const uid = `${item.id}_${ei}`;
+      const uid = `${item.id}_${ei}`.replace(/[^a-zA-Z0-9_]/g,'_');
       return `
       <div style="display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 8px;background:#fff;border-radius:6px;border:1px solid #e0dbd2">
         <span style="font-size:11px;color:#999;min-width:16px">${ei+1}.</span>
-        <div style="flex:1;position:relative">
+        <div style="flex:1;position:relative;min-width:120px">
+          <input type="date" id="date-inp-${uid}" value="${e.date}"
+            onchange="updateEntry('${item.id}',${ei},'date',this.value); document.getElementById('date-lbl-${uid}').textContent='📅 '+thaiDateShort(this.value)"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2">
           <div id="date-lbl-${uid}"
-            onclick="document.getElementById('date-inp-${uid}').showPicker?document.getElementById('date-inp-${uid}').showPicker():document.getElementById('date-inp-${uid}').click()"
-            style="padding:4px 10px;border:1px solid #1a6b4a;border-radius:5px;font-size:12px;color:#1a6b4a;background:#f0fbf5;text-align:center;cursor:pointer;font-weight:500;white-space:nowrap">
+            style="padding:4px 10px;border:1px solid #1a6b4a;border-radius:5px;font-size:12px;color:#1a6b4a;background:#f0fbf5;text-align:center;font-weight:500;pointer-events:none">
             📅 ${thaiDateShort(e.date)}
           </div>
-          <input type="date" id="date-inp-${uid}" value="${e.date}"
-            onchange="updateEntry('${item.id}',${ei},'date',this.value); document.getElementById('date-lbl-${uid}').innerHTML='📅 '+thaiDateShort(this.value)"
-            style="position:absolute;opacity:0;top:0;left:0;width:100%;height:100%;cursor:pointer;pointer-events:none">
         </div>
         <button onclick="adjEntry('${item.id}',${ei},-1)" style="width:26px;height:26px;border:1px solid #ccc;border-radius:5px;cursor:pointer;background:#fff;font-size:15px">−</button>
         <input type="number" min="1" value="${e.qty}" onchange="updateEntry('${item.id}',${ei},'qty',this.value)"
