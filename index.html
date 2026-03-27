@@ -249,45 +249,6 @@ tr.row-inactive:hover { background: #f3f2ef !important; }
 @media print { .sidebar, .topbar { display: none; } .content { padding: 0; } }
 </style>
 
-<!-- Global variables declared early so Firebase module can access them -->
-<script>
-// ===== EARLY DECLARATIONS — must be before Firebase module =====
-let discharged    = {};
-let payments      = {};
-let requisitions  = {};
-let refunds       = [];
-let payHistory    = [];
-let SYSTEM_YEARS  = [{ year: 2026, startMonth: 3, endMonth: 12 }];
-let catalog       = [];
-let RAW_DATA      = [{"id": "DD1/03", "name": "คุณ สามารถ สถิตย์วงศ์", "branch": "สาขา 1", "fee": 16000, "address": "2528/28 ถ.กรุงเทพ-นนทบุรี แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "089-699-9809 , 085-110-1105", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "3-ก.ค.-2567"}, {"id": "DD1/04", "name": "คุณ เนียม สิงห์เอี่ยม", "branch": "สาขา 1", "fee": 18000, "address": "127/115 ซ.วิภาวดีรังสิต 60 แยก 18-4-6 แขวงตลาดบางเขน เขตหลักสี่ กรุงเทพมหานคร", "phone": "085-138-3253", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-พ.ค.-2566"}, {"id": "DD1/05", "name": "คุณ สุภา ลิมปิสวัสดิ์", "branch": "สาขา 1", "fee": 15000, "address": "51/1 ซ.อินทามระ45 แขวงดินแดง เขตดินแดง  กรุงเทพมหานคร", "phone": "081-400-6782", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "7-ส.ค.-2568"}, {"id": "DD1/06", "name": "คุณ สุรชัย ศิริบุญละม่อม", "branch": "สาขา 1", "fee": 13000, "address": "240/6 ม.7 ต.สําโรงกลาง อ.พระประแดง จ.สมุทรปราการ", "phone": "089-893-537 , 086-098-5575", "bank": "ธนาคารกรุงศรีอยุธยา", "account_no": "626-1-05076-5", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "9-ส.ค.-2568"}, {"id": "DD1/07", "name": "คุณ พยุง ราชนิยม", "branch": "สาขา 1", "fee": 14500, "address": "323/38 ถ.ริมทางรถไฟสายแปดริ้ว แขวงทุ่งพญาไท เขตราชเทวี กรุงเทพมหานคร", "phone": "085-160-6818 , 086-509-9924", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "9-มี.ค.-2568"}, {"id": "DD1/10", "name": "คุณ พรสวรรค์ แก้วถึง", "branch": "สาขา 1", "fee": 18000, "address": "610 ซ.เจริญนคร 40 ถ.เจริญนคร แขวงบางลำภูล่าง เขตคลองสาน กรุงเทพมหานคร", "phone": "081-633-1149 , 061-697-9633", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.ค.-2568"}, {"id": "DD1/11", "name": "คุณ เฉลียว กิจวรรณี", "branch": "สาขา 1", "fee": 16000, "address": "14 ซ.ประชาราษฎร์ 14แยก1 เขตตลาดขวัญ อำเภอเมืองนนทบุรี จ.นนทบุรี", "phone": "094-163-3081", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.ค.-2565"}, {"id": "DD1/12", "name": "คุณ อรทัย โชติช่วง", "branch": "สาขา 1", "fee": 18000, "address": "358/830 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "094-427-2566, 099-114-1689", "bank": "ธนาคารไทยพาณิชย์", "account_no": "829-2-57154-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-มิ.ย.-2567"}, {"id": "DD1/14", "name": "คุณ สุนทร สุตะพาหะ", "branch": "สาขา 1", "fee": 16000, "address": "23 ซ.สามัคคี58/22 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-927-4250", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-เม.ย.-2568"}, {"id": "DD1/17", "name": "คุณ ไพลิน วงศ์วัฒนพิมล", "branch": "สาขา 1", "fee": 14000, "address": "154/191 ต.ท่าทราย อ.เมือง จ.นนทบุรี", "phone": "086-565-9616", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "25-มี.ค.-2567"}, {"id": "DD1/18", "name": "คุณ บุญนาค บุญจฑิตย์", "branch": "สาขา 1", "fee": 15000, "address": "10 ซ.ติวานนท์ 25 แยก 8 ต.บางกระสอ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "081-989-2355, 098-831-1058", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-เม.ย.-2567"}, {"id": "DD1/19", "name": "คุณ กันยา ไชยสาร", "branch": "สาขา 1", "fee": 16000, "address": "183/1449 ถ.สรงประภา แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "081-425-4119, 065-628-4893", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "25-ส.ค.-2567"}, {"id": "DD1/20", "name": "คุณ จาฑิกุญ เมธาคุณวุฒิ", "branch": "สาขา 1", "fee": 16000, "address": "17/24 ซ.ประชาชื่น 14 (ม.การไฟฟ้าส่วนภูมิภาค) แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "085-492-9791", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "30-ธ.ค.-2567"}, {"id": "DD1/21", "name": "คุณ วรรณศิริ เหล่ามีผล", "branch": "สาขา 1", "fee": 16000, "address": "154 ถ.นราธิวาสราชนครินทร์ แขวงช่องนนทรี เขตยานนาวา กรุงเทพมหานคร", "phone": "088-835-8771 , 089-986-7434", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "27-ส.ค.-2568"}, {"id": "DD1/22", "name": "คุณ ประดิษฐ์ เอี่ยมทิม", "branch": "สาขา 1", "fee": 16000, "address": "144/1 ซ.เฉลิมสุข แขวงจันทรเกษม เขตจตุจักร กรุงเทพมหานคร", "phone": "084-526-9286, 081-850-0418", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "27-ก.พ.-2566"}, {"id": "DD1/23", "name": "คุณ สวง พุทธสอน", "branch": "สาขา 1", "fee": 18000, "address": "69/142 หมู่ที่ 3 ต.คลองพระอุดม อ.ปากเกร็ด จ.นนทบุรี", "phone": "095-793-9635 , 098-798-6961", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "27-ก.พ.-2568"}, {"id": "DD1/24", "name": "คุณ ศุภชัย ไขรัศมี", "branch": "สาขา 1", "fee": 16000, "address": "5/1 ซ.นนทบุรี 40 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "084-874-3022 , 086-366-6552", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "30-ธ.ค.-2567"}, {"id": "DD1/25", "name": "คุณ อุบล ชูเกิด", "branch": "สาขา 1", "fee": 16000, "address": "90/58 ซ.เปรมสมบัติ แขวงดินแดง เขตดินแดง กรุงเทพมหานคร", "phone": "087-049-4990 , 086-503-3319", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-ก.ย.-2568"}, {"id": "DD1/28", "name": "คุณ สุภิญญา เหมือนวงศ์", "branch": "สาขา 1", "fee": 16000, "address": "5/346 หมู่ที่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "081-925-8643 , 081-909-0028", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "5-ต.ค.-2568"}, {"id": "DD1/31", "name": "คุณ นิรชา ตามใจเพียร", "branch": "สาขา 1", "fee": 16000, "address": "29/433 ถ.ประชาชื่นนนทบุรี ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "061-403-3589 , 064-469-1449", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "16-พ.ย.-2568"}, {"id": "DD1/33", "name": "คุณ ถนอม ปราศจาก", "branch": "สาขา 1", "fee": 16000, "address": "23/353 ซ.อินทามระ 2 ถ.สุทธิสารวินิจฉัย แขวงสามเสนใน เขตพญาไท กรุงเทพมหานคร", "phone": "063-495-3262", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "8-ธ.ค.-2568"}, {"id": "DD1/34", "name": "คุณ กองงัน ชูสอน", "branch": "สาขา 1", "fee": 17000, "address": "44 หมู่ที่ 7 ต.กองโพน อ.นาตาล จ.อุบลราชธานี", "phone": "088-079-4666, 085-021-1750", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ธ.ค.-2568"}, {"id": "DD1/35", "name": "คุณ ชลันธร โสมนัส", "branch": "สาขา 1", "fee": 16000, "address": "8 ซ.ประชาชื่นนนทบุรี 8 แยก 7 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "097-924-5700", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ม.ค.-2569"}, {"id": "DD1/36", "name": "คุณ นัยนา สุนทรียภาส", "branch": "สาขา 1", "fee": 16000, "address": "60 ซ.วัดหลวง แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "091-774-5094", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-ม.ค.-2569"}, {"id": "DD1/37", "name": "คุณ เพ็ง สีจำปา", "branch": "สาขา 1", "fee": 15000, "address": "149/185-310 ถ.พระราม5 แขวงถนนนครไชยศรี เขตดุสิต กรุงเทพมหานคร", "phone": "084-933-3992", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "20-พ.ย.-2568"}, {"id": "DD1/40", "name": "คุณ โสภา นามมงคล", "branch": "สาขา 1", "fee": 16000, "address": "21 หมู่ที่ 12 ต.เสอเพลอ อ.กุมภวาปี จ.อุดรธานี", "phone": "089-456-9308", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "29-ม.ค.-2569"}, {"id": "DD1/41", "name": "คุณ ศกุนตลา ดิฐานนท์", "branch": "สาขา 1", "fee": 16000, "address": "118/38 ถ.พหลโยธิน แขวงอนุเสาวรีย์ เขตบางเขน กรุงเทพมหานคร", "phone": "089-456-9308", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-ต.ค.-2568"}, {"id": "DD1/42", "name": "คุณ สมบัติ สังข์อุดม", "branch": "สาขา 1", "fee": 17000, "address": "18/2 ถ.ประชาชื่น แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "096-931-5263", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.พ.-2569"}, {"id": "DD1/43", "name": "คุณ วัชรีย์บูรย์ สกุลมงคล", "branch": "สาขา 1", "fee": 16000, "address": "399/159 หมู่ที่ 4 ต.บางเดื่อ อ.เมืองปทุมธานี จ.ปทุมธานี", "phone": "088-565-4246 , 062-767-4774", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "13-ก.พ.-2569"}, {"id": "DD1/44", "name": "คุณ ประจวบ รัชเวทย์", "branch": "สาขา 1", "fee": 16000, "address": "1 ซ.ประชานิเวศน์ 3 ซอย 8/5 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "091-891-9298", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ก.พ.-2569"}, {"id": "DD1/45", "name": "คุณ จิตรา ฤทธิ์อิ่ม", "branch": "สาขา 1", "fee": 16000, "address": "90/19 ซ.หมู่บ้านหัวดอน ต.หนองแก อ.หัวหิน จ.ประจวบคีรีขันธ์", "phone": "089-402-7028 , 081-412-7774", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "24-ก.พ.-2569"}, {"id": "DD1/47", "name": "คุณ เมธี ยาทิพย์", "branch": "สาขา 1", "fee": 15000, "address": "3/488 หมู่ที่8 ต.บางโฉลง อ.บางพลี จ.สมุทรปราการ", "phone": "092-883-3995 , 065-880-3403", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "20-มี.ค.-2569"}, {"id": "DD1/01", "name": "คุณ ชาติชาย คุ้มทอง", "branch": "สาขา 2", "fee": 14000, "address": "45/5 ถ.เทศบาลนิมิตเหนือ แขวงลาดยาว เขตจตุจักร กรุงเทพมหานคร", "phone": "086-395-6826", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "1-เม.ย.-2562"}, {"id": "DD2/02", "name": "คุณ อำไพ สุนทรวรรณ", "branch": "สาขา 2", "fee": 16000, "address": "183/1601 ถ.สรงประภา แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "094-624-8705", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "2-ก.พ.-2566"}, {"id": "DD2/04", "name": "คุณ ภัทรา อุบล", "branch": "สาขา 2", "fee": 16000, "address": "47/125 หมู่9 ต.บางพูด อ.ปากเกร็ด จ.นนทบุรี", "phone": "083-079-6771", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "2-มี.ค.-2566"}, {"id": "DD2/05", "name": "คุณ สมฤดี ยาประยงค์", "branch": "สาขา 2", "fee": 15000, "address": "46/67 ถ.ติวานนท์ ต.บางกระสอ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "-", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "3-เม.ย.-2567"}, {"id": "DD2/07", "name": "คุณ มนสันต์ เทพนวล", "branch": "สาขา 2", "fee": 15000, "address": "32/84 ซ.นวมินทร์ 135 แยก 4-1 แขวงนวลจันทร์ เขตบึงกุ่ม กรุงเทพมหานคร", "phone": "082-416-1982", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "5-ส.ค.-2568"}, {"id": "DD2/08", "name": "คุณ ผุสดี เนตรสิงห์", "branch": "สาขา 2", "fee": 16000, "address": "1/59 หมู่ 6 แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "094-545-4215, 097-054-2433", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "6-พ.ย.-2561"}, {"id": "DD2/09", "name": "คุณ พหล ลุประสิทธิ์", "branch": "สาขา 2", "fee": 15000, "address": "36/7 ม.5 ต.ปากเกร็ด อ.ปากเกร็ด จ.นนทบุรี", "phone": "085-917-1055, 081-694-9893", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "6-ก.ค.-2563"}, {"id": "DD2/11", "name": "คุณ รจนา", "branch": "สาขา 2", "fee": 16000, "address": "17 ซ.เทพนิมิตร 2 แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "081-629-0723 , 081-938-3030", "bank": "ธนาคารกรุงศรีอยุธยา", "account_no": "626-1-05076-5", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "8-ก.ย.-2567"}, {"id": "DD2/12", "name": "คุณ อรุณ นิชกูล", "branch": "สาขา 2", "fee": 16000, "address": "20 ซ.ประชานิเวศน์ 3 ซอย 14/2 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-904-7155 , 089-043-2509", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "10-ม.ค.-2568"}, {"id": "DD2/13", "name": "คุณ ศิริรัตน์ สอระสุข", "branch": "สาขา 2", "fee": 14000, "address": "622/24 แขวงคลองถนน เขตสายไหม กรุงเทพมหานคร", "phone": "086-997-3392", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "14-ส.ค.-2568"}, {"id": "DD2/15", "name": "คุณ จรุงศรี เศวตนันทน์", "branch": "สาขา 2", "fee": 15000, "address": "320 ซ.โชติวัฒน์ซ.3 แขวงบางซื่อ เขตบางซื่อ  กรุงเทพมหานคร", "phone": "081-802-3507", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-เม.ย.-2564"}, {"id": "DD2/16", "name": "คุณ ลำจวน  สกุลมา", "branch": "สาขา 2", "fee": 13000, "address": "107/196 หมู่ 6 ต.บางบัวทอง อ.บางบัวทอง จ.นนทบุรี", "phone": "081-489-4008", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "22-เม.ย.-2561"}, {"id": "DD2/17", "name": "คุณ ศรีศักดิ์ เจนธุระกิจ", "branch": "สาขา 2", "fee": 16000, "address": "20 ซ.ประชานิเวศน์ 3 ซอย 8/8 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "086-779-3795 , 085-188-9693", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "23-เม.ย.-2568"}, {"id": "DD2/18", "name": "คุณ ราตรี พินิตตานนท์", "branch": "สาขา 2", "fee": 17000, "address": "485 ถ.ชลนิเวศน์ แขวงลาดยาว เขตจตุจักร กรุงเทพมหานคร", "phone": "089-456-4223 , 02-585-4119 , 094-842-0855", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "24-ม.ค.-2568"}, {"id": "DD2/19", "name": "คุณ ศสิมา ณ ถลาง", "branch": "สาขา 2", "fee": 16000, "address": "21 ซ.สามัคคี58/14  ต.ท่าทราย อ.เมืองนนทบุรี  จ.นนทบุรี", "phone": "081-625-8033", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "25-ก.ย.-2565"}, {"id": "DD2/20", "name": "คุณ สุจิตรา ศุภชูชัย", "branch": "สาขา 2", "fee": 16000, "address": "5/576 หมู่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "089-181-7080", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "26-มิ.ย.-2567"}, {"id": "DD2/21", "name": "คุณ อุไร สุวรรณประทีป", "branch": "สาขา 2", "fee": 16000, "address": "115 ซ.พระรามที่ 2 ซอย 42 แขวงบางมด เขตจอมทอง กรุงเทพมหานคร", "phone": "097-205-8767", "bank": "ธนาคารกรุงเทพ", "account_no": "101-7-60365-3", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "26-พ.ย.-2567"}, {"id": "DD2/22", "name": "คุณ ทัศนีย์ ต้นงามตรง", "branch": "สาขา 2", "fee": 17000, "address": "59/33 ม.1 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "085-810-1438", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "26-ม.ค.-2563"}, {"id": "DD2/23", "name": "คุณ เอมอร เอมะบุตร", "branch": "สาขา 2", "fee": 16000, "address": "80 ซ.โชคชัย 4 ซอย 39 ถ.โชคชัย 4 แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร", "phone": "085-113-2546", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "26-เม.ย.-2566"}, {"id": "DD2/24", "name": "คุณ เพ็ญพิไลพรรณ บุนนาค", "branch": "สาขา 2", "fee": 18000, "address": "387/375 ตรอกข้าวสาร แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "094-424-3565", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "28-พ.ย.-2567"}, {"id": "DD2/25", "name": "คุณ สุรพล พงษ์กุญแจกาญจน์", "branch": "สาขา 2", "fee": 15000, "address": "580/112 ถ.ลาดพร้าว แขวงจันทรเกษม เขตจตุจักร กรุงเทพมหานคร", "phone": "080-061-4355", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "29-ต.ค.-2565"}, {"id": "DD2/26", "name": "คุณ วีระ ทองเชื้อ", "branch": "สาขา 2", "fee": 16000, "address": "88/30 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-896-4056", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "30-ก.ย.-2562"}, {"id": "DD2/27", "name": "คุณ ทองคำ ปั้นอรุณ", "branch": "สาขา 2", "fee": 16000, "address": "457/1 ถ.กรุงเทพ-นนทบุรี ต.บางซื่อ อ.บางซื่อ จ.นนทบุรี", "phone": "086-964-5462 , 062-694-6962", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "30-พ.ย.-2567"}, {"id": "DD2/28", "name": "คุณ นงลักษณ์ สงทิพย์", "branch": "สาขา 2", "fee": 15000, "address": "85 ซ.ประชานิเวศน์3 ซอย13 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "095-546-0085 , 095-709-6101", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "26-ส.ค.-2568"}, {"id": "DD2/29", "name": "คุณ ศิริพร แซ่ก๊วย", "branch": "สาขา 2", "fee": 16000, "address": "1368 ถ.ประชาชื่น แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "083-549-4196 , 081-842-7119", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "28-ส.ค.-2568"}, {"id": "DD2/33", "name": "คุณ ประสาน โชควิเชียร", "branch": "สาขา 2", "fee": 16000, "address": "5/1442 หมู่ 10 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "066-156-1553 , 094-464-1659", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "5-ธ.ค.-2568"}, {"id": "DD2/34", "name": "คุณ มณี แซ่ลี้", "branch": "สาขา 2", "fee": 17000, "address": "131 หมู่ที่4 ต.แม่งอน อ.ฝาง จ.เชียงใหม่", "phone": "081-884-6257", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "9-พ.ย.-2568"}, {"id": "DD2/35", "name": "คุณ ซิวเซ่ง แซ่จัง", "branch": "สาขา 2", "fee": 17000, "address": "333/487 ถ.ประชาราษฎร์1 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "080-268-2220 , 081-928-2540", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "1-ม.ค.-2569"}, {"id": "DD2/36", "name": "คุณ วีระชัย เวศนานนท์", "branch": "สาขา 2", "fee": 16000, "address": "5/153 หมู่ที่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "084-158-1010", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "11-มี.ค.-2569"}, {"id": "DD2/37", "name": "คุณ สละ เสือพลาย", "branch": "สาขา 2", "fee": 16000, "address": "73/4 หมู่ที่ 3 ต.บางรักน้อย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "088-187-7214 , 089-443-9460", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-ม.ค.-2569"}, {"id": "DD2/38", "name": "คุณ ศรีสุดา วัชราพิพัฒน์พันธ์", "branch": "สาขา 2", "fee": 16000, "address": "4 ซ.สามัคคี 28 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "083-047-2524", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "8-ม.ค.-2569"}, {"id": "DD2/39", "name": "คุณ สมจิตร คำอ้อน", "branch": "สาขา 2", "fee": 15000, "address": "168/292 หมู่ที่ 2 ต.บ้านกลาง อ.เมืองปทุมธานี จ.ปทุมธานี", "phone": "084-698-6278", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "21-ก.พ.-2569"}, {"id": "DD1/01", "name": "คุณ เซียมเกียง แซ่ตั้ง", "branch": "สาขา 3", "fee": 17000, "address": "48/94 ซ.งามวงศ์วาน 6 แยก 21 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-484-9439 ,091-569-6266", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "3-พ.ค.-2568"}, {"id": "DD3/02", "name": "คุณ สรรเพชญ ไชยสิริยะสวัสดิ์", "branch": "สาขา 3", "fee": 28000, "address": "11 ซ.ประชาชื่น 9/1 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-004-3975", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.ค.-2568"}, {"id": "DD3/03", "name": "คุณ มนพิชัย ชันไชสง", "branch": "สาขา 3", "fee": 15000, "address": "168/5 ซ.ดำเนินการใต้ ถ.ราชดำเนิน แขวงบวรนิเวศ เขตพระนคร กรุงเทพมหานคร", "phone": "081-772-1929", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "15-ธ.ค.-2564"}, {"id": "DD3/04", "name": "คุณ ธรรมนูญ ขาวสนิท", "branch": "สาขา 3", "fee": 17000, "address": "558/23 ถ.ดินแดง แขวงดินแดง เขตดินแดง กรุงเทพมหานคร", "phone": "081-636-0322", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "16-ก.ค.-2568"}, {"id": "DD3/05", "name": "คุณ กุ้ยเฮง สุภาพงษ์", "branch": "สาขา 3", "fee": 17000, "address": "17/188 ซ.ประชาชื่น14  แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "089-1111-800", "bank": "ธนาคารไทยพาณิชย์", "account_no": "829-2-57154-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.พ.-2560"}, {"id": "DD3/06", "name": "คุณ นันทนา ชินะวนิชกิจ", "branch": "สาขา 3", "fee": 17000, "address": "111/9 ถ.นวมินทร์ แขวงคลองกุ่ม เขตบึงกุ่ม กรุงเทพมหานคร", "phone": "061-538-7878 , 081-701-7177", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-ม.ค.-2568"}, {"id": "DD3/07", "name": "คุณ กิตติ ศิริมธุรส", "branch": "สาขา 3", "fee": 13000, "address": "20/150 ถ.ติวานนท์ ต.ตลาดขวัญ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-122-1019", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-ม.ค.-2567"}, {"id": "DD3/08", "name": "คุณ มุกดา สุทธิเจริญ", "branch": "สาขา 3", "fee": 10000, "address": "187 ซ.สายสิน แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "086-044-4362", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "20-ก.ค.-2560"}, {"id": "DD3/09", "name": "คุณ ศิริพงษ์ สุงสุวรรณ", "branch": "สาขา 3", "fee": 16000, "address": "144 ถ.ประชานิเวศน์ 3 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "098-929-5252 , 099-462-6541", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "20-ธ.ค.-2567"}, {"id": "DD3/10", "name": "คุณ พินิจ เหลื่อมสมบัติ", "branch": "สาขา 3", "fee": 12000, "address": "107 ซ.ติวานนท์ ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "081-702-1183, 081-817-1883", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "23-ธ.ค.-2555"}, {"id": "DD3/11", "name": "คุณ จรวย ส่งท่ามะพลา", "branch": "สาขา 3", "fee": 16000, "address": "6 ซ.จรัญสนิทวงศ์ 63 แขวงบางบำหรุ เขตบางพลัด กรุงเทพมหานคร", "phone": "095-485-4313", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-เม.ย.-2568"}, {"id": "DD3/12", "name": "คุณ ไสว สุขสวัสดิ์", "branch": "สาขา 3", "fee": 17000, "address": "502/554 ซ.เดชะตุงคะ 1 แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "089-129-1417 , 090-641-9206", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "28-มิ.ย.-2568"}, {"id": "DD3/17", "name": "คุณ สุรพล คัชมาตย์", "branch": "สาขา 3", "fee": 18000, "address": "42 ซ.สามัคคี 60/1 ต.ท่าทราย อ.เมืองนนทบุรี .นนทบุรี", "phone": "089-484-4125 , 081-371-6351", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.ย.-2568"}, {"id": "DD3/24", "name": "คุณ จริยา สุประดิษฐ์", "branch": "สาขา 3", "fee": 16000, "address": "48 ซ.ประชาชื่นนนทบุรี ซอย 8 ต.บางเขน อ.บางเขน จ.นนทบุรี", "phone": "090-979-6136", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "30-ต.ค.-2568"}, {"id": "DD3/27", "name": "คุณ อดิสอน เศวตนันทน์", "branch": "สาขา 3", "fee": 15000, "address": "320 ซ.โชติวัฒน์ ซอย 3 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "061-149-5144 , 081-802-3507 , 081-719-7955", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "1-ธ.ค.-2568"}, {"id": "DD3/30", "name": "คุณ พวงแก้ว ธนบัตร", "branch": "สาขา 3", "fee": 20000, "address": "10 ซ.ลาดพร้าว 64 แยก 12 แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพมหานคร", "phone": "085-919-8261 , 098-834-8849", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "30-ธ.ค.-2568"}, {"id": "DD3/31", "name": "คุณ อัมพร ชาตะสุภณ", "branch": "สาขา 3", "fee": 14500, "address": "23/72 หมู่ที่ 3 ต.คูคต อ.ลำลูกกา จ.ปทุมธานี", "phone": "096-915-6294 , 061-429-3092", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "1-ม.ค.-2569"}, {"id": "DD3/32", "name": "คุณ สงวน วัฒนทรงสิทธิ์", "branch": "สาขา 3", "fee": 16000, "address": "43 ซ.นาคนิวาส 22 ถ.นาคนิวาส แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร", "phone": "081-556-5993 , 095-249-9378", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-ม.ค.-2569"}, {"id": "DD3/33", "name": "คุณ นันทิยา วงศ์ชัยสถาพร", "branch": "สาขา 3", "fee": 18000, "address": "10/26 ถ.ประชาชื่น แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "089-301-2279", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ก.พ.-2569"}, {"id": "DD3/34", "name": "คุณ แจ๋ว วงค์นัน", "branch": "สาขา 3", "fee": 18000, "address": "16 ซ.นนทบุรี 52 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-603-4926", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "20-ก.พ.-2569"}, {"id": "DD3/35", "name": "คุณ เชาวลิต แก้วสำเร็จ", "branch": "สาขา 3", "fee": 15500, "address": "5 ซ.วัดชมภูเวก ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "062-584-5629 , 089-528-5674", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "22-ก.พ.-2569"}, {"id": "DD3/37", "name": "คุณ สิริรัตน์ จงประเสริฐ", "branch": "สาขา 3", "fee": 16000, "address": "98/192 หมู่ที่3 ต.ลำผักกูด อ.ธัญบุรี จ.ปทุมธานี", "phone": "085-100-5715 , 099-139-1452", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "8-มี.ค.-2569"}];
-let customers     = RAW_DATA.map(r => ({...r, _dupName: false}));
-let currentMonth  = '';
-let dashMode      = 'month';
-let dashYear      = 2026;
-let dashMonth     = '';
-let DASH_MONTHS   = [];
-let CAT_META      = {
-  med:   { label:'ยา/อุปกรณ์การแพทย์', icon:'💊', color:'#b82c1f', bg:'#fde8e6', cls:'req-tag-med'   },
-  cloth: { label:'ผ้าอ้อม/เสื้อผ้า',   icon:'👕', color:'#2856b8', bg:'#e8f0fe', cls:'req-tag-cloth' },
-  food:  { label:'อาหารเสริม/นม',      icon:'🥛', color:'#2a7a1a', bg:'#e8f5e0', cls:'req-tag-food'  },
-  pers:  { label:'ของใช้ส่วนตัว',      icon:'🧴', color:'#9a5e08', bg:'#fef3e0', cls:'req-tag-pers'  },
-};
-
-function getSystemMonths(year) {
-  const cfg = SYSTEM_YEARS.find(y => y.year === year);
-  if (!cfg) return [];
-  const months = [];
-  for (let m = cfg.startMonth; m <= cfg.endMonth; m++) {
-    months.push(`${year}-${String(m).padStart(2,'0')}`);
-  }
-  return months;
-}
-function getAllSystemMonths() {
-  return SYSTEM_YEARS.flatMap(y => getSystemMonths(y.year)).sort();
-}
-function getDashMonthsForYear(year) { return getSystemMonths(year); }
-</script>
-
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -322,9 +283,6 @@ async function fbLoad() {
     const snap = await get(ref(db, "/"));
     if (!snap.exists()) return;
     const d = snap.val();
-    if (d.system_years && Array.isArray(d.system_years)) {
-      SYSTEM_YEARS = d.system_years;
-    }
     if (d.payHistory && Array.isArray(d.payHistory)) {
       payHistory = d.payHistory;
     }
@@ -332,34 +290,11 @@ async function fbLoad() {
       // Restore keys: _ back to / where needed (DD1_03 → DD1/03)
       payments = {};
       Object.entries(d.payments).forEach(([k,v]) => {
+        // key format: CUSTID_YYYY-MM — custId may have had / replaced with _
+        // Restore: DD1_03_2026-03 → DD1/03_2026-03
         const restored = k.replace(/^(DD\d)_(\d+)_/, '$1/$2_');
         payments[restored] = v;
       });
-    }
-    // ถ้า payHistory ว่าง ให้สร้างจาก payments ที่โหลดมา
-    if (payHistory.length === 0 && Object.keys(payments).length > 0) {
-      const thaiM = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-      Object.entries(payments).forEach(([k, v]) => {
-        // key = DD1/03_2026-03
-        const parts = k.split('_');
-        const ym = parts[parts.length - 1]; // 2026-03
-        const custId = k.replace('_' + ym, '');
-        const cust = customers.find(x => x.id === custId);
-        const [yr, mo] = ym.split('-').map(Number);
-        const monthLabel = `${thaiM[mo]} ${yr + 543}`;
-        payHistory.push({
-          date: v.date || ym + '-01',
-          id: custId,
-          name: cust?.name || custId,
-          month: monthLabel,
-          amount: v.amount || 0,
-          channel: v.channel || '',
-          note: v.note || ''
-        });
-      });
-      payHistory.sort((a, b) => b.date.localeCompare(a.date));
-      // Save rebuilt payHistory to Firebase
-      if (window._fbSave) window._fbSave('payHistory', payHistory);
     }
     if (d.requisitions) { requisitions = d.requisitions; }
     if (d.discharged)   { discharged   = d.discharged;   }
@@ -380,6 +315,10 @@ async function fbLoad() {
       });
     }
     // Render after load
+    updateDashboard();
+    renderTable();
+    if (typeof renderPayHistory === 'function') renderPayHistory();
+    if (typeof renderRefundList === 'function') renderRefundList();
     console.log("✓ Firebase data loaded");
   } catch(e) { console.warn("fbLoad error:", e); }
 }
@@ -402,8 +341,7 @@ function listenRequisitions() {
 window._fbSave = fbSave;
 
 // Load data then listen
-window._fbLoad = fbLoad;
-window._listenRequisitions = listenRequisitions;
+fbLoad().then(() => listenRequisitions());
 </script>
 
 <style id="login-style">
@@ -508,65 +446,56 @@ if (sessionStorage.getItem("dd_admin") === "1") {
 
     <!-- DASHBOARD PAGE -->
     <div class="page active" id="page-dashboard">
-
-      <!-- Selector: ปี / เดือน -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
-        <span style="font-size:13px;color:var(--text2);font-weight:500">ปี:</span>
-        <div id="dash-year-tabs" style="display:flex;gap:4px;flex-wrap:wrap"></div>
-        <button class="btn btn-sm" onclick="addSystemYear()" style="font-size:12px" title="เพิ่มปีถัดไป">+ เพิ่มปี</button>
-        <div style="display:flex;gap:4px;margin-left:12px">
-          <button id="dash-mode-month" class="month-tab active" onclick="setDashMode('month')">รายเดือน</button>
-          <button id="dash-mode-year"  class="month-tab"        onclick="setDashMode('year')">รายปี</button>
-        </div>
-      </div>
-      <div id="dash-month-picker" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px"></div>
-
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-label">ลูกค้าทั้งหมด</div>
-          <div class="stat-value" id="s-total">0</div>
+          <div class="stat-value" id="s-total">123</div>
           <div class="stat-sub">3 สาขา</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-label" id="s-revenue-label">รายได้/เดือน</div>
-          <div class="stat-value" id="s-revenue">0</div>
-          <div class="stat-sub" id="s-revenue-sub">บาท</div>
+          <div class="stat-label">รายได้เป้าหมาย/เดือน</div>
+          <div class="stat-value" id="s-revenue">1,975,500</div>
+          <div class="stat-sub">บาท</div>
         </div>
         <div class="stat-card" id="sc-paid">
-          <div class="stat-label" id="s-paid-label">ชำระแล้วเดือนนี้</div>
+          <div class="stat-label">ชำระแล้วเดือนนี้</div>
           <div class="stat-value" id="s-paid">0</div>
           <div class="stat-sub">ราย</div>
         </div>
         <div class="stat-card red">
-          <div class="stat-label" id="s-unpaid-label">ค้างชำระ</div>
-          <div class="stat-value" id="s-unpaid">0</div>
+          <div class="stat-label">ค้างชำระ</div>
+          <div class="stat-value" id="s-unpaid">123</div>
           <div class="stat-sub">ราย</div>
         </div>
       </div>
 
       <div class="chart-grid">
         <div class="chart-card">
-          <h3 id="dchart1-title">รายได้ต่อสาขา (บาท)</h3>
+          <h3>รายได้ต่อสาขา (บาท/เดือน)</h3>
           <div style="position:relative;height:180px"><canvas id="dchart1"></canvas></div>
         </div>
         <div class="chart-card">
-          <h3 id="dchart2-title">การชำระบิล</h3>
+          <h3>การชำระบิลเดือนนี้</h3>
           <div id="dc-progress">
             <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
               <span>ชำระแล้ว <b id="dc-paid-pct">0%</b></span>
-              <span id="dc-paid-amt" style="font-family:'IBM Plex Mono',monospace;font-size:13px">฿0 / ฿0</span>
+              <span id="dc-paid-amt" style="font-family:'IBM Plex Mono',monospace;font-size:13px">฿0 / ฿1,975,500</span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="dc-fill" style="width:0%"></div></div>
             <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
               <div style="font-size:12px;color:var(--paid)">✓ ชำระแล้ว: <b id="dc-paid-n">0</b> ราย</div>
               <div style="font-size:12px;color:var(--warning)">◑ บางส่วน: <b id="dc-partial-n">0</b> ราย</div>
-              <div style="font-size:12px;color:var(--unpaid)">✗ ยังไม่ชำระ: <b id="dc-unpaid-n">0</b> ราย</div>
+              <div style="font-size:12px;color:var(--unpaid)">✗ ยังไม่ชำระ: <b id="dc-unpaid-n">123</b> ราย</div>
             </div>
           </div>
           <div style="margin-top:14px">
-            <h3 style="margin-bottom:8px" id="dchart3-title">รายได้รายเดือน (มี.ค.–ธ.ค. 2569)</h3>
+            <h3 style="margin-bottom:8px">ค่าบริการรายเดือน</h3>
             <div style="position:relative;height:120px"><canvas id="dchart2"></canvas></div>
           </div>
+        </div>
+      </div>
+
+      <!-- Billing Reminders -->
       <div id="billing-reminders-filter" style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
         <span style="font-size:12px;color:var(--text2);font-weight:500">สาขา:</span>
         <button class="month-tab active" id="rbf-all"  onclick="setReminderBranch('')">ทั้งหมด</button>
@@ -575,6 +504,7 @@ if (sessionStorage.getItem("dd_admin") === "1") {
         <button class="month-tab"        id="rbf-b3"   onclick="setReminderBranch('สาขา 3')">สาขา 3</button>
       </div>
       <div id="billing-reminders"></div>
+
 
     </div>
 
@@ -852,7 +782,7 @@ if (sessionStorage.getItem("dd_admin") === "1") {
           <table>
             <thead><tr>
               <th>รหัส</th><th>ชื่อลูกค้า</th><th>สาขา</th>
-              <th style="text-align:right">ยอดรวม</th><th>ธนาคาร / บัญชี</th>
+              <th style="text-align:right">ค่าบริการ</th><th>ธนาคาร / บัญชี</th>
               <th style="text-align:right">ชำระแล้ว</th><th>สถานะ</th><th>วันที่ชำระ</th><th>การดำเนินการ</th>
             </tr></thead>
             <tbody id="bill-tbody"></tbody>
@@ -875,7 +805,7 @@ if (sessionStorage.getItem("dd_admin") === "1") {
           <table>
             <thead><tr>
               <th>วันที่</th><th>รหัส</th><th>ชื่อลูกค้า</th><th>เดือน</th>
-              <th style="text-align:right">จำนวน</th><th>ช่องทาง</th><th>หมายเหตุ</th><th></th>
+              <th style="text-align:right">จำนวน</th><th>ช่องทาง</th><th>หมายเหตุ</th>
             </tr></thead>
             <tbody id="hist-tbody"></tbody>
           </table>
@@ -1040,13 +970,7 @@ if (sessionStorage.getItem("dd_admin") === "1") {
       </div>
       <div class="form-row">
         <div class="form-group"><label>ชื่อบัญชี</label><input type="text" id="add-accname"></div>
-        <div class="form-group">
-          <label>วันที่เริ่มบริการ</label>
-          <input type="date" id="add-due-picker" onchange="syncAddDue(this.value)"
-            style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text)">
-          <input type="hidden" id="add-due">
-          <div id="add-due-preview" style="font-size:11px;color:var(--text3);margin-top:3px"></div>
-        </div>
+        <div class="form-group"><label>วันที่เริ่มบริการ</label><input type="text" id="add-due" placeholder="1-ม.ค.-2569"></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -1291,55 +1215,6 @@ if (sessionStorage.getItem("dd_admin") === "1") {
   </div>
 </div>
 
-<!-- Edit History Modal -->
-<div class="modal-overlay" id="edit-history-modal">
-  <div class="modal" style="width:460px">
-    <div class="modal-head">
-      <h2>✏️ แก้ไขประวัติการชำระ</h2>
-      <span class="modal-close" onclick="closeModal('edit-history-modal')">×</span>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>ลูกค้า</label>
-        <select id="eh-cust-id" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text)"></select>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>เดือน</label>
-          <select id="eh-month" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text)"></select>
-        </div>
-        <div class="form-group">
-          <label>วันที่ชำระ</label>
-          <input type="date" id="eh-date">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>จำนวนเงิน (฿)</label>
-          <input type="number" id="eh-amount" min="0">
-        </div>
-        <div class="form-group">
-          <label>ช่องทาง</label>
-          <select id="eh-channel" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text)">
-            <option value="โอนเงิน">โอนเงิน</option>
-            <option value="เงินสด">เงินสด</option>
-            <option value="เช็ค">เช็ค</option>
-            <option value="อื่นๆ">อื่นๆ</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>หมายเหตุ</label>
-        <input type="text" id="eh-note" placeholder="หมายเหตุเพิ่มเติม">
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-primary" onclick="saveEditHistory()">💾 บันทึก</button>
-      <button class="btn" onclick="closeModal('edit-history-modal')">ยกเลิก</button>
-    </div>
-  </div>
-</div>
-
 <!-- Add Catalog Type Modal -->
 <div class="modal-overlay" id="cat-type-modal">
   <div class="modal" style="width:400px">
@@ -1553,6 +1428,7 @@ if (sessionStorage.getItem("dd_admin") === "1") {
 <script>
 // ========== DISCHARGE SYSTEM ==========
 // discharged: { [customerId]: { date, reason, note, by } }
+let discharged = {};
 let dischargeTarget = null;
 let restoreTarget = null;
 
@@ -1713,7 +1589,7 @@ function buildBillingReminders() {
   const curYearThai = curYear + 543;
   const isCurrentRealMonth = (curYear === now.getFullYear() && curMo === now.getMonth() + 1);
 
-  const START_YM = getAllSystemMonths()[0] || '2026-03';
+  const START_YM = '2026-03';
   if (currentMonth < START_YM) {
     const el = document.getElementById('billing-reminders');
     if (el) el.innerHTML = `<div style="padding:12px 0;color:var(--text3);font-size:13px">ระบบแจ้งเตือนบิลเริ่มตั้งแต่ เม.ย. 2569 เป็นต้นไปค่ะ</div>`;
@@ -1870,27 +1746,28 @@ function closeSidebar() {
 }
 
 // ========== DATA ==========
+const RAW = [{"id": "DD1/03", "name": "คุณ สามารถ สถิตย์วงศ์", "branch": "สาขา 1", "fee": 16000, "address": "2528/28 ถ.กรุงเทพ-นนทบุรี แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "089-699-9809 , 085-110-1105", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "3-ก.ค.-2567"}, {"id": "DD1/04", "name": "คุณ เนียม สิงห์เอี่ยม", "branch": "สาขา 1", "fee": 18000, "address": "127/115 ซ.วิภาวดีรังสิต 60 แยก 18-4-6 แขวงตลาดบางเขน เขตหลักสี่ กรุงเทพมหานคร", "phone": "085-138-3253", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-พ.ค.-2566"}, {"id": "DD1/05", "name": "คุณ สุภา ลิมปิสวัสดิ์", "branch": "สาขา 1", "fee": 15000, "address": "51/1 ซ.อินทามระ45 แขวงดินแดง เขตดินแดง  กรุงเทพมหานคร", "phone": "081-400-6782", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "7-ส.ค.-2568"}, {"id": "DD1/06", "name": "คุณ สุรชัย ศิริบุญละม่อม", "branch": "สาขา 1", "fee": 13000, "address": "240/6 ม.7 ต.สําโรงกลาง อ.พระประแดง จ.สมุทรปราการ", "phone": "089-893-537 , 086-098-5575", "bank": "ธนาคารกรุงศรีอยุธยา", "account_no": "626-1-05076-5", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "9-ส.ค.-2568"}, {"id": "DD1/07", "name": "คุณ พยุง ราชนิยม", "branch": "สาขา 1", "fee": 14500, "address": "323/38 ถ.ริมทางรถไฟสายแปดริ้ว แขวงทุ่งพญาไท เขตราชเทวี กรุงเทพมหานคร", "phone": "085-160-6818 , 086-509-9924", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "9-มี.ค.-2568"}, {"id": "DD1/10", "name": "คุณ พรสวรรค์ แก้วถึง", "branch": "สาขา 1", "fee": 18000, "address": "610 ซ.เจริญนคร 40 ถ.เจริญนคร แขวงบางลำภูล่าง เขตคลองสาน กรุงเทพมหานคร", "phone": "081-633-1149 , 061-697-9633", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.ค.-2568"}, {"id": "DD1/11", "name": "คุณ เฉลียว กิจวรรณี", "branch": "สาขา 1", "fee": 16000, "address": "14 ซ.ประชาราษฎร์ 14แยก1 เขตตลาดขวัญ อำเภอเมืองนนทบุรี จ.นนทบุรี", "phone": "094-163-3081", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.ค.-2565"}, {"id": "DD1/12", "name": "คุณ อรทัย โชติช่วง", "branch": "สาขา 1", "fee": 18000, "address": "358/830 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "094-427-2566, 099-114-1689", "bank": "ธนาคารไทยพาณิชย์", "account_no": "829-2-57154-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-มิ.ย.-2567"}, {"id": "DD1/14", "name": "คุณ สุนทร สุตะพาหะ", "branch": "สาขา 1", "fee": 16000, "address": "23 ซ.สามัคคี58/22 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-927-4250", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-เม.ย.-2568"}, {"id": "DD1/17", "name": "คุณ ไพลิน วงศ์วัฒนพิมล", "branch": "สาขา 1", "fee": 14000, "address": "154/191 ต.ท่าทราย อ.เมือง จ.นนทบุรี", "phone": "086-565-9616", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "25-มี.ค.-2567"}, {"id": "DD1/18", "name": "คุณ บุญนาค บุญจฑิตย์", "branch": "สาขา 1", "fee": 15000, "address": "10 ซ.ติวานนท์ 25 แยก 8 ต.บางกระสอ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "081-989-2355, 098-831-1058", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-เม.ย.-2567"}, {"id": "DD1/19", "name": "คุณ กันยา ไชยสาร", "branch": "สาขา 1", "fee": 16000, "address": "183/1449 ถ.สรงประภา แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "081-425-4119, 065-628-4893", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "25-ส.ค.-2567"}, {"id": "DD1/20", "name": "คุณ จาฑิกุญ เมธาคุณวุฒิ", "branch": "สาขา 1", "fee": 16000, "address": "17/24 ซ.ประชาชื่น 14 (ม.การไฟฟ้าส่วนภูมิภาค) แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "085-492-9791", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "30-ธ.ค.-2567"}, {"id": "DD1/21", "name": "คุณ วรรณศิริ เหล่ามีผล", "branch": "สาขา 1", "fee": 16000, "address": "154 ถ.นราธิวาสราชนครินทร์ แขวงช่องนนทรี เขตยานนาวา กรุงเทพมหานคร", "phone": "088-835-8771 , 089-986-7434", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "27-ส.ค.-2568"}, {"id": "DD1/22", "name": "คุณ ประดิษฐ์ เอี่ยมทิม", "branch": "สาขา 1", "fee": 16000, "address": "144/1 ซ.เฉลิมสุข แขวงจันทรเกษม เขตจตุจักร กรุงเทพมหานคร", "phone": "084-526-9286, 081-850-0418", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "27-ก.พ.-2566"}, {"id": "DD1/23", "name": "คุณ สวง พุทธสอน", "branch": "สาขา 1", "fee": 18000, "address": "69/142 หมู่ที่ 3 ต.คลองพระอุดม อ.ปากเกร็ด จ.นนทบุรี", "phone": "095-793-9635 , 098-798-6961", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "27-ก.พ.-2568"}, {"id": "DD1/24", "name": "คุณ ศุภชัย ไขรัศมี", "branch": "สาขา 1", "fee": 16000, "address": "5/1 ซ.นนทบุรี 40 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "084-874-3022 , 086-366-6552", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "30-ธ.ค.-2567"}, {"id": "DD1/25", "name": "คุณ อุบล ชูเกิด", "branch": "สาขา 1", "fee": 16000, "address": "90/58 ซ.เปรมสมบัติ แขวงดินแดง เขตดินแดง กรุงเทพมหานคร", "phone": "087-049-4990 , 086-503-3319", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-ก.ย.-2568"}, {"id": "DD1/28", "name": "คุณ สุภิญญา เหมือนวงศ์", "branch": "สาขา 1", "fee": 16000, "address": "5/346 หมู่ที่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "081-925-8643 , 081-909-0028", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "5-ต.ค.-2568"}, {"id": "DD1/31", "name": "คุณ นิรชา ตามใจเพียร", "branch": "สาขา 1", "fee": 16000, "address": "29/433 ถ.ประชาชื่นนนทบุรี ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "061-403-3589 , 064-469-1449", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "16-พ.ย.-2568"}, {"id": "DD1/33", "name": "คุณ ถนอม ปราศจาก", "branch": "สาขา 1", "fee": 16000, "address": "23/353 ซ.อินทามระ 2 ถ.สุทธิสารวินิจฉัย แขวงสามเสนใน เขตพญาไท กรุงเทพมหานคร", "phone": "063-495-3262", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "8-ธ.ค.-2568"}, {"id": "DD1/34", "name": "คุณ กองงัน ชูสอน", "branch": "สาขา 1", "fee": 17000, "address": "44 หมู่ที่ 7 ต.กองโพน อ.นาตาล จ.อุบลราชธานี", "phone": "088-079-4666, 085-021-1750", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ธ.ค.-2568"}, {"id": "DD1/35", "name": "คุณ ชลันธร โสมนัส", "branch": "สาขา 1", "fee": 16000, "address": "8 ซ.ประชาชื่นนนทบุรี 8 แยก 7 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "097-924-5700", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ม.ค.-2569"}, {"id": "DD1/36", "name": "คุณ นัยนา สุนทรียภาส", "branch": "สาขา 1", "fee": 16000, "address": "60 ซ.วัดหลวง แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "091-774-5094", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-ม.ค.-2569"}, {"id": "DD1/37", "name": "คุณ เพ็ง สีจำปา", "branch": "สาขา 1", "fee": 15000, "address": "149/185-310 ถ.พระราม5 แขวงถนนนครไชยศรี เขตดุสิต กรุงเทพมหานคร", "phone": "084-933-3992", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "20-พ.ย.-2568"}, {"id": "DD1/40", "name": "คุณ โสภา นามมงคล", "branch": "สาขา 1", "fee": 16000, "address": "21 หมู่ที่ 12 ต.เสอเพลอ อ.กุมภวาปี จ.อุดรธานี", "phone": "089-456-9308", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "29-ม.ค.-2569"}, {"id": "DD1/41", "name": "คุณ ศกุนตลา ดิฐานนท์", "branch": "สาขา 1", "fee": 16000, "address": "118/38 ถ.พหลโยธิน แขวงอนุเสาวรีย์ เขตบางเขน กรุงเทพมหานคร", "phone": "089-456-9308", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-ต.ค.-2568"}, {"id": "DD1/42", "name": "คุณ สมบัติ สังข์อุดม", "branch": "สาขา 1", "fee": 17000, "address": "18/2 ถ.ประชาชื่น แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "096-931-5263", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.พ.-2569"}, {"id": "DD1/43", "name": "คุณ วัชรีย์บูรย์ สกุลมงคล", "branch": "สาขา 1", "fee": 16000, "address": "399/159 หมู่ที่ 4 ต.บางเดื่อ อ.เมืองปทุมธานี จ.ปทุมธานี", "phone": "088-565-4246 , 062-767-4774", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "13-ก.พ.-2569"}, {"id": "DD1/44", "name": "คุณ ประจวบ รัชเวทย์", "branch": "สาขา 1", "fee": 16000, "address": "1 ซ.ประชานิเวศน์ 3 ซอย 8/5 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "091-891-9298", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ก.พ.-2569"}, {"id": "DD1/45", "name": "คุณ จิตรา ฤทธิ์อิ่ม", "branch": "สาขา 1", "fee": 16000, "address": "90/19 ซ.หมู่บ้านหัวดอน ต.หนองแก อ.หัวหิน จ.ประจวบคีรีขันธ์", "phone": "089-402-7028 , 081-412-7774", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "24-ก.พ.-2569"}, {"id": "DD1/47", "name": "คุณ เมธี ยาทิพย์", "branch": "สาขา 1", "fee": 15000, "address": "3/488 หมู่ที่8 ต.บางโฉลง อ.บางพลี จ.สมุทรปราการ", "phone": "092-883-3995 , 065-880-3403", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "20-มี.ค.-2569"}, {"id": "DD1/01", "name": "คุณ ชาติชาย คุ้มทอง", "branch": "สาขา 2", "fee": 14000, "address": "45/5 ถ.เทศบาลนิมิตเหนือ แขวงลาดยาว เขตจตุจักร กรุงเทพมหานคร", "phone": "086-395-6826", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "1-เม.ย.-2562"}, {"id": "DD2/02", "name": "คุณ อำไพ สุนทรวรรณ", "branch": "สาขา 2", "fee": 16000, "address": "183/1601 ถ.สรงประภา แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "094-624-8705", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "2-ก.พ.-2566"}, {"id": "DD2/04", "name": "คุณ ภัทรา อุบล", "branch": "สาขา 2", "fee": 16000, "address": "47/125 หมู่9 ต.บางพูด อ.ปากเกร็ด จ.นนทบุรี", "phone": "083-079-6771", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "2-มี.ค.-2566"}, {"id": "DD2/05", "name": "คุณ สมฤดี ยาประยงค์", "branch": "สาขา 2", "fee": 15000, "address": "46/67 ถ.ติวานนท์ ต.บางกระสอ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "-", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "3-เม.ย.-2567"}, {"id": "DD2/07", "name": "คุณ มนสันต์ เทพนวล", "branch": "สาขา 2", "fee": 15000, "address": "32/84 ซ.นวมินทร์ 135 แยก 4-1 แขวงนวลจันทร์ เขตบึงกุ่ม กรุงเทพมหานคร", "phone": "082-416-1982", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "5-ส.ค.-2568"}, {"id": "DD2/08", "name": "คุณ ผุสดี เนตรสิงห์", "branch": "สาขา 2", "fee": 16000, "address": "1/59 หมู่ 6 แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "094-545-4215, 097-054-2433", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "6-พ.ย.-2561"}, {"id": "DD2/09", "name": "คุณ พหล ลุประสิทธิ์", "branch": "สาขา 2", "fee": 15000, "address": "36/7 ม.5 ต.ปากเกร็ด อ.ปากเกร็ด จ.นนทบุรี", "phone": "085-917-1055, 081-694-9893", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "6-ก.ค.-2563"}, {"id": "DD2/11", "name": "คุณ รจนา", "branch": "สาขา 2", "fee": 16000, "address": "17 ซ.เทพนิมิตร 2 แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "081-629-0723 , 081-938-3030", "bank": "ธนาคารกรุงศรีอยุธยา", "account_no": "626-1-05076-5", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "8-ก.ย.-2567"}, {"id": "DD2/12", "name": "คุณ อรุณ นิชกูล", "branch": "สาขา 2", "fee": 16000, "address": "20 ซ.ประชานิเวศน์ 3 ซอย 14/2 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-904-7155 , 089-043-2509", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "10-ม.ค.-2568"}, {"id": "DD2/13", "name": "คุณ ศิริรัตน์ สอระสุข", "branch": "สาขา 2", "fee": 14000, "address": "622/24 แขวงคลองถนน เขตสายไหม กรุงเทพมหานคร", "phone": "086-997-3392", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "14-ส.ค.-2568"}, {"id": "DD2/15", "name": "คุณ จรุงศรี เศวตนันทน์", "branch": "สาขา 2", "fee": 15000, "address": "320 ซ.โชติวัฒน์ซ.3 แขวงบางซื่อ เขตบางซื่อ  กรุงเทพมหานคร", "phone": "081-802-3507", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-เม.ย.-2564"}, {"id": "DD2/16", "name": "คุณ ลำจวน  สกุลมา", "branch": "สาขา 2", "fee": 13000, "address": "107/196 หมู่ 6 ต.บางบัวทอง อ.บางบัวทอง จ.นนทบุรี", "phone": "081-489-4008", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "22-เม.ย.-2561"}, {"id": "DD2/17", "name": "คุณ ศรีศักดิ์ เจนธุระกิจ", "branch": "สาขา 2", "fee": 16000, "address": "20 ซ.ประชานิเวศน์ 3 ซอย 8/8 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "086-779-3795 , 085-188-9693", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "23-เม.ย.-2568"}, {"id": "DD2/18", "name": "คุณ ราตรี พินิตตานนท์", "branch": "สาขา 2", "fee": 17000, "address": "485 ถ.ชลนิเวศน์ แขวงลาดยาว เขตจตุจักร กรุงเทพมหานคร", "phone": "089-456-4223 , 02-585-4119 , 094-842-0855", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "24-ม.ค.-2568"}, {"id": "DD2/19", "name": "คุณ ศสิมา ณ ถลาง", "branch": "สาขา 2", "fee": 16000, "address": "21 ซ.สามัคคี58/14  ต.ท่าทราย อ.เมืองนนทบุรี  จ.นนทบุรี", "phone": "081-625-8033", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "25-ก.ย.-2565"}, {"id": "DD2/20", "name": "คุณ สุจิตรา ศุภชูชัย", "branch": "สาขา 2", "fee": 16000, "address": "5/576 หมู่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "089-181-7080", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "26-มิ.ย.-2567"}, {"id": "DD2/21", "name": "คุณ อุไร สุวรรณประทีป", "branch": "สาขา 2", "fee": 16000, "address": "115 ซ.พระรามที่ 2 ซอย 42 แขวงบางมด เขตจอมทอง กรุงเทพมหานคร", "phone": "097-205-8767", "bank": "ธนาคารกรุงเทพ", "account_no": "101-7-60365-3", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "26-พ.ย.-2567"}, {"id": "DD2/22", "name": "คุณ ทัศนีย์ ต้นงามตรง", "branch": "สาขา 2", "fee": 17000, "address": "59/33 ม.1 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "085-810-1438", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "26-ม.ค.-2563"}, {"id": "DD2/23", "name": "คุณ เอมอร เอมะบุตร", "branch": "สาขา 2", "fee": 16000, "address": "80 ซ.โชคชัย 4 ซอย 39 ถ.โชคชัย 4 แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร", "phone": "085-113-2546", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "26-เม.ย.-2566"}, {"id": "DD2/24", "name": "คุณ เพ็ญพิไลพรรณ บุนนาค", "branch": "สาขา 2", "fee": 18000, "address": "387/375 ตรอกข้าวสาร แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "094-424-3565", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "28-พ.ย.-2567"}, {"id": "DD2/25", "name": "คุณ สุรพล พงษ์กุญแจกาญจน์", "branch": "สาขา 2", "fee": 15000, "address": "580/112 ถ.ลาดพร้าว แขวงจันทรเกษม เขตจตุจักร กรุงเทพมหานคร", "phone": "080-061-4355", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "29-ต.ค.-2565"}, {"id": "DD2/26", "name": "คุณ วีระ ทองเชื้อ", "branch": "สาขา 2", "fee": 16000, "address": "88/30 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-896-4056", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "30-ก.ย.-2562"}, {"id": "DD2/27", "name": "คุณ ทองคำ ปั้นอรุณ", "branch": "สาขา 2", "fee": 16000, "address": "457/1 ถ.กรุงเทพ-นนทบุรี ต.บางซื่อ อ.บางซื่อ จ.นนทบุรี", "phone": "086-964-5462 , 062-694-6962", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "30-พ.ย.-2567"}, {"id": "DD2/28", "name": "คุณ นงลักษณ์ สงทิพย์", "branch": "สาขา 2", "fee": 15000, "address": "85 ซ.ประชานิเวศน์3 ซอย13 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "095-546-0085 , 095-709-6101", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "26-ส.ค.-2568"}, {"id": "DD2/29", "name": "คุณ ศิริพร แซ่ก๊วย", "branch": "สาขา 2", "fee": 16000, "address": "1368 ถ.ประชาชื่น แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "083-549-4196 , 081-842-7119", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "28-ส.ค.-2568"}, {"id": "DD2/33", "name": "คุณ ประสาน โชควิเชียร", "branch": "สาขา 2", "fee": 16000, "address": "5/1442 หมู่ 10 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "066-156-1553 , 094-464-1659", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "5-ธ.ค.-2568"}, {"id": "DD2/34", "name": "คุณ มณี แซ่ลี้", "branch": "สาขา 2", "fee": 17000, "address": "131 หมู่ที่4 ต.แม่งอน อ.ฝาง จ.เชียงใหม่", "phone": "081-884-6257", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "9-พ.ย.-2568"}, {"id": "DD2/35", "name": "คุณ ซิวเซ่ง แซ่จัง", "branch": "สาขา 2", "fee": 17000, "address": "333/487 ถ.ประชาราษฎร์1 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "080-268-2220 , 081-928-2540", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "1-ม.ค.-2569"}, {"id": "DD2/36", "name": "คุณ วีระชัย เวศนานนท์", "branch": "สาขา 2", "fee": 16000, "address": "5/153 หมู่ที่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "084-158-1010", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "11-มี.ค.-2569"}, {"id": "DD2/37", "name": "คุณ สละ เสือพลาย", "branch": "สาขา 2", "fee": 16000, "address": "73/4 หมู่ที่ 3 ต.บางรักน้อย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "088-187-7214 , 089-443-9460", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-ม.ค.-2569"}, {"id": "DD2/38", "name": "คุณ ศรีสุดา วัชราพิพัฒน์พันธ์", "branch": "สาขา 2", "fee": 16000, "address": "4 ซ.สามัคคี 28 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "083-047-2524", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "8-ม.ค.-2569"}, {"id": "DD2/39", "name": "คุณ สมจิตร คำอ้อน", "branch": "สาขา 2", "fee": 15000, "address": "168/292 หมู่ที่ 2 ต.บ้านกลาง อ.เมืองปทุมธานี จ.ปทุมธานี", "phone": "084-698-6278", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "21-ก.พ.-2569"}, {"id": "DD1/01", "name": "คุณ เซียมเกียง แซ่ตั้ง", "branch": "สาขา 3", "fee": 17000, "address": "48/94 ซ.งามวงศ์วาน 6 แยก 21 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-484-9439 ,091-569-6266", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "3-พ.ค.-2568"}, {"id": "DD3/02", "name": "คุณ สรรเพชญ ไชยสิริยะสวัสดิ์", "branch": "สาขา 3", "fee": 28000, "address": "11 ซ.ประชาชื่น 9/1 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-004-3975", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.ค.-2568"}, {"id": "DD3/03", "name": "คุณ มนพิชัย ชันไชสง", "branch": "สาขา 3", "fee": 15000, "address": "168/5 ซ.ดำเนินการใต้ ถ.ราชดำเนิน แขวงบวรนิเวศ เขตพระนคร กรุงเทพมหานคร", "phone": "081-772-1929", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "15-ธ.ค.-2564"}, {"id": "DD3/04", "name": "คุณ ธรรมนูญ ขาวสนิท", "branch": "สาขา 3", "fee": 17000, "address": "558/23 ถ.ดินแดง แขวงดินแดง เขตดินแดง กรุงเทพมหานคร", "phone": "081-636-0322", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "16-ก.ค.-2568"}, {"id": "DD3/05", "name": "คุณ กุ้ยเฮง สุภาพงษ์", "branch": "สาขา 3", "fee": 17000, "address": "17/188 ซ.ประชาชื่น14  แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "089-1111-800", "bank": "ธนาคารไทยพาณิชย์", "account_no": "829-2-57154-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.พ.-2560"}, {"id": "DD3/06", "name": "คุณ นันทนา ชินะวนิชกิจ", "branch": "สาขา 3", "fee": 17000, "address": "111/9 ถ.นวมินทร์ แขวงคลองกุ่ม เขตบึงกุ่ม กรุงเทพมหานคร", "phone": "061-538-7878 , 081-701-7177", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-ม.ค.-2568"}, {"id": "DD3/07", "name": "คุณ กิตติ ศิริมธุรส", "branch": "สาขา 3", "fee": 13000, "address": "20/150 ถ.ติวานนท์ ต.ตลาดขวัญ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-122-1019", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-ม.ค.-2567"}, {"id": "DD3/08", "name": "คุณ มุกดา สุทธิเจริญ", "branch": "สาขา 3", "fee": 10000, "address": "187 ซ.สายสิน แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "086-044-4362", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "20-ก.ค.-2560"}, {"id": "DD3/09", "name": "คุณ ศิริพงษ์ สุงสุวรรณ", "branch": "สาขา 3", "fee": 16000, "address": "144 ถ.ประชานิเวศน์ 3 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "098-929-5252 , 099-462-6541", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "20-ธ.ค.-2567"}, {"id": "DD3/10", "name": "คุณ พินิจ เหลื่อมสมบัติ", "branch": "สาขา 3", "fee": 12000, "address": "107 ซ.ติวานนท์ ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "081-702-1183, 081-817-1883", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "23-ธ.ค.-2555"}, {"id": "DD3/11", "name": "คุณ จรวย ส่งท่ามะพลา", "branch": "สาขา 3", "fee": 16000, "address": "6 ซ.จรัญสนิทวงศ์ 63 แขวงบางบำหรุ เขตบางพลัด กรุงเทพมหานคร", "phone": "095-485-4313", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-เม.ย.-2568"}, {"id": "DD3/12", "name": "คุณ ไสว สุขสวัสดิ์", "branch": "สาขา 3", "fee": 17000, "address": "502/554 ซ.เดชะตุงคะ 1 แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "089-129-1417 , 090-641-9206", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "28-มิ.ย.-2568"}, {"id": "DD3/17", "name": "คุณ สุรพล คัชมาตย์", "branch": "สาขา 3", "fee": 18000, "address": "42 ซ.สามัคคี 60/1 ต.ท่าทราย อ.เมืองนนทบุรี .นนทบุรี", "phone": "089-484-4125 , 081-371-6351", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.ย.-2568"}, {"id": "DD3/24", "name": "คุณ จริยา สุประดิษฐ์", "branch": "สาขา 3", "fee": 16000, "address": "48 ซ.ประชาชื่นนนทบุรี ซอย 8 ต.บางเขน อ.บางเขน จ.นนทบุรี", "phone": "090-979-6136", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "30-ต.ค.-2568"}, {"id": "DD3/27", "name": "คุณ อดิสอน เศวตนันทน์", "branch": "สาขา 3", "fee": 15000, "address": "320 ซ.โชติวัฒน์ ซอย 3 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "061-149-5144 , 081-802-3507 , 081-719-7955", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "1-ธ.ค.-2568"}, {"id": "DD3/30", "name": "คุณ พวงแก้ว ธนบัตร", "branch": "สาขา 3", "fee": 20000, "address": "10 ซ.ลาดพร้าว 64 แยก 12 แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพมหานคร", "phone": "085-919-8261 , 098-834-8849", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "30-ธ.ค.-2568"}, {"id": "DD3/31", "name": "คุณ อัมพร ชาตะสุภณ", "branch": "สาขา 3", "fee": 14500, "address": "23/72 หมู่ที่ 3 ต.คูคต อ.ลำลูกกา จ.ปทุมธานี", "phone": "096-915-6294 , 061-429-3092", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "1-ม.ค.-2569"}, {"id": "DD3/32", "name": "คุณ สงวน วัฒนทรงสิทธิ์", "branch": "สาขา 3", "fee": 16000, "address": "43 ซ.นาคนิวาส 22 ถ.นาคนิวาส แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร", "phone": "081-556-5993 , 095-249-9378", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-ม.ค.-2569"}, {"id": "DD3/33", "name": "คุณ นันทิยา วงศ์ชัยสถาพร", "branch": "สาขา 3", "fee": 18000, "address": "10/26 ถ.ประชาชื่น แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "089-301-2279", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ก.พ.-2569"}, {"id": "DD3/34", "name": "คุณ แจ๋ว วงค์นัน", "branch": "สาขา 3", "fee": 18000, "address": "16 ซ.นนทบุรี 52 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-603-4926", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "20-ก.พ.-2569"}, {"id": "DD3/35", "name": "คุณ เชาวลิต แก้วสำเร็จ", "branch": "สาขา 3", "fee": 15500, "address": "5 ซ.วัดชมภูเวก ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "062-584-5629 , 089-528-5674", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "22-ก.พ.-2569"}, {"id": "DD3/37", "name": "คุณ สิริรัตน์ จงประเสริฐ", "branch": "สาขา 3", "fee": 16000, "address": "98/192 หมู่ที่3 ต.ลำผักกูด อ.ธัญบุรี จ.ปทุมธานี", "phone": "085-100-5715 , 099-139-1452", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "8-มี.ค.-2569"}];
 
 // Duplicate IDs
 const DUP_NAMES = [];
 
-// customers initialized in early script
-// payments declared globally above
+let customers = RAW.map(r => ({...r, _dupName: false}));
+let payments = {}; // { "customerId_YYYY-MM": { amount, channel, date, note } }
 let searchQuery = '';
 let currentPage = 1;
 let billPage = 1;
 const PER_PAGE = 20;
-// currentMonth declared globally above
+let currentMonth = '';
 let currentCustomer = null;
-// payHistory declared globally above
+let payHistory = [];
 
 // Init current month
 const now = new Date();
 // Default to current month, but clamp to Apr-Dec 2026 range
 {
   const cm = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  const validMonths = getAllSystemMonths();
-  currentMonth = validMonths.includes(cm) ? cm : (validMonths[0] || '2026-03');
+  const validMonths = ['2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+  currentMonth = validMonths.includes(cm) ? cm : '2026-03';
 }
 
 function fmt(n) { return n.toLocaleString('th-TH'); }
@@ -1925,8 +1802,7 @@ function calcTotalBill(custId, month) {
 
   const reqTotal = inRange.reduce((s, e) => {
     const item = catalog.find(x => x.id === e.itemId);
-    const unitPrice = e.price != null ? parseFloat(e.price) : (item?.price || 0);
-    return s + unitPrice * (parseInt(e.qty)||0);
+    return s + (item ? (item.price||0) * (parseInt(e.qty)||0) : 0);
   }, 0);
 
   return c.fee + reqTotal;
@@ -1948,7 +1824,24 @@ function statusBadge(s) {
 }
 
 // Pages
-function _goPageLegacy(id) { goPage(id); }
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget && event.currentTarget.classList && event.currentTarget.classList.add('active');
+  // find nav item
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if(n.getAttribute('onclick') && n.getAttribute('onclick').includes(id)) n.classList.add('active');
+  });
+  const titles = {dashboard:'ภาพรวม',customers:'รายชื่อลูกค้า',discharged:'คืนเคส',billing:'ชำระบิล',history:'ประวัติการชำระ',issues:'ปัญหาข้อมูล'};
+  document.getElementById('page-title').textContent = titles[id]||'';
+  if(id==='customers') renderTable();
+  if(id==='discharged') renderDischarged();
+  if(id==='billing') { renderMonthTabs(); renderBilling(); }
+  if(id==='history') renderHistory();
+  if(id==='issues') renderIssues();
+  if(id==='dashboard') updateDashboard();
+}
 
 // SEARCH
 function handleSearch(q) {
@@ -2019,8 +1912,11 @@ function renderTable() {
 
 // BILLING
 function renderMonthTabs() {
-  // Dynamic: สร้างจาก SYSTEM_YEARS
-  const months = getAllSystemMonths();
+  // Fixed range: Mar–Dec 2026 (มี.ค.–ธ.ค. 2569)
+  const months = [];
+  for (let mo = 3; mo <= 12; mo++) {
+    months.push(`2026-${String(mo).padStart(2,'0')}`);
+  }
   document.getElementById('month-tabs').innerHTML = months.map(m=>`
     <div class="month-tab ${m===currentMonth?'active':''}" onclick="setMonth('${m}')">${thaiMonth(m)}</div>
   `).join('');
@@ -2104,10 +2000,9 @@ function renderBilling() {
 function markAllPaid(){
   filteredBilling().forEach(c=>{
     const k=payKey(c.id,currentMonth);
-    const tot=calcTotalBill(c.id,currentMonth);
-    if(!payments[k]||payments[k].amount<tot){
-      payments[k]={amount:tot,channel:'โอนเงิน',date:new Date().toISOString().split('T')[0],note:'ชำระครบ'};
-      payHistory.push({date:new Date().toISOString().split('T')[0],id:c.id,name:c.name,month:thaiMonth(currentMonth),amount:tot,channel:'โอนเงิน',note:'ชำระครบ'});
+    if(!payments[k]||payments[k].amount<c.fee){
+      payments[k]={amount:c.fee,channel:'โอนเงิน',date:new Date().toISOString().split('T')[0],note:'ชำระครบ'};
+      payHistory.push({date:new Date().toISOString().split('T')[0],id:c.id,name:c.name,month:thaiMonth(currentMonth),amount:c.fee,channel:'โอนเงิน',note:'ชำระครบ'});
     }
   });
   renderBilling();updateDashboard();
@@ -2314,16 +2209,6 @@ function savePay(){
 }
 
 // ADD CUSTOMER
-// แปลง YYYY-MM-DD → d-เดือนไทย-ปีไทย
-function syncAddDue(val) {
-  if (!val) { document.getElementById('add-due').value=''; document.getElementById('add-due-preview').textContent=''; return; }
-  const thaiM = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  const [y,m,d] = val.split('-').map(Number);
-  const thai = `${d}-${thaiM[m]}-${y}`;
-  document.getElementById('add-due').value = thai;
-  document.getElementById('add-due-preview').textContent = `→ ${d}-${thaiM[m]}-${y+543}`;
-}
-
 function openAddModal(){
   // Reset bank fields
   const bankSel = document.getElementById('add-bank');
@@ -2332,10 +2217,6 @@ function openAddModal(){
   if (bankSel)  bankSel.value = '';
   if (accSel)   { accSel.style.display='none'; accSel.innerHTML='<option value="">— เลือกบัญชี —</option>'; }
   if (accNo)    { accNo.style.display='block'; accNo.value=''; }
-  // Reset date picker
-  document.getElementById('add-due-picker').value = '';
-  document.getElementById('add-due').value = '';
-  document.getElementById('add-due-preview').textContent = '';
   document.getElementById('add-modal').classList.add('open');
 }
 function saveCustomer(){
@@ -2358,7 +2239,6 @@ function saveCustomer(){
   renderTable();
   updateDashboard();
   document.querySelectorAll('#add-modal input,#add-modal textarea').forEach(el=>el.value='');
-  document.getElementById('add-due-preview').textContent = '';
   if (window._fbSave) {
     const obj = {};
     customers.forEach(x => { obj[x.id.replace(/\//g,'_')] = x; });
@@ -2372,7 +2252,7 @@ function renderHistory(){
   const empty = document.getElementById('hist-empty');
   if(payHistory.length===0){ tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
-  tbody.innerHTML = payHistory.slice(0,100).map((p,i)=>`
+  tbody.innerHTML = payHistory.slice(0,100).map(p=>`
     <tr>
       <td style="font-size:12px">${p.date}</td>
       <td class="td-id">${p.id}</td>
@@ -2381,112 +2261,8 @@ function renderHistory(){
       <td class="td-fee" style="color:var(--accent)">฿${fmt(p.amount)}</td>
       <td style="font-size:12px">${p.channel}</td>
       <td style="font-size:12px;color:var(--text3)">${p.note||'—'}</td>
-      <td style="white-space:nowrap">
-        <button class="btn btn-sm" onclick="openEditHistory(${i})" title="แก้ไข">✏️</button>
-        <button class="btn btn-sm" onclick="deleteHistory(${i})" style="color:var(--danger);margin-left:4px" title="ลบ">🗑</button>
-      </td>
     </tr>
   `).join('');
-}
-
-let _editHistIdx = -1;
-
-function openEditHistory(idx) {
-  const p = payHistory[idx];
-  if (!p) return;
-  _editHistIdx = idx;
-  // Populate modal
-  document.getElementById('eh-date').value    = p.date    || '';
-  document.getElementById('eh-amount').value  = p.amount  || '';
-  document.getElementById('eh-channel').value = p.channel || '';
-  document.getElementById('eh-note').value    = p.note    || '';
-  // Customer selector
-  const sel = document.getElementById('eh-cust-id');
-  sel.innerHTML = customers.map(c =>
-    `<option value="${c.id}" ${c.id===p.id?'selected':''}>${c.id} — ${c.name}</option>`
-  ).join('');
-  // Month selector
-  const msel = document.getElementById('eh-month');
-  const months = getAllSystemMonths();
-  const thaiM = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  // find matching ym from payHistory
-  const curYm = Object.keys(payments).find(k => {
-    const parts = k.split('_'); const ym = parts[parts.length-1];
-    return k.replace('_'+ym,'') === p.id && thaiMonth(ym) === p.month;
-  });
-  msel.innerHTML = months.map(m => {
-    const [y,mo] = m.split('-');
-    const label = `${thaiM[+mo]} ${+y+543}`;
-    return `<option value="${m}" ${label===p.month?'selected':''}>${label}</option>`;
-  }).join('');
-  document.getElementById('edit-history-modal').classList.add('open');
-}
-
-function saveEditHistory() {
-  if (_editHistIdx < 0) return;
-  const oldP   = payHistory[_editHistIdx];
-  const newId  = document.getElementById('eh-cust-id').value;
-  const newYm  = document.getElementById('eh-month').value;
-  const amount = parseFloat(document.getElementById('eh-amount').value) || 0;
-  const channel= document.getElementById('eh-channel').value;
-  const date   = document.getElementById('eh-date').value;
-  const note   = document.getElementById('eh-note').value;
-  const thaiM  = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  const [yr,mo] = newYm.split('-').map(Number);
-  const monthLabel = `${thaiM[mo]} ${yr+543}`;
-  const newCust = customers.find(x=>x.id===newId);
-
-  // Remove old payment key if customer or month changed
-  const oldYm = Object.keys(payments).find(k => {
-    const parts = k.split('_'); const ym = parts[parts.length-1];
-    return k.replace('_'+ym,'') === oldP.id && thaiMonth(ym) === oldP.month;
-  });
-  if (oldYm && (oldP.id !== newId || oldP.month !== monthLabel)) {
-    delete payments[oldYm];
-  }
-
-  // Set new payment
-  payments[payKey(newId, newYm)] = {amount, channel, date, note};
-
-  // Update payHistory entry
-  payHistory[_editHistIdx] = {
-    date, id: newId, name: newCust?.name || newId,
-    month: monthLabel, amount, channel, note
-  };
-
-  closeModal('edit-history-modal');
-  renderHistory();
-  renderBilling();
-  updateDashboard();
-
-  // Save to Firebase
-  const safePayments = {};
-  Object.entries(payments).forEach(([k,v]) => { safePayments[k.replace(/\//g,'_')] = v; });
-  if (window._fbSave) {
-    window._fbSave('payments', safePayments);
-    window._fbSave('payHistory', payHistory);
-  }
-}
-
-function deleteHistory(idx) {
-  if (!confirm('ต้องการลบประวัติการชำระนี้?')) return;
-  const p = payHistory[idx];
-  // Remove from payments too
-  const ym = Object.keys(payments).find(k => {
-    const parts = k.split('_'); const yvl = parts[parts.length-1];
-    return k.replace('_'+yvl,'') === p.id && thaiMonth(yvl) === p.month;
-  });
-  if (ym) delete payments[ym];
-  payHistory.splice(idx, 1);
-  renderHistory();
-  renderBilling();
-  updateDashboard();
-  const safePayments = {};
-  Object.entries(payments).forEach(([k,v]) => { safePayments[k.replace(/\//g,'_')] = v; });
-  if (window._fbSave) {
-    window._fbSave('payments', safePayments);
-    window._fbSave('payHistory', payHistory);
-  }
 }
 
 // ISSUES
@@ -2533,191 +2309,36 @@ function renderIssues(){
 
 // DASHBOARD
 let chart1, chart2;
-// ===== SYSTEM YEARS CONFIG =====
-// SYSTEM_YEARS, getSystemMonths, getAllSystemMonths declared globally above
-
-// ===== DASHBOARD MODE =====
-// dashMode/dashYear/dashMonth/DASH_MONTHS declared globally above
-const THAI_M_SHORT = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-
-function setDashMode(mode) {
-  dashMode = mode;
-  document.getElementById('dash-mode-month').classList.toggle('active', mode==='month');
-  document.getElementById('dash-mode-year').classList.toggle('active', mode==='year');
-  document.getElementById('dash-month-picker').style.display = mode==='month' ? 'flex' : 'none';
-  updateDashboard();
-}
-
-function setDashMonth(ym) {
-  dashMonth = ym;
-  dashYear  = parseInt(ym.split('-')[0]);
-  DASH_MONTHS = getDashMonthsForYear(dashYear);
-  updateDashboard();
-}
-
-function setDashYear(year) {
-  dashYear  = year;
-  DASH_MONTHS = getDashMonthsForYear(year);
-  dashMonth = DASH_MONTHS[0] || dashMonth;
-  // sync currentMonth tabs too
-  renderMonthTabs?.();
-  renderDashYearTabs();
-  updateDashboard();
-}
-
-function renderDashYearTabs() {
-  const container = document.getElementById('dash-year-tabs');
-  if (!container) return;
-  container.innerHTML = SYSTEM_YEARS.map(y =>
-    `<button class="month-tab ${y.year===dashYear?'active':''}" onclick="setDashYear(${y.year})">${y.year+543}</button>`
-  ).join('');
-}
-
-function renderDashMonthButtons() {
-  const container = document.getElementById('dash-month-picker');
-  if (!container) return;
-  const months = getDashMonthsForYear(dashYear);
-  container.innerHTML = months.map(m => {
-    const mo = parseInt(m.split('-')[1]);
-    return `<button class="month-tab ${m===dashMonth?'active':''}" onclick="setDashMonth('${m}')">${THAI_M_SHORT[mo]}</button>`;
-  }).join('');
-}
-
-function addSystemYear() {
-  const lastYear = Math.max(...SYSTEM_YEARS.map(y=>y.year));
-  const newYear = lastYear + 1;
-  if (SYSTEM_YEARS.find(y=>y.year===newYear)) { alert(`ปี ${newYear+543} มีอยู่แล้วค่ะ`); return; }
-  if (!confirm(`เพิ่มปี ${newYear+543} (${newYear}) เข้าระบบ?`)) return;
-  SYSTEM_YEARS.push({ year: newYear, startMonth: 1, endMonth: 12 });
-  // Save to Firebase
-  if (window._fbSave) window._fbSave('system_years', SYSTEM_YEARS);
-  // Also expand validMonths for billing tabs
-  renderMonthTabs?.();
-  renderDashYearTabs();
-  renderDashMonthButtons();
-  alert(`✓ เพิ่มปี ${newYear+543} เรียบร้อยแล้วค่ะ`);
-}
-
 function updateDashboard(){
-  // Sync dashMonth with currentMonth when on month mode
-  if (dashMode === 'month') dashMonth = currentMonth;
+  const activeCusts  = customers.filter(c => !isInactive(c.id));
+  const total        = activeCusts.length;
+  const totalRev     = activeCusts.reduce((s,c)=>s+c.fee,0);
+  const paidN        = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='paid').length;
+  const partialN     = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='partial').length;
+  const unpaidN      = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='unpaid').length;
+  const paidRev      = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='paid').reduce((s,c)=>s+c.fee,0);
+  const dcCount      = Object.keys(discharged).length;
 
-  // Update month tab highlights
-  DASH_MONTHS.forEach(m => {
-    const mo = m.split('-')[1];
-    const btn = document.getElementById('dm-'+mo);
-    if (btn) btn.classList.toggle('active', m === dashMonth);
-  });
-
-  const activeCusts = customers.filter(c => !isInactive(c.id));
-  const total       = activeCusts.length;
-
-  // คำนวณรายได้จากประวัติการชำระ
-  function revenueFromHistory(months) {
-    return payHistory
-      .filter(p => {
-        // match month label เช่น "มี.ค. 2569"
-        const [y, m] = months.length === 1
-          ? months[0].split('-').map(Number)
-          : [null, null];
-        if (months.length === 1) {
-          const label = `${THAI_M_SHORT[m]} ${y+543}`;
-          return p.month === label;
-        }
-        // year mode — match all months in list
-        return months.some(mo => {
-          const [yy, mm] = mo.split('-').map(Number);
-          return p.month === `${THAI_M_SHORT[mm]} ${yy+543}`;
-        });
-      })
-      .reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
-  }
-
-  let revenue, paidN, partialN, unpaidN, paidRev;
-  let revenueLabel, paidLabel, unpaidLabel, chart1Title, chart2Title;
-
-  if (dashMode === 'month') {
-    revenue    = revenueFromHistory([dashMonth]);
-    paidN      = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='paid').length;
-    partialN   = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='partial').length;
-    unpaidN    = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='unpaid').length;
-    paidRev    = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='paid')
-                  .reduce((s,c)=>s+calcTotalBill(c.id,dashMonth),0);
-    const [y,m] = dashMonth.split('-').map(Number);
-    revenueLabel = `รายได้ ${THAI_M_SHORT[m]} ${y+543}`;
-    paidLabel    = `ชำระแล้ว ${THAI_M_SHORT[m]} ${y+543}`;
-    unpaidLabel  = `ค้างชำระ ${THAI_M_SHORT[m]} ${y+543}`;
-    chart1Title  = `รายได้ต่อสาขา (${THAI_M_SHORT[m]} ${y+543})`;
-    chart2Title  = `การชำระบิล ${THAI_M_SHORT[m]} ${y+543}`;
-  } else {
-    // year mode
-    revenue    = revenueFromHistory(DASH_MONTHS);
-    paidN      = 0; partialN = 0; unpaidN = 0; paidRev = 0;
-    // ในโหมดปี แสดงลูกค้าที่ชำระแล้วอย่างน้อย 1 เดือน
-    DASH_MONTHS.forEach(mo => {
-      activeCusts.forEach(c => {
-        const s = getPayStatus(c.id, mo);
-        // count unique paid (ไม่ต้องรวมซ้ำ ให้นับครั้ง)
-      });
-      paidN   += activeCusts.filter(c=>getPayStatus(c.id,mo)==='paid').length;
-      partialN+= activeCusts.filter(c=>getPayStatus(c.id,mo)==='partial').length;
-      unpaidN += activeCusts.filter(c=>getPayStatus(c.id,mo)==='unpaid').length;
-      paidRev += activeCusts.filter(c=>getPayStatus(c.id,mo)==='paid')
-                    .reduce((s,c)=>s+calcTotalBill(c.id,mo),0);
-    });
-    revenueLabel = 'รายได้รวมปี 2569';
-    paidLabel    = 'ชำระแล้ว (ครั้ง)';
-    unpaidLabel  = 'ค้างชำระ (ครั้ง)';
-    chart1Title  = 'รายได้ต่อสาขา รวมทั้งปี';
-    chart2Title  = 'การชำระบิลทั้งปี';
-  }
-
-  // Update stat cards
-  document.getElementById('s-total').textContent        = total;
-  document.getElementById('s-revenue').textContent      = fmt(revenue);
-  document.getElementById('s-revenue-label').textContent= revenueLabel;
-  document.getElementById('s-revenue-sub').textContent  = 'บาท (จากประวัติชำระ)';
-  document.getElementById('s-paid').textContent         = paidN;
-  document.getElementById('s-paid-label').textContent   = paidLabel;
-  document.getElementById('s-unpaid').textContent       = unpaidN;
-  document.getElementById('s-unpaid-label').textContent = unpaidLabel;
-  document.getElementById('dchart1-title').textContent  = chart1Title;
-  document.getElementById('dchart2-title').textContent  = chart2Title;
-  document.getElementById('discharged-badge').textContent = Object.keys(discharged).length;
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-revenue').textContent=fmt(totalRev);
+  document.getElementById('s-paid').textContent=paidN;
+  document.getElementById('s-unpaid').textContent=unpaidN;
+  document.getElementById('discharged-badge').textContent=dcCount;
   buildBillingReminders();
 
-  const totalTarget = activeCusts.reduce((s,c)=>s+calcTotalBill(c.id, dashMode==='month'?dashMonth:DASH_MONTHS[0]),0) * (dashMode==='year'?DASH_MONTHS.length:1);
-  const pct = totalTarget > 0 ? Math.round(paidRev/totalTarget*100) : 0;
-  document.getElementById('dc-paid-pct').textContent  = pct+'%';
-  document.getElementById('dc-paid-amt').textContent  = '฿'+fmt(paidRev)+' / ฿'+fmt(totalTarget);
-  document.getElementById('dc-fill').style.width      = pct+'%';
-  document.getElementById('dc-paid-n').textContent    = paidN;
-  document.getElementById('dc-partial-n').textContent = partialN;
-  document.getElementById('dc-unpaid-n').textContent  = unpaidN;
-  document.getElementById('unpaid-badge').textContent = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='unpaid').length;
+  const pct = totalRev > 0 ? Math.round(paidRev/totalRev*100) : 0;
+  document.getElementById('dc-paid-pct').textContent=pct+'%';
+  document.getElementById('dc-paid-amt').textContent='฿'+fmt(paidRev)+' / ฿'+fmt(totalRev);
+  document.getElementById('dc-fill').style.width=pct+'%';
+  document.getElementById('dc-paid-n').textContent=paidN;
+  document.getElementById('dc-partial-n').textContent=partialN;
+  document.getElementById('dc-unpaid-n').textContent=unpaidN;
+  document.getElementById('unpaid-badge').textContent=unpaidN;
 
-  // Chart 1: รายได้ต่อสาขา
-  const getRevByBranch = (branch) => {
-    if (dashMode === 'month') {
-      return payHistory.filter(p => {
-        const [y,m] = dashMonth.split('-').map(Number);
-        const label = `${THAI_M_SHORT[m]} ${y+543}`;
-        const c = customers.find(x=>x.id===p.id);
-        return p.month === label && c?.branch === branch;
-      }).reduce((s,p)=>s+(parseFloat(p.amount)||0), 0);
-    } else {
-      return payHistory.filter(p => {
-        const c = customers.find(x=>x.id===p.id);
-        return DASH_MONTHS.some(mo => {
-          const [yy,mm] = mo.split('-').map(Number);
-          return p.month === `${THAI_M_SHORT[mm]} ${yy+543}`;
-        }) && c?.branch === branch;
-      }).reduce((s,p)=>s+(parseFloat(p.amount)||0), 0);
-    }
-  };
-  const b1r = getRevByBranch('สาขา 1');
-  const b2r = getRevByBranch('สาขา 2');
-  const b3r = getRevByBranch('สาขา 3');
+  // Charts — only active
+  const b1r = activeCusts.filter(c=>c.branch==='สาขา 1').reduce((s,c)=>s+c.fee,0);
+  const b2r = activeCusts.filter(c=>c.branch==='สาขา 2').reduce((s,c)=>s+c.fee,0);
+  const b3r = activeCusts.filter(c=>c.branch==='สาขา 3').reduce((s,c)=>s+c.fee,0);
 
   if(chart1) chart1.destroy();
   chart1 = new Chart(document.getElementById('dchart1'), {
@@ -2726,25 +2347,17 @@ function updateDashboard(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#999'}},y:{grid:{color:'rgba(128,128,128,0.1)'},ticks:{color:'#999',callback:v=>'฿'+(v/1000).toFixed(0)+'K'}}}}
   });
 
-  // Chart 2: รายได้รายเดือน (มี.ค.–ธ.ค.)
-  const monthRevs = DASH_MONTHS.map(mo => {
-    const [yy,mm] = mo.split('-').map(Number);
-    const label = `${THAI_M_SHORT[mm]} ${yy+543}`;
-    return payHistory.filter(p=>p.month===label).reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
-  });
-  const yName = dashYear+543; document.getElementById('dchart3-title').textContent = `รายได้รายเดือน ปี ${yName}`;
+  const feeBuckets = [
+    activeCusts.filter(c=>c.fee<=12000).length,
+    activeCusts.filter(c=>c.fee>=13000&&c.fee<=16000).length,
+    activeCusts.filter(c=>c.fee>=17000&&c.fee<=20000).length,
+    activeCusts.filter(c=>c.fee>20000).length,
+  ];
   if(chart2) chart2.destroy();
   chart2 = new Chart(document.getElementById('dchart2'), {
     type:'bar',
-    data:{
-      labels: DASH_MONTHS.map(mo => { const [,mm]=mo.split('-'); return THAI_M_SHORT[+mm]; }),
-      datasets:[{
-        data: monthRevs,
-        backgroundColor: DASH_MONTHS.map(mo => mo===dashMonth ? '#1a6b4a' : '#a8d5c0'),
-        borderRadius:4, borderSkipped:false
-      }]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}},y:{grid:{color:'rgba(128,128,128,0.1)'},ticks:{color:'#999',callback:v=>'฿'+(v/1000).toFixed(0)+'K'}}}}
+    data:{labels:['≤12K','13-16K','17-20K','>20K'],datasets:[{data:feeBuckets,backgroundColor:'#1a6b4a',borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}},y:{grid:{color:'rgba(128,128,128,0.1)'},ticks:{color:'#999',stepSize:20}}}}
   });
 }
 
@@ -2778,13 +2391,13 @@ function exportCSV(){
 // ========== REQUISITION SYSTEM ==========
 
 // Default catalog
-catalog = [{"id": "pi01", "name": "ผ้าอ้อมผู้ใหญ่ L", "type": "cloth", "unit": "ชิ้น", "price": 450.0, "note": ""}, {"id": "pi02", "name": "ผ้าอ้อมผู้ใหญ่ M", "type": "cloth", "unit": "ชิ้น", "price": 450.0, "note": ""}, {"id": "pi03", "name": "ผ้าอ้อมผู้ใหญ่แบบกางเกง", "type": "cloth", "unit": "ชิ้น", "price": 500.0, "note": ""}, {"id": "pi04", "name": "แผ่นรองซับ", "type": "cloth", "unit": "ชิ้น", "price": 130.0, "note": ""}, {"id": "pi05", "name": "แผ่นเสริม", "type": "cloth", "unit": "ชิ้น", "price": 320.0, "note": ""}, {"id": "pi06", "name": "กระดาษเปียก", "type": "cloth", "unit": "ชิ้น", "price": 80.0, "note": ""}, {"id": "pi07", "name": "ถุงมือ", "type": "pers", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "pi08", "name": "ครีมอาบน้ำ", "type": "pers", "unit": "ชิ้น", "price": 150.0, "note": ""}, {"id": "pi09", "name": "โลชั่น", "type": "pers", "unit": "ชิ้น", "price": 150.0, "note": ""}, {"id": "pi10", "name": "แป้งทา", "type": "pers", "unit": "ชิ้น", "price": 60.0, "note": ""}, {"id": "pi11", "name": "ยาสีฟัน", "type": "pers", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "pi12", "name": "ที่โกนหนวด", "type": "pers", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "pi13", "name": "นมEnrich care", "type": "pers", "unit": "ชิ้น", "price": 800.0, "note": ""}, {"id": "pi14", "name": "ครีมอาบน้ำ PharmaPure", "type": "pers", "unit": "ชิ้น", "price": 250.0, "note": ""}, {"id": "pi15", "name": "แชมพูไนโซรัล", "type": "pers", "unit": "ชิ้น", "price": 410.0, "note": ""}, {"id": "pi16", "name": "น้ำยาทำความสะอาดจุดซ่อนเร้น", "type": "pers", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "pi17", "name": "แปรงสีฟันและยาสีฟัน", "type": "pers", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "pi18", "name": "นมD-Care", "type": "pers", "unit": "ชิ้น", "price": 900.0, "note": ""}, {"id": "ms01", "name": "ชุดใส่สายสวนปัสสาวะ", "type": "med", "unit": "ชิ้น", "price": 300.0, "note": ""}, {"id": "ms02", "name": "น้ำเกลือ", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms03", "name": "สายยางให้อาหารแบบซิลิโคน", "type": "med", "unit": "ชิ้น", "price": 490.0, "note": ""}, {"id": "ms04", "name": "หน้ากากออกซิเจนแบบมีถุง", "type": "med", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "ms05", "name": "สายออกซิเจน", "type": "med", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "ms06", "name": "ไซริ้งพลาสติกป้อนอาหาร", "type": "med", "unit": "ชิ้น", "price": 40.0, "note": ""}, {"id": "ms07", "name": "ชุด IV", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms08", "name": "ยาพ่นBF", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms09", "name": "เจลหล่อลื่นแบบซอง", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms10", "name": "ออกซิเจนรายเดือน", "type": "med", "unit": "ชิ้น", "price": 3000.0, "note": ""}, {"id": "ms11", "name": "ครีมทาแก้คันDC", "type": "med", "unit": "ชิ้น", "price": 150.0, "note": ""}, {"id": "ms12", "name": "ถุงปัสสาวะ", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms13", "name": "ถุงยางอนามัย", "type": "med", "unit": "ชิ้น", "price": 5.0, "note": ""}, {"id": "ms14", "name": "ไมโครปอร์", "type": "med", "unit": "ชิ้น", "price": 70.0, "note": ""}, {"id": "ms15", "name": "ชุดฟีดอาหาร", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms16", "name": "ครีมทาแก้คันNH", "type": "med", "unit": "ชิ้น", "price": 80.0, "note": ""}, {"id": "ms17", "name": "แผ่นตรวจน้ำตาล", "type": "med", "unit": "ชิ้น", "price": 600.0, "note": ""}, {"id": "ms18", "name": "เข็มเจาะน้ำตาล", "type": "med", "unit": "ชิ้น", "price": 300.0, "note": ""}, {"id": "ms19", "name": "ชุดเจาะน้ำตาลปลายนิ้ว", "type": "med", "unit": "ชิ้น", "price": 900.0, "note": ""}, {"id": "ms20", "name": "ยาละลายเสมหะ", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "ms21", "name": "ยาฆ่าเชื้อF", "type": "med", "unit": "ชิ้น", "price": 250.0, "note": ""}, {"id": "ms22", "name": "ยาพ่นIF", "type": "med", "unit": "ชิ้น", "price": 40.0, "note": ""}, {"id": "ms23", "name": "สายดูดเสมหะ", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms24", "name": "ยาเพิ่มเติม", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms25", "name": "ค่าแลป", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms26", "name": "ไม้พันสำลี", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms27", "name": "เบตาดีนเล็ก", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms28", "name": "แป้งไมโครเดิร์มซี", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "ms29", "name": "ครีมทาแก้คันTC", "type": "med", "unit": "ชิ้น", "price": 80.0, "note": ""}, {"id": "ms30", "name": "สายยางให้อาหารแบบธรรมดา", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms31", "name": "สําลีสเตอร์ไรด์", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms32", "name": "ผ้าก๊อซ", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms33", "name": "ไฮโดรเจน", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms34", "name": "ชุดพ่นยา", "type": "med", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "ms35", "name": "อินทราไซท์ เจล", "type": "med", "unit": "ชิ้น", "price": 300.0, "note": ""}, {"id": "ms36", "name": "ชุดทำความสะอาด", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms37", "name": "ออกซิเจนรายวัน", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "ms38", "name": "น้ำกลั่น", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms39", "name": "ถุงฟีดอาหาร", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms40", "name": "สำลีแอลกอฮอล์", "type": "med", "unit": "ชิ้น", "price": 20.0, "note": ""}, {"id": "ms41", "name": "อุปกรณ์ทำแผล", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms42", "name": "ชุดสวนล้างปัสสาวะ", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}];
+let catalog = [{"id": "pi01", "name": "ผ้าอ้อมผู้ใหญ่ L", "type": "cloth", "unit": "ชิ้น", "price": 450.0, "note": ""}, {"id": "pi02", "name": "ผ้าอ้อมผู้ใหญ่ M", "type": "cloth", "unit": "ชิ้น", "price": 450.0, "note": ""}, {"id": "pi03", "name": "ผ้าอ้อมผู้ใหญ่แบบกางเกง", "type": "cloth", "unit": "ชิ้น", "price": 500.0, "note": ""}, {"id": "pi04", "name": "แผ่นรองซับ", "type": "cloth", "unit": "ชิ้น", "price": 130.0, "note": ""}, {"id": "pi05", "name": "แผ่นเสริม", "type": "cloth", "unit": "ชิ้น", "price": 320.0, "note": ""}, {"id": "pi06", "name": "กระดาษเปียก", "type": "cloth", "unit": "ชิ้น", "price": 80.0, "note": ""}, {"id": "pi07", "name": "ถุงมือ", "type": "pers", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "pi08", "name": "ครีมอาบน้ำ", "type": "pers", "unit": "ชิ้น", "price": 150.0, "note": ""}, {"id": "pi09", "name": "โลชั่น", "type": "pers", "unit": "ชิ้น", "price": 150.0, "note": ""}, {"id": "pi10", "name": "แป้งทา", "type": "pers", "unit": "ชิ้น", "price": 60.0, "note": ""}, {"id": "pi11", "name": "ยาสีฟัน", "type": "pers", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "pi12", "name": "ที่โกนหนวด", "type": "pers", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "pi13", "name": "นมEnrich care", "type": "pers", "unit": "ชิ้น", "price": 800.0, "note": ""}, {"id": "pi14", "name": "ครีมอาบน้ำ PharmaPure", "type": "pers", "unit": "ชิ้น", "price": 250.0, "note": ""}, {"id": "pi15", "name": "แชมพูไนโซรัล", "type": "pers", "unit": "ชิ้น", "price": 410.0, "note": ""}, {"id": "pi16", "name": "น้ำยาทำความสะอาดจุดซ่อนเร้น", "type": "pers", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "pi17", "name": "แปรงสีฟันและยาสีฟัน", "type": "pers", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "pi18", "name": "นมD-Care", "type": "pers", "unit": "ชิ้น", "price": 900.0, "note": ""}, {"id": "ms01", "name": "ชุดใส่สายสวนปัสสาวะ", "type": "med", "unit": "ชิ้น", "price": 300.0, "note": ""}, {"id": "ms02", "name": "น้ำเกลือ", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms03", "name": "สายยางให้อาหารแบบซิลิโคน", "type": "med", "unit": "ชิ้น", "price": 490.0, "note": ""}, {"id": "ms04", "name": "หน้ากากออกซิเจนแบบมีถุง", "type": "med", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "ms05", "name": "สายออกซิเจน", "type": "med", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "ms06", "name": "ไซริ้งพลาสติกป้อนอาหาร", "type": "med", "unit": "ชิ้น", "price": 40.0, "note": ""}, {"id": "ms07", "name": "ชุด IV", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms08", "name": "ยาพ่นBF", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms09", "name": "เจลหล่อลื่นแบบซอง", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms10", "name": "ออกซิเจนรายเดือน", "type": "med", "unit": "ชิ้น", "price": 3000.0, "note": ""}, {"id": "ms11", "name": "ครีมทาแก้คันDC", "type": "med", "unit": "ชิ้น", "price": 150.0, "note": ""}, {"id": "ms12", "name": "ถุงปัสสาวะ", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms13", "name": "ถุงยางอนามัย", "type": "med", "unit": "ชิ้น", "price": 5.0, "note": ""}, {"id": "ms14", "name": "ไมโครปอร์", "type": "med", "unit": "ชิ้น", "price": 70.0, "note": ""}, {"id": "ms15", "name": "ชุดฟีดอาหาร", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms16", "name": "ครีมทาแก้คันNH", "type": "med", "unit": "ชิ้น", "price": 80.0, "note": ""}, {"id": "ms17", "name": "แผ่นตรวจน้ำตาล", "type": "med", "unit": "ชิ้น", "price": 600.0, "note": ""}, {"id": "ms18", "name": "เข็มเจาะน้ำตาล", "type": "med", "unit": "ชิ้น", "price": 300.0, "note": ""}, {"id": "ms19", "name": "ชุดเจาะน้ำตาลปลายนิ้ว", "type": "med", "unit": "ชิ้น", "price": 900.0, "note": ""}, {"id": "ms20", "name": "ยาละลายเสมหะ", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "ms21", "name": "ยาฆ่าเชื้อF", "type": "med", "unit": "ชิ้น", "price": 250.0, "note": ""}, {"id": "ms22", "name": "ยาพ่นIF", "type": "med", "unit": "ชิ้น", "price": 40.0, "note": ""}, {"id": "ms23", "name": "สายดูดเสมหะ", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms24", "name": "ยาเพิ่มเติม", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms25", "name": "ค่าแลป", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms26", "name": "ไม้พันสำลี", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms27", "name": "เบตาดีนเล็ก", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms28", "name": "แป้งไมโครเดิร์มซี", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "ms29", "name": "ครีมทาแก้คันTC", "type": "med", "unit": "ชิ้น", "price": 80.0, "note": ""}, {"id": "ms30", "name": "สายยางให้อาหารแบบธรรมดา", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms31", "name": "สําลีสเตอร์ไรด์", "type": "med", "unit": "ชิ้น", "price": 10.0, "note": ""}, {"id": "ms32", "name": "ผ้าก๊อซ", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms33", "name": "ไฮโดรเจน", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms34", "name": "ชุดพ่นยา", "type": "med", "unit": "ชิ้น", "price": 120.0, "note": ""}, {"id": "ms35", "name": "อินทราไซท์ เจล", "type": "med", "unit": "ชิ้น", "price": 300.0, "note": ""}, {"id": "ms36", "name": "ชุดทำความสะอาด", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms37", "name": "ออกซิเจนรายวัน", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}, {"id": "ms38", "name": "น้ำกลั่น", "type": "med", "unit": "ชิ้น", "price": 100.0, "note": ""}, {"id": "ms39", "name": "ถุงฟีดอาหาร", "type": "med", "unit": "ชิ้น", "price": 50.0, "note": ""}, {"id": "ms40", "name": "สำลีแอลกอฮอล์", "type": "med", "unit": "ชิ้น", "price": 20.0, "note": ""}, {"id": "ms41", "name": "อุปกรณ์ทำแผล", "type": "med", "unit": "ชิ้น", "price": 0, "note": ""}, {"id": "ms42", "name": "ชุดสวนล้างปัสสาวะ", "type": "med", "unit": "ชิ้น", "price": 200.0, "note": ""}];
 let catalogEditId = null;
 
 // requisitions: { "custId_YYYY-MM": [ { itemId, qty, savedAt } ] }
-// requisitions declared globally above
+let requisitions = {};
 
-CAT_META = {
+let CAT_META = {
   med:   { label:'ยา/อุปกรณ์การแพทย์', icon:'💊', color:'#b82c1f', bg:'#fde8e6', cls:'req-tag-med'   },
   cloth: { label:'ผ้าอ้อม/เสื้อผ้า',   icon:'👕', color:'#2856b8', bg:'#e8f0fe', cls:'req-tag-cloth' },
   food:  { label:'อาหารเสริม/นม',      icon:'🥛', color:'#2a7a1a', bg:'#e8f5e0', cls:'req-tag-food'  },
@@ -2818,8 +2431,11 @@ function initReqSelects() {
     if (c) searchEl.value = `${c.name}  (${c.id})`;
   }
 
-  // Dynamic from SYSTEM_YEARS
-  const months = getAllSystemMonths();
+  // Fixed range: เม.ย.–ธ.ค. 2569
+  const months = [];
+  for (let mo = 3; mo <= 12; mo++) {
+    months.push(`2026-${String(mo).padStart(2,'0')}`);
+  }
   const mSel = document.getElementById('req-month-sel');
   if (mSel) mSel.innerHTML = months.map(m =>
     `<option value="${m}" ${m === currentMonth ? 'selected' : ''}>${thaiMonth(m)}</option>`
@@ -2978,9 +2594,7 @@ function renderReqItems() {
     const nameHl    = isSearchMode ? highlight(item.name, itemQ) : item.name;
     const hasEntries = entries.length > 0;
 
-    const entryRows = entries.map((e, ei) => {
-      const unitPrice = e.price != null ? e.price : (item.price || 0);
-      return `
+    const entryRows = entries.map((e, ei) => `
       <div style="display:flex;align-items:center;gap:6px;margin-top:4px;padding:4px 6px;background:#fff;border-radius:6px;border:1px solid var(--border)">
         <span style="font-size:11px;color:var(--text3);min-width:14px">${ei+1}.</span>
         <input type="date" value="${e.savedAt||''}" onchange="updateReqEntry('${item.id}',${ei},'savedAt',this.value)"
@@ -2990,14 +2604,8 @@ function renderReqItems() {
           style="width:50px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;font-size:13px;text-align:center">
         <button onclick="adjReqEntry('${item.id}',${ei},1)" style="width:26px;height:26px;border:1px solid var(--accent);border-radius:5px;cursor:pointer;background:var(--accent-light);font-size:15px;line-height:1;color:var(--accent)">+</button>
         <span style="font-size:12px;color:var(--text3)">${item.unit}</span>
-        <span style="font-size:11px;color:var(--text3);margin-left:4px">฿</span>
-        <input type="number" min="0" value="${unitPrice}" title="ราคา/หน่วย"
-          onchange="updateReqEntry('${item.id}',${ei},'price',this.value)"
-          style="width:70px;padding:3px 6px;border:1px solid ${e.price != null && e.price !== item.price ? '#e8820a' : 'var(--border)'};border-radius:5px;font-size:12px;text-align:right;background:${e.price != null && e.price !== item.price ? '#fff8f0' : 'var(--surface)'}">
-        <span style="font-size:11px;color:var(--text3)">/หน่วย</span>
         <button onclick="removeReqEntry('${item.id}',${ei})" style="margin-left:auto;width:24px;height:24px;border:1px solid #f5b8b0;border-radius:5px;cursor:pointer;font-size:13px;color:var(--danger);background:var(--danger-light)">×</button>
-      </div>`;
-    }).join('');
+      </div>`).join('');
 
     return `<div class="req-item-row" style="flex-direction:column;align-items:stretch;${hasEntries?'background:var(--accent-light);border-radius:8px;padding:8px;margin:2px 0':'padding:6px 2px'}">
       <div style="display:flex;align-items:center;gap:6px">
@@ -3035,10 +2643,7 @@ function updateReqEntry(itemId, entryIdx, field, value) {
   if (!entries[entryIdx]) return;
   const realIdx = list.indexOf(entries[entryIdx]);
   if (realIdx < 0) return;
-  if (field === 'qty')   list[realIdx][field] = Math.max(1, parseInt(value)||1);
-  else if (field === 'price') list[realIdx][field] = parseFloat(value) || 0;
-  else list[realIdx][field] = value;
-  renderReqItems();
+  list[realIdx][field] = field === 'qty' ? Math.max(1, parseInt(value)||1) : value;
   renderSavedReq();
   if (window._fbSave) {
     const ul = requisitions[k];
@@ -3510,7 +3115,10 @@ function printReceipt(custId, month) {
 
   // Init month select (current ± 3 months)
   const mSel = document.getElementById('rcpt-override-month');
-  const months = getAllSystemMonths();
+  const months = [];
+  for (let mo = 3; mo <= 12; mo++) {
+    months.push(`2026-${String(mo).padStart(2,'0')}`);
+  }
   mSel.innerHTML = months.map(m =>
     `<option value="${m}" ${m === targetMonth ? 'selected' : ''}>${thaiMonth(m)}</option>`
   ).join('');
@@ -3552,23 +3160,18 @@ function rcptBuildDefaultItems(c, overrideDay, targetMonth, prevYM, allReqList) 
     return d >= rangeStartStr && d <= rangeEndStr;
   });
 
-  // Group by itemId → sum qty, use entry price if overridden
+  // Group by itemId → sum qty, keep the item info
   const byItem = {};
   inRange.forEach(e => {
     const item = catalog.find(x => x.id === e.itemId);
     if (!item) return;
-    const unitPrice = e.price != null ? parseFloat(e.price) : (item.price || 0);
-    if (!byItem[item.id]) byItem[item.id] = { item, qty: 0, unitPrice };
-    else {
-      // ถ้ามีหลาย entry ราคาอาจต่างกัน ให้ใช้ weighted avg หรือราคาล่าสุด
-      byItem[item.id].unitPrice = unitPrice;
-    }
+    if (!byItem[item.id]) byItem[item.id] = { item, qty: 0 };
     byItem[item.id].qty += (parseInt(e.qty) || 0);
   });
 
-  const subItems = Object.values(byItem).map(({ item, qty, unitPrice }) => ({
+  const subItems = Object.values(byItem).map(({ item, qty }) => ({
     id: 'req_'+item.id, label: item.name, qty,
-    price: unitPrice, amount: unitPrice * qty,
+    price: item.price||0, amount: (item.price||0)*qty,
     isSub: true, isOther: false, isReq: true
   }));
 
@@ -3958,7 +3561,7 @@ window.onload = function() {
 }
 
 // ========== REFUND SYSTEM ==========
-// refunds declared globally above
+let refunds = []; // [ { id, custId, date, paid, actual, refundAmt, diffItems, note, createdAt } ]
 let _rfEditId = null;
 
 function openRefundModal(refundId, prefillCustId) {
@@ -4369,6 +3972,7 @@ window.onload = function() { setTimeout(function() { window.print(); }, 600); };
 
 // ========== UPDATE goPage ==========
 // (override to include requisition)
+const _origGoPage = goPage;
 function goPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -4584,21 +4188,6 @@ function onAccSelChange(prefix) {
 
 // ========== INIT ==========
 updateDashboard();
-
-// Start app after all scripts loaded
-if (window._fbLoad) {
-  window._fbLoad().then(() => {
-    window._listenRequisitions();
-    DASH_MONTHS = getAllSystemMonths();
-    dashMonth = currentMonth || DASH_MONTHS[0] || '2026-03';
-    renderDashYearTabs();
-    renderDashMonthButtons();
-    renderMonthTabs();
-    renderTable();
-    renderBilling();
-    updateDashboard();
-  });
-}
 </script>
 </body>
 </html>
