@@ -3208,6 +3208,9 @@ function renderReceiptContent() {
 
   renderRcptEditor();
 
+  // Pre-calculate hasSubItems before building rows
+  const hasSubItems = _rcptLineItems.some(item => item.isSub);
+
   // Build print rows
   let mainIdx = 0;
   let subTotal = 0;
@@ -3227,15 +3230,14 @@ function renderReceiptContent() {
     rowsArr.push({ html: `<tr class="${item.isReq||isSub ? 'item-extra' : ''}">
       ${numCell}
       <td style="${labelStyle}">${item.label || ''}</td>
-      <td>${item.isOther ? '' : qty > 0 ? qty+' หน่วย' : ''}</td>
-      <td>${item.isOther ? '' : price > 0 ? fmt(price) : '—'}</td>
-      <td>${item.isOther ? '' : amount > 0 ? fmt(amount) : '—'}</td>
+      <td>${item.isOther ? (hasSubItems ? '' : '—') : qty > 0 ? qty+' หน่วย' : ''}</td>
+      <td>${item.isOther ? (hasSubItems ? '' : '—') : price > 0 ? fmt(price) : '—'}</td>
+      <td>${item.isOther ? (hasSubItems ? '' : '—') : amount > 0 ? fmt(amount) : '—'}</td>
     </tr>`, isSub });
   });
 
   // Inject subtotal row after last sub-item (if any sub-items exist)
   let rows = '';
-  const hasSubItems = rowsArr.some(r => r.isSub);
   let lastSubIdx = -1;
   rowsArr.forEach((r, i) => { if (r.isSub) lastSubIdx = i; });
 
