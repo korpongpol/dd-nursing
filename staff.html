@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDdt1rc23hxWNQFXDhp1we4rfN-lW0wh60",
@@ -28,7 +28,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-const CAT_META = {
+let CAT_META = {
   med:  {label:"ยา/อุปกรณ์การแพทย์", icon:"💊", color:"#b82c1f", bg:"#fde8e6"},
   cloth:{label:"ผ้าอ้อม/เสื้อผ้า",    icon:"👕", color:"#2856b8", bg:"#e8f0fe"},
   food: {label:"อาหารเสริม/นม",       icon:"🥛", color:"#2a7a1a", bg:"#e8f5e0"},
@@ -85,28 +85,96 @@ async function loadData() {
         allCustomers = Object.values(data.customers).filter(c => !c.discharged);
         allCustomers.sort((a,b) => a.name.localeCompare(b.name,"th"));
       }
-      if (data.catalog) catalog = Object.values(data.catalog);
+      if (data.catalog) catalog = Object.values(data.catalog).map(stripPrice);
+      if (data.cat_meta) mergeCatMeta(data.cat_meta);
     }
-    buildMonthSelect();
+    // Load system_years
+    try {
+      const sySnap = await get(ref(db, "system_years"));
+      buildMonthSelect(sySnap.exists() ? sySnap.val() : null);
+    } catch(e) { buildMonthSelect(null); }
+
     renderCustList();
+    renderCatTabs();
     renderItems();
     showStatus("พร้อมใช้งาน ✓", "ok");
     setTimeout(() => { document.getElementById("status").style.display="none"; }, 2000);
+
+    // Real-time listeners
+    listenCatalog();
+    listenCatMeta();
   } catch(e) {
     showStatus("ไม่สามารถเชื่อมต่อ Firebase: " + e.message, "err");
   }
 }
 
-function buildMonthSelect() {
+// ลบราคาออกจาก catalog item (พนักงานไม่เห็นราคา)
+function stripPrice(item) {
+  const { price, ...rest } = item;
+  return rest;
+}
+
+// Merge cat_meta from Firebase
+function mergeCatMeta(data) {
+  Object.entries(data).forEach(([k,v]) => {
+    if (!CAT_META[k]) CAT_META[k] = v;
+    else Object.assign(CAT_META[k], v);
+  });
+}
+
+// Listen for catalog changes (admin updates → staff sees immediately)
+function listenCatalog() {
+  onValue(ref(db, "catalog"), snap => {
+    if (snap.exists()) {
+      catalog = Object.values(snap.val()).map(stripPrice);
+      renderCatTabs();
+      renderItems();
+    }
+  });
+}
+
+// Listen for cat_meta changes
+function listenCatMeta() {
+  onValue(ref(db, "cat_meta"), snap => {
+    if (snap.exists()) {
+      mergeCatMeta(snap.val());
+      renderCatTabs();
+      renderItems();
+    }
+  });
+}
+
+// Load existing req entries from Firebase when customer/month selected
+async function loadExistingReq() {
+  if (!selectedCustId || !selectedMonth) return;
+  try {
+    const key = selectedCustId.replace(/\//g,"_") + "_" + selectedMonth;
+    const snap = await get(ref(db, "requisitions/" + key));
+    if (snap.exists()) {
+      const data = snap.val();
+      reqEntries = Array.isArray(data)
+        ? data.map(e => ({ itemId: e.itemId, qty: e.qty||1, date: e.savedAt||todayISO }))
+        : [];
+    } else {
+      reqEntries = [];
+    }
+    renderItems();
+    renderSaved();
+  } catch(e) { console.warn("loadExistingReq error:", e); }
+}
+
+function buildMonthSelect(systemYears) {
   const sel = document.getElementById("month-sel");
   const thaiM = ["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
-  // Fixed range: Apr–Dec 2026 (เม.ย.–ธ.ค. 2569)
+  const years = systemYears || [{ year: 2026, startMonth: 3, endMonth: 12 }];
   const months = [];
-  for (let mo = 4; mo <= 12; mo++) {
-    months.push("2026-" + String(mo).padStart(2,"0"));
-  }
+  years.sort((a,b)=>a.year-b.year).forEach(y => {
+    for (let mo = y.startMonth; mo <= y.endMonth; mo++) {
+      months.push(y.year + "-" + String(mo).padStart(2,"0"));
+    }
+  });
   const curRaw = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
-  const cur = months.includes(curRaw) ? curRaw : "2026-04";
+  const cur = months.includes(curRaw) ? curRaw : months[0] || "2026-03";
   sel.innerHTML = months.map(m => {
     const [y,mo] = m.split("-");
     return `<option value="${m}" ${m===cur?"selected":""}>${thaiM[+mo]} ${+y+543}</option>`;
@@ -155,6 +223,8 @@ function renderCustList() {
 
 function selectCust(id) {
   selectedCustId = id;
+  reqEntries = [];
+  loadExistingReq();
   const c = allCustomers.find(x=>x.id===id);
   reqEntries = [];
   renderCustList();
@@ -168,6 +238,7 @@ function selectCust(id) {
   document.getElementById("month-sel").onchange = function(){
     selectedMonth = this.value;
     reqEntries = [];
+    loadExistingReq();
     renderItems();
     renderSaved();
   };
@@ -179,20 +250,33 @@ function onItemSearch(v) {
   renderItems();
 }
 
+function renderCatTabs() {
+  const container = document.getElementById("cat-tabs-container");
+  if (!container) return;
+  const types = Object.keys(CAT_META);
+  if (!types.includes(activeType)) activeType = types[0] || "cloth";
+  container.innerHTML = types.map(type => {
+    const m = CAT_META[type];
+    return `<button class="cat-tab ${type===activeType?'active':''}" data-type="${type}" onclick="setTab('${type}')">${m.icon} ${m.label}</button>`;
+  }).join("");
+}
+
 function setTab(type) {
   activeType = type;
   itemSearch = "";
   document.getElementById("item-search").value = "";
-  document.querySelectorAll(".cat-tab").forEach(t => t.classList.toggle("active", t.dataset.type===type));
+  renderCatTabs();
   renderItems();
 }
 
 function renderItems() {
+  const validTypes = Object.keys(CAT_META);
+  if (!validTypes.includes(activeType)) activeType = validTypes[0] || "cloth";
   let items = itemSearch
     ? catalog.filter(c => c.name.toLowerCase().includes(itemSearch) || (c.note||"").toLowerCase().includes(itemSearch))
     : catalog.filter(c => c.type === activeType);
 
-  const meta = CAT_META[activeType];
+  const meta = CAT_META[activeType] || { icon:"📦", label:"สินค้า", bg:"#f0f0f0", color:"#333" };
   const titleEl = document.getElementById("items-title");
   titleEl.textContent = itemSearch ? `🔍 ผลการค้นหา "${itemSearch}"` : `${meta.icon} ${meta.label}`;
 
@@ -208,8 +292,15 @@ function renderItems() {
     const entryRows = entries.map((e,ei) => `
       <div style="display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 8px;background:#fff;border-radius:6px;border:1px solid #e0dbd2">
         <span style="font-size:11px;color:#999;min-width:16px">${ei+1}.</span>
-        <input type="date" value="${e.date}" onchange="updateEntry('${item.id}',${ei},'date',this.value)"
-          style="flex:1;padding:4px 6px;border:1px solid #e0dbd2;border-radius:5px;font-size:12px">
+        <label style="position:relative;cursor:pointer;flex:1">
+          <span id="date-lbl-${item.id}-${ei}"
+            style="display:block;padding:4px 8px;border:1px solid #e0dbd2;border-radius:5px;font-size:12px;color:#444;background:#fafaf8;min-width:90px;text-align:center">
+            ${thaiDateShort(e.date)}
+          </span>
+          <input type="date" value="${e.date}"
+            onchange="updateEntry('${item.id}',${ei},'date',this.value); document.getElementById('date-lbl-${item.id}-${ei}').textContent=thaiDateShort(this.value)"
+            style="position:absolute;opacity:0;top:0;left:0;width:100%;height:100%;cursor:pointer">
+        </label>
         <button onclick="adjEntry('${item.id}',${ei},-1)" style="width:26px;height:26px;border:1px solid #ccc;border-radius:5px;cursor:pointer;background:#fff;font-size:15px">−</button>
         <input type="number" min="1" value="${e.qty}" onchange="updateEntry('${item.id}',${ei},'qty',this.value)"
           style="width:50px;padding:4px 6px;border:1px solid #e0dbd2;border-radius:5px;font-size:13px;text-align:center">
@@ -281,6 +372,13 @@ function renderSaved() {
         </div>`).join("")}
     </div>`;
   }).join("");
+}
+
+function thaiDateShort(iso) {
+  if (!iso) return "เลือกวัน";
+  const thaiM = ["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+  const [y,m,d] = iso.split("-").map(Number);
+  return `${d} ${thaiM[m]} ${y+543}`;
 }
 
 function fmtDate(iso) {
@@ -412,12 +510,7 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
     <div class="card">
       <div class="card-title">3. รายการที่ต้องการเบิก</div>
       <!-- Category tabs -->
-      <div class="cat-tabs">
-        <button class="cat-tab active" data-type="cloth" onclick="setTab('cloth')">👕 ผ้าอ้อม</button>
-        <button class="cat-tab" data-type="med"   onclick="setTab('med')">💊 ยา/อุปกรณ์</button>
-        <button class="cat-tab" data-type="food"  onclick="setTab('food')">🥛 อาหารเสริม</button>
-        <button class="cat-tab" data-type="pers"  onclick="setTab('pers')">🧴 ของใช้ส่วนตัว</button>
-      </div>
+      <div class="cat-tabs" id="cat-tabs-container"></div>
       <!-- Item search -->
       <div class="item-search-wrap">
         <input type="text" id="item-search" class="item-search" placeholder="ค้นหารายการของ เช่น ผ้าอ้อม, ยา..." oninput="onItemSearch(this.value)">

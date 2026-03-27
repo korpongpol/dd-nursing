@@ -283,6 +283,9 @@ async function fbLoad() {
     const snap = await get(ref(db, "/"));
     if (!snap.exists()) return;
     const d = snap.val();
+    if (d.system_years && Array.isArray(d.system_years)) {
+      SYSTEM_YEARS = d.system_years;
+    }
     if (d.payHistory && Array.isArray(d.payHistory)) {
       payHistory = d.payHistory;
     }
@@ -342,6 +345,10 @@ async function fbLoad() {
     renderTable();
     if (typeof renderPayHistory === 'function') renderPayHistory();
     if (typeof renderRefundList === 'function') renderRefundList();
+    // Re-init month ranges after loading SYSTEM_YEARS
+    renderMonthTabs?.();
+    renderDashYearTabs?.();
+    renderDashMonthButtons?.();
     console.log("✓ Firebase data loaded");
   } catch(e) { console.warn("fbLoad error:", e); }
 }
@@ -364,7 +371,12 @@ function listenRequisitions() {
 window._fbSave = fbSave;
 
 // Load data then listen
-fbLoad().then(() => listenRequisitions());
+fbLoad().then(() => {
+  listenRequisitions();
+  DASH_MONTHS = getAllSystemMonths();
+  renderDashYearTabs();
+  renderDashMonthButtons();
+});
 </script>
 
 <style id="login-style">
@@ -469,56 +481,65 @@ if (sessionStorage.getItem("dd_admin") === "1") {
 
     <!-- DASHBOARD PAGE -->
     <div class="page active" id="page-dashboard">
+
+      <!-- Selector: ปี / เดือน -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="font-size:13px;color:var(--text2);font-weight:500">ปี:</span>
+        <div id="dash-year-tabs" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+        <button class="btn btn-sm" onclick="addSystemYear()" style="font-size:12px" title="เพิ่มปีถัดไป">+ เพิ่มปี</button>
+        <div style="display:flex;gap:4px;margin-left:12px">
+          <button id="dash-mode-month" class="month-tab active" onclick="setDashMode('month')">รายเดือน</button>
+          <button id="dash-mode-year"  class="month-tab"        onclick="setDashMode('year')">รายปี</button>
+        </div>
+      </div>
+      <div id="dash-month-picker" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px"></div>
+
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-label">ลูกค้าทั้งหมด</div>
-          <div class="stat-value" id="s-total">123</div>
+          <div class="stat-value" id="s-total">0</div>
           <div class="stat-sub">3 สาขา</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-label">รายได้เป้าหมาย/เดือน</div>
-          <div class="stat-value" id="s-revenue">1,975,500</div>
-          <div class="stat-sub">บาท</div>
+          <div class="stat-label" id="s-revenue-label">รายได้/เดือน</div>
+          <div class="stat-value" id="s-revenue">0</div>
+          <div class="stat-sub" id="s-revenue-sub">บาท</div>
         </div>
         <div class="stat-card" id="sc-paid">
-          <div class="stat-label">ชำระแล้วเดือนนี้</div>
+          <div class="stat-label" id="s-paid-label">ชำระแล้วเดือนนี้</div>
           <div class="stat-value" id="s-paid">0</div>
           <div class="stat-sub">ราย</div>
         </div>
         <div class="stat-card red">
-          <div class="stat-label">ค้างชำระ</div>
-          <div class="stat-value" id="s-unpaid">123</div>
+          <div class="stat-label" id="s-unpaid-label">ค้างชำระ</div>
+          <div class="stat-value" id="s-unpaid">0</div>
           <div class="stat-sub">ราย</div>
         </div>
       </div>
 
       <div class="chart-grid">
         <div class="chart-card">
-          <h3>รายได้ต่อสาขา (บาท/เดือน)</h3>
+          <h3 id="dchart1-title">รายได้ต่อสาขา (บาท)</h3>
           <div style="position:relative;height:180px"><canvas id="dchart1"></canvas></div>
         </div>
         <div class="chart-card">
-          <h3>การชำระบิลเดือนนี้</h3>
+          <h3 id="dchart2-title">การชำระบิล</h3>
           <div id="dc-progress">
             <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
               <span>ชำระแล้ว <b id="dc-paid-pct">0%</b></span>
-              <span id="dc-paid-amt" style="font-family:'IBM Plex Mono',monospace;font-size:13px">฿0 / ฿1,975,500</span>
+              <span id="dc-paid-amt" style="font-family:'IBM Plex Mono',monospace;font-size:13px">฿0 / ฿0</span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="dc-fill" style="width:0%"></div></div>
             <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
               <div style="font-size:12px;color:var(--paid)">✓ ชำระแล้ว: <b id="dc-paid-n">0</b> ราย</div>
               <div style="font-size:12px;color:var(--warning)">◑ บางส่วน: <b id="dc-partial-n">0</b> ราย</div>
-              <div style="font-size:12px;color:var(--unpaid)">✗ ยังไม่ชำระ: <b id="dc-unpaid-n">123</b> ราย</div>
+              <div style="font-size:12px;color:var(--unpaid)">✗ ยังไม่ชำระ: <b id="dc-unpaid-n">0</b> ราย</div>
             </div>
           </div>
           <div style="margin-top:14px">
-            <h3 style="margin-bottom:8px">ค่าบริการรายเดือน</h3>
+            <h3 style="margin-bottom:8px" id="dchart3-title">รายได้รายเดือน (มี.ค.–ธ.ค. 2569)</h3>
             <div style="position:relative;height:120px"><canvas id="dchart2"></canvas></div>
           </div>
-        </div>
-      </div>
-
-      <!-- Billing Reminders -->
       <div id="billing-reminders-filter" style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
         <span style="font-size:12px;color:var(--text2);font-weight:500">สาขา:</span>
         <button class="month-tab active" id="rbf-all"  onclick="setReminderBranch('')">ทั้งหมด</button>
@@ -527,7 +548,6 @@ if (sessionStorage.getItem("dd_admin") === "1") {
         <button class="month-tab"        id="rbf-b3"   onclick="setReminderBranch('สาขา 3')">สาขา 3</button>
       </div>
       <div id="billing-reminders"></div>
-
 
     </div>
 
@@ -993,7 +1013,13 @@ if (sessionStorage.getItem("dd_admin") === "1") {
       </div>
       <div class="form-row">
         <div class="form-group"><label>ชื่อบัญชี</label><input type="text" id="add-accname"></div>
-        <div class="form-group"><label>วันที่เริ่มบริการ</label><input type="text" id="add-due" placeholder="1-ม.ค.-2569"></div>
+        <div class="form-group">
+          <label>วันที่เริ่มบริการ</label>
+          <input type="date" id="add-due-picker" onchange="syncAddDue(this.value)"
+            style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text)">
+          <input type="hidden" id="add-due">
+          <div id="add-due-preview" style="font-size:11px;color:var(--text3);margin-top:3px"></div>
+        </div>
       </div>
     </div>
     <div class="modal-foot">
@@ -1661,7 +1687,7 @@ function buildBillingReminders() {
   const curYearThai = curYear + 543;
   const isCurrentRealMonth = (curYear === now.getFullYear() && curMo === now.getMonth() + 1);
 
-  const START_YM = '2026-03';
+  const START_YM = getAllSystemMonths()[0] || '2026-03';
   if (currentMonth < START_YM) {
     const el = document.getElementById('billing-reminders');
     if (el) el.innerHTML = `<div style="padding:12px 0;color:var(--text3);font-size:13px">ระบบแจ้งเตือนบิลเริ่มตั้งแต่ เม.ย. 2569 เป็นต้นไปค่ะ</div>`;
@@ -1838,8 +1864,8 @@ const now = new Date();
 // Default to current month, but clamp to Apr-Dec 2026 range
 {
   const cm = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  const validMonths = ['2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
-  currentMonth = validMonths.includes(cm) ? cm : '2026-03';
+  const validMonths = getAllSystemMonths();
+  currentMonth = validMonths.includes(cm) ? cm : (validMonths[0] || '2026-03');
 }
 
 function fmt(n) { return n.toLocaleString('th-TH'); }
@@ -1985,11 +2011,8 @@ function renderTable() {
 
 // BILLING
 function renderMonthTabs() {
-  // Fixed range: Mar–Dec 2026 (มี.ค.–ธ.ค. 2569)
-  const months = [];
-  for (let mo = 3; mo <= 12; mo++) {
-    months.push(`2026-${String(mo).padStart(2,'0')}`);
-  }
+  // Dynamic: สร้างจาก SYSTEM_YEARS
+  const months = getAllSystemMonths();
   document.getElementById('month-tabs').innerHTML = months.map(m=>`
     <div class="month-tab ${m===currentMonth?'active':''}" onclick="setMonth('${m}')">${thaiMonth(m)}</div>
   `).join('');
@@ -2283,6 +2306,16 @@ function savePay(){
 }
 
 // ADD CUSTOMER
+// แปลง YYYY-MM-DD → d-เดือนไทย-ปีไทย
+function syncAddDue(val) {
+  if (!val) { document.getElementById('add-due').value=''; document.getElementById('add-due-preview').textContent=''; return; }
+  const thaiM = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const [y,m,d] = val.split('-').map(Number);
+  const thai = `${d}-${thaiM[m]}-${y}`;
+  document.getElementById('add-due').value = thai;
+  document.getElementById('add-due-preview').textContent = `→ ${d}-${thaiM[m]}-${y+543}`;
+}
+
 function openAddModal(){
   // Reset bank fields
   const bankSel = document.getElementById('add-bank');
@@ -2291,6 +2324,10 @@ function openAddModal(){
   if (bankSel)  bankSel.value = '';
   if (accSel)   { accSel.style.display='none'; accSel.innerHTML='<option value="">— เลือกบัญชี —</option>'; }
   if (accNo)    { accNo.style.display='block'; accNo.value=''; }
+  // Reset date picker
+  document.getElementById('add-due-picker').value = '';
+  document.getElementById('add-due').value = '';
+  document.getElementById('add-due-preview').textContent = '';
   document.getElementById('add-modal').classList.add('open');
 }
 function saveCustomer(){
@@ -2313,6 +2350,7 @@ function saveCustomer(){
   renderTable();
   updateDashboard();
   document.querySelectorAll('#add-modal input,#add-modal textarea').forEach(el=>el.value='');
+  document.getElementById('add-due-preview').textContent = '';
   if (window._fbSave) {
     const obj = {};
     customers.forEach(x => { obj[x.id.replace(/\//g,'_')] = x; });
@@ -2361,7 +2399,7 @@ function openEditHistory(idx) {
   ).join('');
   // Month selector
   const msel = document.getElementById('eh-month');
-  const months = ['2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+  const months = getAllSystemMonths();
   const thaiM = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
   // find matching ym from payHistory
   const curYm = Object.keys(payments).find(k => {
@@ -2487,36 +2525,214 @@ function renderIssues(){
 
 // DASHBOARD
 let chart1, chart2;
-function updateDashboard(){
-  const activeCusts  = customers.filter(c => !isInactive(c.id));
-  const total        = activeCusts.length;
-  const totalRev     = activeCusts.reduce((s,c)=>s+c.fee,0);
-  const paidN        = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='paid').length;
-  const partialN     = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='partial').length;
-  const unpaidN      = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='unpaid').length;
-  const paidRev      = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='paid').reduce((s,c)=>s+c.fee,0);
-  const dcCount      = Object.keys(discharged).length;
+// ===== SYSTEM YEARS CONFIG =====
+// เพิ่มปีใหม่ได้ที่นี่ หรือผ่านปุ่ม "เพิ่มปี" ในหน้า Dashboard
+let SYSTEM_YEARS = [{ year: 2026, startMonth: 3, endMonth: 12 }];
 
-  document.getElementById('s-total').textContent=total;
-  document.getElementById('s-revenue').textContent=fmt(totalRev);
-  document.getElementById('s-paid').textContent=paidN;
-  document.getElementById('s-unpaid').textContent=unpaidN;
-  document.getElementById('discharged-badge').textContent=dcCount;
+function getSystemMonths(year) {
+  const cfg = SYSTEM_YEARS.find(y => y.year === year);
+  if (!cfg) return [];
+  const months = [];
+  for (let m = cfg.startMonth; m <= cfg.endMonth; m++) {
+    months.push(`${year}-${String(m).padStart(2,'0')}`);
+  }
+  return months;
+}
+
+function getAllSystemMonths() {
+  return SYSTEM_YEARS.flatMap(y => getSystemMonths(y.year)).sort();
+}
+
+function getDashMonthsForYear(year) {
+  return getSystemMonths(year);
+}
+
+// ===== DASHBOARD MODE =====
+let dashMode  = 'month';  // 'month' | 'year'
+let dashYear  = 2026;
+let dashMonth = currentMonth || '2026-03';
+
+let DASH_MONTHS = getAllSystemMonths();
+const THAI_M_SHORT = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+function setDashMode(mode) {
+  dashMode = mode;
+  document.getElementById('dash-mode-month').classList.toggle('active', mode==='month');
+  document.getElementById('dash-mode-year').classList.toggle('active', mode==='year');
+  document.getElementById('dash-month-picker').style.display = mode==='month' ? 'flex' : 'none';
+  updateDashboard();
+}
+
+function setDashMonth(ym) {
+  dashMonth = ym;
+  dashYear  = parseInt(ym.split('-')[0]);
+  DASH_MONTHS = getDashMonthsForYear(dashYear);
+  updateDashboard();
+}
+
+function setDashYear(year) {
+  dashYear  = year;
+  DASH_MONTHS = getDashMonthsForYear(year);
+  dashMonth = DASH_MONTHS[0] || dashMonth;
+  // sync currentMonth tabs too
+  renderMonthTabs?.();
+  renderDashYearTabs();
+  updateDashboard();
+}
+
+function renderDashYearTabs() {
+  const container = document.getElementById('dash-year-tabs');
+  if (!container) return;
+  container.innerHTML = SYSTEM_YEARS.map(y =>
+    `<button class="month-tab ${y.year===dashYear?'active':''}" onclick="setDashYear(${y.year})">${y.year+543}</button>`
+  ).join('');
+}
+
+function renderDashMonthButtons() {
+  const container = document.getElementById('dash-month-picker');
+  if (!container) return;
+  const months = getDashMonthsForYear(dashYear);
+  container.innerHTML = months.map(m => {
+    const mo = parseInt(m.split('-')[1]);
+    return `<button class="month-tab ${m===dashMonth?'active':''}" onclick="setDashMonth('${m}')">${THAI_M_SHORT[mo]}</button>`;
+  }).join('');
+}
+
+function addSystemYear() {
+  const lastYear = Math.max(...SYSTEM_YEARS.map(y=>y.year));
+  const newYear = lastYear + 1;
+  if (SYSTEM_YEARS.find(y=>y.year===newYear)) { alert(`ปี ${newYear+543} มีอยู่แล้วค่ะ`); return; }
+  if (!confirm(`เพิ่มปี ${newYear+543} (${newYear}) เข้าระบบ?`)) return;
+  SYSTEM_YEARS.push({ year: newYear, startMonth: 1, endMonth: 12 });
+  // Save to Firebase
+  if (window._fbSave) window._fbSave('system_years', SYSTEM_YEARS);
+  // Also expand validMonths for billing tabs
+  renderMonthTabs?.();
+  renderDashYearTabs();
+  renderDashMonthButtons();
+  alert(`✓ เพิ่มปี ${newYear+543} เรียบร้อยแล้วค่ะ`);
+}
+
+function updateDashboard(){
+  // Sync dashMonth with currentMonth when on month mode
+  if (dashMode === 'month') dashMonth = currentMonth;
+
+  // Update month tab highlights
+  DASH_MONTHS.forEach(m => {
+    const mo = m.split('-')[1];
+    const btn = document.getElementById('dm-'+mo);
+    if (btn) btn.classList.toggle('active', m === dashMonth);
+  });
+
+  const activeCusts = customers.filter(c => !isInactive(c.id));
+  const total       = activeCusts.length;
+
+  // คำนวณรายได้จากประวัติการชำระ
+  function revenueFromHistory(months) {
+    return payHistory
+      .filter(p => {
+        // match month label เช่น "มี.ค. 2569"
+        const [y, m] = months.length === 1
+          ? months[0].split('-').map(Number)
+          : [null, null];
+        if (months.length === 1) {
+          const label = `${THAI_M_SHORT[m]} ${y+543}`;
+          return p.month === label;
+        }
+        // year mode — match all months in list
+        return months.some(mo => {
+          const [yy, mm] = mo.split('-').map(Number);
+          return p.month === `${THAI_M_SHORT[mm]} ${yy+543}`;
+        });
+      })
+      .reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+  }
+
+  let revenue, paidN, partialN, unpaidN, paidRev;
+  let revenueLabel, paidLabel, unpaidLabel, chart1Title, chart2Title;
+
+  if (dashMode === 'month') {
+    revenue    = revenueFromHistory([dashMonth]);
+    paidN      = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='paid').length;
+    partialN   = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='partial').length;
+    unpaidN    = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='unpaid').length;
+    paidRev    = activeCusts.filter(c=>getPayStatus(c.id,dashMonth)==='paid')
+                  .reduce((s,c)=>s+calcTotalBill(c.id,dashMonth),0);
+    const [y,m] = dashMonth.split('-').map(Number);
+    revenueLabel = `รายได้ ${THAI_M_SHORT[m]} ${y+543}`;
+    paidLabel    = `ชำระแล้ว ${THAI_M_SHORT[m]} ${y+543}`;
+    unpaidLabel  = `ค้างชำระ ${THAI_M_SHORT[m]} ${y+543}`;
+    chart1Title  = `รายได้ต่อสาขา (${THAI_M_SHORT[m]} ${y+543})`;
+    chart2Title  = `การชำระบิล ${THAI_M_SHORT[m]} ${y+543}`;
+  } else {
+    // year mode
+    revenue    = revenueFromHistory(DASH_MONTHS);
+    paidN      = 0; partialN = 0; unpaidN = 0; paidRev = 0;
+    // ในโหมดปี แสดงลูกค้าที่ชำระแล้วอย่างน้อย 1 เดือน
+    DASH_MONTHS.forEach(mo => {
+      activeCusts.forEach(c => {
+        const s = getPayStatus(c.id, mo);
+        // count unique paid (ไม่ต้องรวมซ้ำ ให้นับครั้ง)
+      });
+      paidN   += activeCusts.filter(c=>getPayStatus(c.id,mo)==='paid').length;
+      partialN+= activeCusts.filter(c=>getPayStatus(c.id,mo)==='partial').length;
+      unpaidN += activeCusts.filter(c=>getPayStatus(c.id,mo)==='unpaid').length;
+      paidRev += activeCusts.filter(c=>getPayStatus(c.id,mo)==='paid')
+                    .reduce((s,c)=>s+calcTotalBill(c.id,mo),0);
+    });
+    revenueLabel = 'รายได้รวมปี 2569';
+    paidLabel    = 'ชำระแล้ว (ครั้ง)';
+    unpaidLabel  = 'ค้างชำระ (ครั้ง)';
+    chart1Title  = 'รายได้ต่อสาขา รวมทั้งปี';
+    chart2Title  = 'การชำระบิลทั้งปี';
+  }
+
+  // Update stat cards
+  document.getElementById('s-total').textContent        = total;
+  document.getElementById('s-revenue').textContent      = fmt(revenue);
+  document.getElementById('s-revenue-label').textContent= revenueLabel;
+  document.getElementById('s-revenue-sub').textContent  = 'บาท (จากประวัติชำระ)';
+  document.getElementById('s-paid').textContent         = paidN;
+  document.getElementById('s-paid-label').textContent   = paidLabel;
+  document.getElementById('s-unpaid').textContent       = unpaidN;
+  document.getElementById('s-unpaid-label').textContent = unpaidLabel;
+  document.getElementById('dchart1-title').textContent  = chart1Title;
+  document.getElementById('dchart2-title').textContent  = chart2Title;
+  document.getElementById('discharged-badge').textContent = Object.keys(discharged).length;
   buildBillingReminders();
 
-  const pct = totalRev > 0 ? Math.round(paidRev/totalRev*100) : 0;
-  document.getElementById('dc-paid-pct').textContent=pct+'%';
-  document.getElementById('dc-paid-amt').textContent='฿'+fmt(paidRev)+' / ฿'+fmt(totalRev);
-  document.getElementById('dc-fill').style.width=pct+'%';
-  document.getElementById('dc-paid-n').textContent=paidN;
-  document.getElementById('dc-partial-n').textContent=partialN;
-  document.getElementById('dc-unpaid-n').textContent=unpaidN;
-  document.getElementById('unpaid-badge').textContent=unpaidN;
+  const totalTarget = activeCusts.reduce((s,c)=>s+calcTotalBill(c.id, dashMode==='month'?dashMonth:DASH_MONTHS[0]),0) * (dashMode==='year'?DASH_MONTHS.length:1);
+  const pct = totalTarget > 0 ? Math.round(paidRev/totalTarget*100) : 0;
+  document.getElementById('dc-paid-pct').textContent  = pct+'%';
+  document.getElementById('dc-paid-amt').textContent  = '฿'+fmt(paidRev)+' / ฿'+fmt(totalTarget);
+  document.getElementById('dc-fill').style.width      = pct+'%';
+  document.getElementById('dc-paid-n').textContent    = paidN;
+  document.getElementById('dc-partial-n').textContent = partialN;
+  document.getElementById('dc-unpaid-n').textContent  = unpaidN;
+  document.getElementById('unpaid-badge').textContent = activeCusts.filter(c=>getPayStatus(c.id,currentMonth)==='unpaid').length;
 
-  // Charts — only active
-  const b1r = activeCusts.filter(c=>c.branch==='สาขา 1').reduce((s,c)=>s+c.fee,0);
-  const b2r = activeCusts.filter(c=>c.branch==='สาขา 2').reduce((s,c)=>s+c.fee,0);
-  const b3r = activeCusts.filter(c=>c.branch==='สาขา 3').reduce((s,c)=>s+c.fee,0);
+  // Chart 1: รายได้ต่อสาขา
+  const getRevByBranch = (branch) => {
+    if (dashMode === 'month') {
+      return payHistory.filter(p => {
+        const [y,m] = dashMonth.split('-').map(Number);
+        const label = `${THAI_M_SHORT[m]} ${y+543}`;
+        const c = customers.find(x=>x.id===p.id);
+        return p.month === label && c?.branch === branch;
+      }).reduce((s,p)=>s+(parseFloat(p.amount)||0), 0);
+    } else {
+      return payHistory.filter(p => {
+        const c = customers.find(x=>x.id===p.id);
+        return DASH_MONTHS.some(mo => {
+          const [yy,mm] = mo.split('-').map(Number);
+          return p.month === `${THAI_M_SHORT[mm]} ${yy+543}`;
+        }) && c?.branch === branch;
+      }).reduce((s,p)=>s+(parseFloat(p.amount)||0), 0);
+    }
+  };
+  const b1r = getRevByBranch('สาขา 1');
+  const b2r = getRevByBranch('สาขา 2');
+  const b3r = getRevByBranch('สาขา 3');
 
   if(chart1) chart1.destroy();
   chart1 = new Chart(document.getElementById('dchart1'), {
@@ -2525,17 +2741,25 @@ function updateDashboard(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#999'}},y:{grid:{color:'rgba(128,128,128,0.1)'},ticks:{color:'#999',callback:v=>'฿'+(v/1000).toFixed(0)+'K'}}}}
   });
 
-  const feeBuckets = [
-    activeCusts.filter(c=>c.fee<=12000).length,
-    activeCusts.filter(c=>c.fee>=13000&&c.fee<=16000).length,
-    activeCusts.filter(c=>c.fee>=17000&&c.fee<=20000).length,
-    activeCusts.filter(c=>c.fee>20000).length,
-  ];
+  // Chart 2: รายได้รายเดือน (มี.ค.–ธ.ค.)
+  const monthRevs = DASH_MONTHS.map(mo => {
+    const [yy,mm] = mo.split('-').map(Number);
+    const label = `${THAI_M_SHORT[mm]} ${yy+543}`;
+    return payHistory.filter(p=>p.month===label).reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+  });
+  const yName = dashYear+543; document.getElementById('dchart3-title').textContent = `รายได้รายเดือน ปี ${yName}`;
   if(chart2) chart2.destroy();
   chart2 = new Chart(document.getElementById('dchart2'), {
     type:'bar',
-    data:{labels:['≤12K','13-16K','17-20K','>20K'],datasets:[{data:feeBuckets,backgroundColor:'#1a6b4a',borderRadius:4,borderSkipped:false}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}},y:{grid:{color:'rgba(128,128,128,0.1)'},ticks:{color:'#999',stepSize:20}}}}
+    data:{
+      labels: DASH_MONTHS.map(mo => { const [,mm]=mo.split('-'); return THAI_M_SHORT[+mm]; }),
+      datasets:[{
+        data: monthRevs,
+        backgroundColor: DASH_MONTHS.map(mo => mo===dashMonth ? '#1a6b4a' : '#a8d5c0'),
+        borderRadius:4, borderSkipped:false
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}},y:{grid:{color:'rgba(128,128,128,0.1)'},ticks:{color:'#999',callback:v=>'฿'+(v/1000).toFixed(0)+'K'}}}}
   });
 }
 
@@ -2609,11 +2833,8 @@ function initReqSelects() {
     if (c) searchEl.value = `${c.name}  (${c.id})`;
   }
 
-  // Fixed range: เม.ย.–ธ.ค. 2569
-  const months = [];
-  for (let mo = 3; mo <= 12; mo++) {
-    months.push(`2026-${String(mo).padStart(2,'0')}`);
-  }
+  // Dynamic from SYSTEM_YEARS
+  const months = getAllSystemMonths();
   const mSel = document.getElementById('req-month-sel');
   if (mSel) mSel.innerHTML = months.map(m =>
     `<option value="${m}" ${m === currentMonth ? 'selected' : ''}>${thaiMonth(m)}</option>`
@@ -3304,10 +3525,7 @@ function printReceipt(custId, month) {
 
   // Init month select (current ± 3 months)
   const mSel = document.getElementById('rcpt-override-month');
-  const months = [];
-  for (let mo = 3; mo <= 12; mo++) {
-    months.push(`2026-${String(mo).padStart(2,'0')}`);
-  }
+  const months = getAllSystemMonths();
   mSel.innerHTML = months.map(m =>
     `<option value="${m}" ${m === targetMonth ? 'selected' : ''}>${thaiMonth(m)}</option>`
   ).join('');
