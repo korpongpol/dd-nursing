@@ -1494,7 +1494,7 @@ function confirmDischarge() {
   renderBilling();
   renderDischarged();
   updateDashboard();
-  // refresh detail if open
+  if (window._fbSave) window._fbSave('discharged', discharged);
 }
 
 function openRestoreModal(id) {
@@ -1520,6 +1520,7 @@ function confirmRestore() {
   renderBilling();
   renderDischarged();
   updateDashboard();
+  if (window._fbSave) window._fbSave('discharged', discharged);
 }
 
 function renderDischarged() {
@@ -2216,6 +2217,8 @@ function savePay(){
   renderBilling();
   renderTable();
   updateDashboard();
+  // Save to Firebase
+  if (window._fbSave) window._fbSave('payments', payments);
 }
 
 // ADD CUSTOMER
@@ -3745,6 +3748,7 @@ function saveRefund() {
   }
   closeModal('refund-modal');
   renderRefundList();
+  if (window._fbSave) window._fbSave('refunds', refunds);
 }
 
 function renderRefundList() {
