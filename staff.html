@@ -289,25 +289,29 @@ function renderItems() {
     const m = CAT_META[item.type] || meta;
     const entries = reqEntries.filter(e=>e.itemId===item.id);
     const hasEntries = entries.length > 0;
-    const entryRows = entries.map((e,ei) => `
+    const entryRows = entries.map((e,ei) => {
+      const uid = `${item.id}_${ei}`;
+      return `
       <div style="display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 8px;background:#fff;border-radius:6px;border:1px solid #e0dbd2">
         <span style="font-size:11px;color:#999;min-width:16px">${ei+1}.</span>
-        <label style="position:relative;cursor:pointer;flex:1">
-          <span id="date-lbl-${item.id}-${ei}"
-            style="display:block;padding:4px 8px;border:1px solid #e0dbd2;border-radius:5px;font-size:12px;color:#444;background:#fafaf8;min-width:90px;text-align:center">
-            ${thaiDateShort(e.date)}
-          </span>
-          <input type="date" value="${e.date}"
-            onchange="updateEntry('${item.id}',${ei},'date',this.value); document.getElementById('date-lbl-${item.id}-${ei}').textContent=thaiDateShort(this.value)"
-            style="position:absolute;opacity:0;top:0;left:0;width:100%;height:100%;cursor:pointer">
-        </label>
+        <div style="flex:1;position:relative">
+          <div id="date-lbl-${uid}"
+            onclick="document.getElementById('date-inp-${uid}').showPicker?document.getElementById('date-inp-${uid}').showPicker():document.getElementById('date-inp-${uid}').click()"
+            style="padding:4px 10px;border:1px solid #1a6b4a;border-radius:5px;font-size:12px;color:#1a6b4a;background:#f0fbf5;text-align:center;cursor:pointer;font-weight:500;white-space:nowrap">
+            📅 ${thaiDateShort(e.date)}
+          </div>
+          <input type="date" id="date-inp-${uid}" value="${e.date}"
+            onchange="updateEntry('${item.id}',${ei},'date',this.value); document.getElementById('date-lbl-${uid}').innerHTML='📅 '+thaiDateShort(this.value)"
+            style="position:absolute;opacity:0;top:0;left:0;width:100%;height:100%;cursor:pointer;pointer-events:none">
+        </div>
         <button onclick="adjEntry('${item.id}',${ei},-1)" style="width:26px;height:26px;border:1px solid #ccc;border-radius:5px;cursor:pointer;background:#fff;font-size:15px">−</button>
         <input type="number" min="1" value="${e.qty}" onchange="updateEntry('${item.id}',${ei},'qty',this.value)"
           style="width:50px;padding:4px 6px;border:1px solid #e0dbd2;border-radius:5px;font-size:13px;text-align:center">
         <button onclick="adjEntry('${item.id}',${ei},1)" style="width:26px;height:26px;border:1px solid #1a6b4a;border-radius:5px;cursor:pointer;background:#e8f5ee;font-size:15px;color:#1a6b4a">+</button>
         <span style="font-size:11px;color:#999;min-width:28px">${item.unit}</span>
         <button onclick="removeEntry('${item.id}',${ei})" style="width:24px;height:24px;border:1px solid #f5b8b0;border-radius:5px;cursor:pointer;font-size:13px;color:#c0392b;background:#fdf0ee">×</button>
-      </div>`).join("");
+      </div>`;
+    }).join("");
 
     return `<div style="padding:8px 4px;border-bottom:1px solid #f0ede8;${hasEntries?"background:#f0fbf5;border-radius:8px;padding:8px;margin:2px 0":""}">
       <div style="display:flex;align-items:center;gap:8px">
