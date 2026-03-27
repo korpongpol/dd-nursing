@@ -805,7 +805,7 @@ if (sessionStorage.getItem("dd_admin") === "1") {
           <table>
             <thead><tr>
               <th>รหัส</th><th>ชื่อลูกค้า</th><th>สาขา</th>
-              <th style="text-align:right">ค่าบริการ</th><th>ธนาคาร / บัญชี</th>
+              <th style="text-align:right">ยอดรวม</th><th>ธนาคาร / บัญชี</th>
               <th style="text-align:right">ชำระแล้ว</th><th>สถานะ</th><th>วันที่ชำระ</th><th>การดำเนินการ</th>
             </tr></thead>
             <tbody id="bill-tbody"></tbody>
@@ -2072,9 +2072,10 @@ function renderBilling() {
 function markAllPaid(){
   filteredBilling().forEach(c=>{
     const k=payKey(c.id,currentMonth);
-    if(!payments[k]||payments[k].amount<c.fee){
-      payments[k]={amount:c.fee,channel:'โอนเงิน',date:new Date().toISOString().split('T')[0],note:'ชำระครบ'};
-      payHistory.push({date:new Date().toISOString().split('T')[0],id:c.id,name:c.name,month:thaiMonth(currentMonth),amount:c.fee,channel:'โอนเงิน',note:'ชำระครบ'});
+    const tot=calcTotalBill(c.id,currentMonth);
+    if(!payments[k]||payments[k].amount<tot){
+      payments[k]={amount:tot,channel:'โอนเงิน',date:new Date().toISOString().split('T')[0],note:'ชำระครบ'};
+      payHistory.push({date:new Date().toISOString().split('T')[0],id:c.id,name:c.name,month:thaiMonth(currentMonth),amount:tot,channel:'โอนเงิน',note:'ชำระครบ'});
     }
   });
   renderBilling();updateDashboard();
