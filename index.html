@@ -283,7 +283,16 @@ async function fbLoad() {
     const snap = await get(ref(db, "/"));
     if (!snap.exists()) return;
     const d = snap.val();
-    if (d.payments)     { payments     = d.payments;     }
+    if (d.payments) {
+      // Restore keys: _ back to / where needed (DD1_03 → DD1/03)
+      payments = {};
+      Object.entries(d.payments).forEach(([k,v]) => {
+        // key format: CUSTID_YYYY-MM — custId may have had / replaced with _
+        // Restore: DD1_03_2026-03 → DD1/03_2026-03
+        const restored = k.replace(/^(DD\d)_(\d+)_/, '$1/$2_');
+        payments[restored] = v;
+      });
+    }
     if (d.requisitions) { requisitions = d.requisitions; }
     if (d.discharged)   { discharged   = d.discharged;   }
     if (d.refunds && Array.isArray(d.refunds)) { refunds = d.refunds; }
@@ -2175,10 +2184,14 @@ function savePay(){
   renderBilling();
   renderTable();
   updateDashboard();
-  // Save to Firebase — retry until _fbSave is ready
+  // Save to Firebase — sanitize keys (replace / with _)
   function doSave(retry) {
     if (window._fbSave) {
-      window._fbSave('payments', payments);
+      const safePayments = {};
+      Object.entries(payments).forEach(([k,v]) => {
+        safePayments[k.replace(/\//g,'_')] = v;
+      });
+      window._fbSave('payments', safePayments);
     } else if (retry > 0) {
       setTimeout(() => doSave(retry - 1), 300);
     }
