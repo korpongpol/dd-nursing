@@ -326,52 +326,8 @@ function listenRequisitions() {
 
 window._fbSave = fbSave;
 
-// Override key functions to auto-save
-const _origSavePay = window.savePay;
-document.addEventListener("DOMContentLoaded", () => {
-  // Patch savePay
-  const origSavePay = window.savePay;
-  window.savePay = function() {
-    origSavePay?.();
-    setTimeout(() => fbSave("payments", payments), 100);
-  };
-
-  // Patch confirmDischarge
-  const origDischarge = window.confirmDischarge;
-  window.confirmDischarge = function() {
-    origDischarge?.();
-    setTimeout(() => fbSave("discharged", discharged), 100);
-  };
-
-  // Patch confirmRestore
-  const origRestore = window.confirmRestore;
-  window.confirmRestore = function() {
-    origRestore?.();
-    setTimeout(() => fbSave("discharged", discharged), 100);
-  };
-
-  // Patch saveRefund
-  const origSaveRefund = window.saveRefund;
-  window.saveRefund = function() {
-    origSaveRefund?.();
-    setTimeout(() => fbSave("refunds", refunds), 100);
-  };
-
-  // Patch saveEditCustomer
-  const origEditCust = window.saveEditCustomer;
-  window.saveEditCustomer = function() {
-    origEditCust?.();
-    // Save edited fields to customers_extra
-    const id = document.getElementById("edit-id")?.value;
-    if (id) {
-      const c = customers.find(x=>x.id===id);
-      if (c) fbSave("customers_extra/" + id.replace(/\//g,"_"), c);
-    }
-  };
-
-  // Load data then listen
-  fbLoad().then(() => listenRequisitions());
-});
+// Load data then listen
+fbLoad().then(() => listenRequisitions());
 </script>
 
 <style id="login-style">
@@ -1495,6 +1451,7 @@ function confirmDischarge() {
   renderDischarged();
   updateDashboard();
   if (window._fbSave) window._fbSave('discharged', discharged);
+  else setTimeout(() => window._fbSave?.('discharged', discharged), 1000);
 }
 
 function openRestoreModal(id) {
@@ -1521,6 +1478,7 @@ function confirmRestore() {
   renderDischarged();
   updateDashboard();
   if (window._fbSave) window._fbSave('discharged', discharged);
+  else setTimeout(() => window._fbSave?.('discharged', discharged), 1000);
 }
 
 function renderDischarged() {
@@ -2217,8 +2175,15 @@ function savePay(){
   renderBilling();
   renderTable();
   updateDashboard();
-  // Save to Firebase
-  if (window._fbSave) window._fbSave('payments', payments);
+  // Save to Firebase — retry until _fbSave is ready
+  function doSave(retry) {
+    if (window._fbSave) {
+      window._fbSave('payments', payments);
+    } else if (retry > 0) {
+      setTimeout(() => doSave(retry - 1), 300);
+    }
+  }
+  doSave(10);
 }
 
 // ADD CUSTOMER
@@ -3749,6 +3714,7 @@ function saveRefund() {
   closeModal('refund-modal');
   renderRefundList();
   if (window._fbSave) window._fbSave('refunds', refunds);
+  else setTimeout(() => window._fbSave?.('refunds', refunds), 1000);
 }
 
 function renderRefundList() {
