@@ -1474,6 +1474,25 @@ let discharged = {};
 let dischargeTarget = null;
 let restoreTarget = null;
 
+// Robust Firebase save — retries until _fbSave is ready
+function safeFbSave(path, data) {
+  if (window._fbSave) {
+    window._fbSave(path, data);
+  } else {
+    let attempts = 0;
+    const retry = setInterval(() => {
+      attempts++;
+      if (window._fbSave) {
+        clearInterval(retry);
+        window._fbSave(path, data);
+      } else if (attempts > 20) { // give up after 10s
+        clearInterval(retry);
+        console.warn('safeFbSave: Firebase not ready after 10s, gave up saving:', path);
+      }
+    }, 500);
+  }
+}
+
 function isInactive(id) { return !!discharged[id]; }
 
 function openDischargeModal(id) {
@@ -1506,8 +1525,7 @@ function confirmDischarge() {
   renderBilling();
   renderDischarged();
   updateDashboard();
-  if (window._fbSave) window._fbSave('discharged', discharged);
-  else setTimeout(() => window._fbSave?.('discharged', discharged), 1000);
+  safeFbSave('discharged', discharged);
 }
 
 function openRestoreModal(id) {
@@ -1533,8 +1551,7 @@ function confirmRestore() {
   renderBilling();
   renderDischarged();
   updateDashboard();
-  if (window._fbSave) window._fbSave('discharged', discharged);
-  else setTimeout(() => window._fbSave?.('discharged', discharged), 1000);
+  safeFbSave('discharged', discharged);
 }
 
 function renderDischarged() {
@@ -4071,7 +4088,7 @@ function saveRefund() {
   closeModal('refund-modal');
   renderRefundList();
   if (window._fbSave) window._fbSave('refunds', refunds);
-  else setTimeout(() => window._fbSave?.('refunds', refunds), 1000);
+  // safeFbSave handles retry
 }
 
 function renderRefundList() {
@@ -4115,7 +4132,7 @@ function deleteRefund(id) {
   refunds = refunds.filter(r => r.id !== id);
   renderRefundList();
   if (window._fbSave) window._fbSave('refunds', refunds);
-  else setTimeout(() => window._fbSave?.('refunds', refunds), 1000);
+  // safeFbSave handles retry
 }
 
 function exportRefundCSV() {
