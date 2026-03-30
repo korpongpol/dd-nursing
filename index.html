@@ -329,6 +329,7 @@ async function fbLoad() {
       });
     }
     if (d.invoiced)     { invoiced     = d.invoiced;     }
+    if (d.rcpt_edits)   { _rcptEditsCache = d.rcpt_edits; }
     if (d.refunds && Array.isArray(d.refunds)) { refunds = d.refunds; }
     if (d.catalog) {
       catalog = Object.values(d.catalog);
@@ -3388,6 +3389,23 @@ function nextReceiptNo(branch) {
 
 // Store current receipt context for re-render
 let _rcptCtx = null;
+let _rcptEditsCache = {}; // { "custId_safe_YYYY-MM": [...lineItems] }
+
+function _rcptKey(custId, month) {
+  return custId.replace(/\//g,'_') + '_' + month;
+}
+
+function _saveRcptEdits() {
+  if (!_rcptCtx) return;
+  const key = _rcptKey(_rcptCtx.custId, _rcptCtx.targetMonth);
+  _rcptEditsCache[key] = JSON.parse(JSON.stringify(_rcptLineItems));
+  if (window._fbSave) window._fbSave('rcpt_edits/' + key, _rcptEditsCache[key]);
+}
+
+function _loadRcptEdits(custId, month) {
+  const key = _rcptKey(custId, month);
+  return _rcptEditsCache[key] || null;
+}
 
 function printReceipt(custId, month) {
   const targetMonth = month || currentMonth;
@@ -3406,8 +3424,11 @@ function printReceipt(custId, month) {
   const reqListCur  = requisitions[reqKey(custId, targetMonth)] || [];
   const reqListPrev = requisitions[reqKey(custId, prevYM0)] || [];
   const reqList0    = [...reqListPrev, ...reqListCur];
-  // รีเซ็ตเฉพาะตอนเปิด receipt คนใหม่หรือเดือนใหม่ — ถ้าเปิดซ้ำให้คงของเดิมไว้
-  if (!_sameReceipt || _rcptLineItems.length === 0) {
+  // โหลด edits ที่บันทึกไว้ หรือ build default ถ้ายังไม่มี
+  const _savedEdits = _loadRcptEdits(custId, targetMonth);
+  if (_savedEdits && _savedEdits.length > 0) {
+    _rcptLineItems = _savedEdits;
+  } else if (!_sameReceipt || _rcptLineItems.length === 0) {
     _rcptLineItems = rcptBuildDefaultItems(c, overrideDay0, targetMonth, prevYM0, reqList0);
   }
 
@@ -3536,7 +3557,7 @@ function rcptUpdateRow(i, field, val) {
     if (_rcptLineItems[i].isOther) _rcptLineItems[i].isOther = false;
     // debounce receipt re-render so cursor stays while typing
     clearTimeout(_rcptLabelDebounce);
-    _rcptLabelDebounce = setTimeout(() => reRenderReceipt(), 800);
+    _rcptLabelDebounce = setTimeout(() => { reRenderReceipt(); _saveRcptEdits(); }, 800);
     return; // don't re-render now
   }
   if (field === 'qty' || field === 'price') {
@@ -3550,6 +3571,8 @@ function rcptUpdateRow(i, field, val) {
   window._rcptEditorTyping = true;
   reRenderReceipt();
   window._rcptEditorTyping = false;
+  // save edits to Firebase
+  _saveRcptEdits();
 }
 
 function rcptToggleSub(i) {
@@ -3557,18 +3580,21 @@ function rcptToggleSub(i) {
   _rcptLineItems[i].isSub = !_rcptLineItems[i].isSub;
   renderRcptEditor();
   reRenderReceipt();
+  _saveRcptEdits();
 }
 
 function rcptAddRow() {
   _rcptLineItems.push({ id:'row_'+Date.now(), label:'', qty:1, price:0, amount:0, isSub:false, isOther:false, isReq:false });
   renderRcptEditor();
   reRenderReceipt();
+  _saveRcptEdits();
 }
 
 function rcptRemoveRow(i) {
   _rcptLineItems.splice(i, 1);
   renderRcptEditor();
   reRenderReceipt();
+  _saveRcptEdits();
 }
 
 function renderReceiptContent() {
