@@ -3394,6 +3394,7 @@ function printReceipt(custId, month) {
   const c = customers.find(x => x.id === custId);
   if (!c) return;
 
+  const _sameReceipt = _rcptCtx && _rcptCtx.custId === custId && _rcptCtx.targetMonth === targetMonth;
   _rcptCtx = { custId, targetMonth, rcptNo: nextReceiptNo(c.branch) };
 
   // Build default line items from customer data
@@ -3405,8 +3406,10 @@ function printReceipt(custId, month) {
   const reqListCur  = requisitions[reqKey(custId, targetMonth)] || [];
   const reqListPrev = requisitions[reqKey(custId, prevYM0)] || [];
   const reqList0    = [...reqListPrev, ...reqListCur];
-  // ส่ง allReqList ทั้งหมด — rcptBuildDefaultItems จะกรองตามช่วงวันเอง
-  _rcptLineItems = rcptBuildDefaultItems(c, overrideDay0, targetMonth, prevYM0, reqList0);
+  // รีเซ็ตเฉพาะตอนเปิด receipt คนใหม่หรือเดือนใหม่ — ถ้าเปิดซ้ำให้คงของเดิมไว้
+  if (!_sameReceipt || _rcptLineItems.length === 0) {
+    _rcptLineItems = rcptBuildDefaultItems(c, overrideDay0, targetMonth, prevYM0, reqList0);
+  }
 
   // Init month select (current ± 3 months)
   const mSel = document.getElementById('rcpt-override-month');
@@ -3489,7 +3492,7 @@ function rcptBuildDefaultItems(c, overrideDay, targetMonth, prevYM, allReqList) 
     { id:'row_1', label: `ค่าดูแลผู้สูงอายุ (${getDateRangeLabel(overrideDay, targetMonth)})`,
       qty:1, price:c.fee, amount:c.fee, isSub:false, isOther:false, isReq:false },
     { id:'row_2', label: `ค่าส่วนต่างอื่นๆ (${getDateRangeLabel(overrideDay, prevYM)})`,
-      qty:'', price:'', amount:'', isSub:false, isOther:true, isReq:false },
+      qty:1, price:0, amount:0, isSub:false, isOther:false, isReq:false },
     ...subItems
   ];
 }
@@ -3540,8 +3543,8 @@ function rcptUpdateRow(i, field, val) {
     const q = parseFloat(_rcptLineItems[i].qty) || 0;
     const p = parseFloat(_rcptLineItems[i].price) || 0;
     _rcptLineItems[i].amount = q * p;
-    // if row was "isOther" placeholder, clear so values display
     if (_rcptLineItems[i].isOther) _rcptLineItems[i].isOther = false;
+    _rcptLineItems[i]._qtyPriceEdited = true;
   }
   // prevent editor re-render while user is typing in qty/price
   window._rcptEditorTyping = true;
@@ -3597,8 +3600,9 @@ function renderReceiptContent() {
       if (!row._labelEdited) row.label = newDefaults.find(r=>r.id==='row_1')?.label || row.label;
       row.price = c.fee; row.qty = 1; row.amount = c.fee;
     }
-    if (row.id === 'row_2' && !row._labelEdited) {
-      row.label = newDefaults.find(r=>r.id==='row_2')?.label || row.label;
+    if (row.id === 'row_2') {
+      if (!row._labelEdited) row.label = newDefaults.find(r=>r.id==='row_2')?.label || row.label;
+      // preserve qty/price if user has edited them
     }
   });
 
