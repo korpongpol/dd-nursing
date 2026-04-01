@@ -375,10 +375,87 @@ function listenRequisitions() {
   });
 }
 
+// ===== REALTIME LISTENERS — sync all main data nodes in realtime =====
+function listenAllData() {
+  // payments — อัปเดตสถิติและหน้า billing ทันทีเมื่อมีการบันทึกชำระเงิน
+  onValue(ref(db, "payments"), snap => {
+    if (snap.exists()) {
+      payments = {};
+      Object.entries(snap.val()).forEach(([k, v]) => {
+        const restored = k.replace(/^(DD\d)_(\d+)_/, '$1/$2_');
+        payments[restored] = v;
+      });
+    } else { payments = {}; }
+    updateDashboard?.();
+    renderTable?.();
+    const ap = document.querySelector(".page.active")?.id;
+    if (ap === "page-billing")  renderBilling?.();
+    if (ap === "page-history")  renderPayHistory?.();
+  });
+
+  // payHistory — อัปเดตประวัติการชำระเงินแบบ realtime
+  onValue(ref(db, "payHistory"), snap => {
+    if (snap.exists() && Array.isArray(snap.val())) payHistory = snap.val();
+    if (document.querySelector(".page.active")?.id === "page-history") renderPayHistory?.();
+  });
+
+  // discharged — กรองผู้ป่วยที่ออกแล้วออกจากรายการทันที
+  onValue(ref(db, "discharged"), snap => {
+    if (snap.exists()) {
+      discharged = {};
+      Object.entries(snap.val()).forEach(([k, v]) => {
+        const restored = k.replace(/^(DD\d+)_(\d+)/, '$1/$2');
+        discharged[restored] = v;
+      });
+    } else { discharged = {}; }
+    updateDashboard?.();
+    renderTable?.();
+    if (document.querySelector(".page.active")?.id === "page-discharged") renderDischarged?.();
+  });
+
+  // invoiced — sync สถานะออกบิลสำหรับหน้า billing
+  onValue(ref(db, "invoiced"), snap => {
+    invoiced = snap.exists() ? snap.val() : {};
+    if (document.querySelector(".page.active")?.id === "page-billing") renderBilling?.();
+  });
+
+  // refunds — อัปเดตรายการ refund แบบ realtime
+  onValue(ref(db, "refunds"), snap => {
+    if (snap.exists() && Array.isArray(snap.val())) refunds = snap.val();
+    if (document.querySelector(".page.active")?.id === "page-refund") renderRefundList?.();
+  });
+
+  // catalog — sync รายการสินค้าเมื่อ staff แก้ไข
+  onValue(ref(db, "catalog"), snap => {
+    if (snap.exists()) {
+      catalog = Object.values(snap.val());
+      catalog.sort((a, b) => a.name.localeCompare(b.name, "th"));
+    }
+    if (document.querySelector(".page.active")?.id === "page-requisition") renderReqSummary?.();
+  });
+
+  // cat_meta — sync การตั้งค่าหมวดหมู่สินค้าแบบ realtime
+  onValue(ref(db, "cat_meta"), snap => {
+    if (snap.exists()) Object.assign(CAT_META, snap.val());
+  });
+
+  // customers_extra — sync การแก้ไขข้อมูลลูกค้าแบบ realtime
+  onValue(ref(db, "customers_extra"), snap => {
+    if (snap.exists()) {
+      Object.entries(snap.val()).forEach(([id, extra]) => {
+        const c = customers.find(x => x.id === id);
+        if (c) Object.assign(c, extra);
+      });
+    }
+    updateDashboard?.();
+    renderTable?.();
+  });
+}
+
 window._fbSave = fbSave;
 
-// Load data then listen
-fbLoad().then(() => listenRequisitions());
+// โหลดข้อมูลครั้งแรก แล้วเปิด realtime listeners ทั้งหมด
+fbLoad().then(() => { listenRequisitions(); listenAllData(); });
 </script>
 
 <style id="login-style">
