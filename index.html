@@ -369,6 +369,13 @@ async function fbLoad() {
         if (c) Object.assign(c, extra);
       });
     }
+    // Sync customers from RAW → Firebase (so staff.html always sees latest IDs/names)
+    if (window._fbSave) {
+      const custObj = {};
+      customers.forEach(x => { custObj[x.id.replace(/\//g,'_')] = x; });
+      window._fbSave('customers', custObj);
+      console.log("✓ Synced customers to Firebase");
+    }
     // Render after load
     updateDashboard();
     renderTable();
