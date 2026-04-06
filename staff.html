@@ -65,7 +65,9 @@ let catalog = DEFAULT_CATALOG;
 let allCustomers = [];
 let filteredCustomers = [];
 let selectedCustId = "";
-let _reqDirty = false;  // true = user has unsaved changes, don't overwrite from Firebase
+let _reqDirty = false;          // true = user has unsaved changes, don't overwrite from Firebase
+let _reqFirebaseLoaded = false; // true = Firebase requisitions data has arrived at least once
+let _pendingLoad = false;       // true = loadExistingReq was called before Firebase was ready
 let selectedMonth  = "";
 let reqEntries = [];
 let activeBranch = "";
@@ -140,14 +142,21 @@ function loadData() {
   // === Realtime: requisitions for selected customer/month ===
   window._onValue(window._ref(window._db, "requisitions"), snap => {
     window._allRequisitions = snap.exists() ? snap.val() : {};
-    // Only reload reqEntries if user has NO unsaved changes
-    // (prevents Firebase sync from overwriting in-progress edits)
-    if (selectedCustId && selectedMonth && !_reqDirty) {
-      const key = selectedCustId.replace(/\//g,"_") + "_" + selectedMonth;
-      const saved = window._allRequisitions[key];
-      if (saved && Array.isArray(saved)) {
-        reqEntries = saved.map(e => ({itemId: e.itemId, qty: e.qty, date: e.savedAt || todayISO}));
+
+    if (!_reqFirebaseLoaded) {
+      // First time Firebase data arrives
+      _reqFirebaseLoaded = true;
+      if (_pendingLoad) {
+        // loadExistingReq was called before Firebase was ready — load now
+        _pendingLoad = false;
+        loadExistingReq();
       }
+    } else if (selectedCustId && selectedMonth && !_reqDirty) {
+      // Subsequent real-time updates from other clients — reload only if no unsaved changes
+      const key = selectedCustId.replace(/\//g,"_") + "_" + selectedMonth;
+      const raw = window._allRequisitions[key];
+      const saved = Array.isArray(raw) ? raw : (raw ? Object.values(raw) : []);
+      reqEntries = saved.map(e => ({itemId: e.itemId, qty: e.qty, date: e.savedAt || todayISO}));
       renderItems();
       renderSaved();
     }
@@ -213,14 +222,22 @@ function renderCustList() {
 
 function loadExistingReq() {
   if (!selectedCustId || !selectedMonth) return;
-  _reqDirty = false;  // loading fresh data — reset dirty flag
-  const key = selectedCustId.replace(/\//g,"_") + "_" + selectedMonth;
-  const saved = (window._allRequisitions || {})[key];
-  if (saved && Array.isArray(saved)) {
-    reqEntries = saved.map(e => ({itemId: e.itemId, qty: e.qty, date: e.savedAt || todayISO}));
-  } else {
+
+  if (!_reqFirebaseLoaded) {
+    // Firebase not ready yet — defer until onValue fires
+    _pendingLoad = true;
     reqEntries = [];
+    renderItems(); renderSaved();
+    return;
   }
+
+  _reqDirty = false;  // loading fresh — reset dirty flag
+  _pendingLoad = false;
+  const key = selectedCustId.replace(/\//g,"_") + "_" + selectedMonth;
+  const raw = (window._allRequisitions || {})[key];
+  // Handle both array and object (Firebase may return either)
+  const saved = Array.isArray(raw) ? raw : (raw ? Object.values(raw) : []);
+  reqEntries = saved.map(e => ({itemId: e.itemId, qty: e.qty, date: e.savedAt || todayISO}));
   renderItems();
   renderSaved();
 }
