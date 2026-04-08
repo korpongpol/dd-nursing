@@ -4027,19 +4027,27 @@ function renderReceiptContent() {
 // Thai baht words
 function bahtText(n) {
   if (n === 0) return 'ศูนย์บาทถ้วน';
-  const ones  = ['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'];
-  const tens  = ['','สิบ','ยี่สิบ','สามสิบ','สี่สิบ','ห้าสิบ','หกสิบ','เจ็ดสิบ','แปดสิบ','เก้าสิบ'];
-  const places = ['','ร้อย','พัน','หมื่น','แสน','ล้าน'];
-  let result = '';
-  const digits = String(Math.round(n)).split('').reverse();
-  digits.forEach((d, i) => {
-    const num = parseInt(d);
-    if (num === 0) return;
-    const pl = i % 6;
-    result = (pl === 1 && num === 1 ? 'สิบ' : pl === 1 ? tens[num] : ones[num]) + places[pl] + result;
-    if (i > 0 && i % 6 === 0) result = 'ล้าน' + result;
-  });
-  return result + 'บาทถ้วน';
+  n = Math.round(Math.abs(n));
+  const ones = ['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'];
+  const tensW = ['','สิบ','ยี่สิบ','สามสิบ','สี่สิบ','ห้าสิบ','หกสิบ','เจ็ดสิบ','แปดสิบ','เก้าสิบ'];
+  function group(x) {
+    if (!x) return '';
+    let s = '';
+    const h6 = Math.floor(x / 100000) % 10; if (h6) s += ones[h6] + 'แสน';
+    const h5 = Math.floor(x /  10000) % 10; if (h5) s += ones[h5] + 'หมื่น';
+    const h4 = Math.floor(x /   1000) % 10; if (h4) s += ones[h4] + 'พัน';
+    const h3 = Math.floor(x /    100) % 10; if (h3) s += ones[h3] + 'ร้อย';
+    const h2 = Math.floor(x /     10) % 10;
+    const h1 = x % 10;
+    if (h2 === 1) s += 'สิบ';
+    else if (h2 > 1) s += tensW[h2];
+    if (h1 === 1 && h2 > 0) s += 'เอ็ด';
+    else if (h1) s += ones[h1];
+    return s;
+  }
+  const mil = Math.floor(n / 1000000);
+  const rem = n % 1000000;
+  return (mil ? group(mil) + 'ล้าน' : '') + (rem ? group(rem) : '') + 'บาทถ้วน';
 }
 
 function fmtDateThai(isoOrStr) {
