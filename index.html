@@ -1564,10 +1564,14 @@ if (sessionStorage.getItem("dd_admin") === "1") {
     </div>
     <!-- Line items editor -->
     <div style="padding:12px 20px;background:#fffdf9;border-bottom:1px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">
         <span style="font-size:12px;font-weight:600;color:var(--text2)">✏️ แก้ไขรายการ</span>
         <button class="btn btn-sm btn-primary" onclick="rcptAddRow()" style="font-size:11px;padding:3px 10px">+ เพิ่มแถว</button>
-        <button class="btn btn-sm" onclick="reRenderReceipt()" style="font-size:11px;padding:3px 10px">🔄 อัพเดตใบเสร็จ</button>
+        <button class="btn btn-sm" onclick="rcptReloadReqItems()" title="โหลดของที่เบิกล่าสุดจากระบบมาใส่ใหม่"
+          style="font-size:11px;padding:3px 10px;border-color:#2856b8;color:#2856b8">📦 รีโหลดของที่เบิก</button>
+        <button class="btn btn-sm" onclick="rcptResetAll()" title="ล้างการแก้ไขทั้งหมด สร้างใหม่จากข้อมูลจริง"
+          style="font-size:11px;padding:3px 10px;border-color:var(--danger);color:var(--danger)">↺ รีเซ็ต</button>
+        <span id="rcpt-edited-badge" style="display:none;font-size:10px;padding:2px 8px;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;color:#856404">แก้ไขแล้ว</span>
       </div>
       <div id="rcpt-items-editor" style="display:flex;flex-direction:column;gap:4px"></div>
     </div>
@@ -3652,9 +3656,11 @@ function printReceipt(custId, month) {
   // โหลด edits ที่บันทึกไว้ หรือ build default ถ้ายังไม่มี
   const _savedEdits = _loadRcptEdits(custId, targetMonth);
   if (_savedEdits && _savedEdits.length > 0) {
-    _rcptLineItems = _savedEdits;
+    _rcptLineItems  = _savedEdits;
+    _rcptUserEdited = true;  // โหลดจากที่บันทึกไว้ = ถือว่า user เคยแก้ไขแล้ว
   } else if (!_sameReceipt || _rcptLineItems.length === 0) {
-    _rcptLineItems = rcptBuildDefaultItems(c, overrideDay0, targetMonth, prevYM0, reqList0);
+    _rcptLineItems  = rcptBuildDefaultItems(c, overrideDay0, targetMonth, prevYM0, reqList0);
+    _rcptUserEdited = false; // เพิ่งสร้างใหม่ = ยังไม่มีการแก้ไข
   }
 
   // Init month select (current ± 3 months)
@@ -3689,7 +3695,8 @@ function reRenderReceipt() {
 }
 
 // Store editable line items state
-let _rcptLineItems = [];
+let _rcptLineItems  = [];
+let _rcptUserEdited = false; // true = user เคยแก้ไขแล้ว ห้าม auto-replace req items
 
 function rcptBuildDefaultItems(c, overrideDay, targetMonth, prevYM, allReqList) {
   // ช่วงวันของ row_2 (ค่าส่วนต่าง) = prevYM overrideDay → targetMonth overrideDay-1
@@ -3746,26 +3753,44 @@ function rcptBuildDefaultItems(c, overrideDay, targetMonth, prevYM, allReqList) 
 function renderRcptEditor() {
   const el = document.getElementById('rcpt-items-editor');
   if (!el) return;
+
+  // แสดง badge "แก้ไขแล้ว" ถ้า user เคยแก้ไข
+  const badge = document.getElementById('rcpt-edited-badge');
+  if (badge) badge.style.display = _rcptUserEdited ? 'inline-block' : 'none';
+
   el.innerHTML = _rcptLineItems.map((row, i) => {
-    const isSubBg = row.isSub ? 'background:#f9f9f6;border-left:3px solid var(--accent);padding-left:10px;' : '';
-    return `<div style="display:flex;flex-direction:column;gap:4px;padding:6px 4px;border-bottom:1px solid var(--border-light,#f0ede8);${isSubBg}">
+    const isReq  = row.isReq;
+    const isSub  = row.isSub;
+    let rowBg = '';
+    if (isReq)  rowBg = 'background:#eef4ff;border-left:3px solid #2856b8;padding-left:10px;';
+    else if (isSub) rowBg = 'background:#f9f9f6;border-left:3px solid var(--accent);padding-left:10px;';
+    const typeTag = isReq
+      ? `<span style="font-size:10px;padding:1px 6px;border-radius:8px;background:#dbeafe;color:#2856b8;font-weight:600;flex-shrink:0">📦เบิก</span>`
+      : '';
+    const total = ((parseFloat(row.qty)||0)*(parseFloat(row.price)||0)) || parseFloat(row.amount) || 0;
+    return `<div style="display:flex;flex-direction:column;gap:4px;padding:6px 4px;border-bottom:1px solid var(--border-light,#f0ede8);${rowBg}">
       <div style="display:flex;align-items:center;gap:4px">
         <span style="font-size:11px;color:var(--text3);width:18px;text-align:right;flex-shrink:0">${i+1}</span>
-        <button onclick="rcptToggleSub(${i})" title="${row.isSub?'ยกเลิกหัวข้อย่อย':'ทำเป็นหัวข้อย่อย'}"
-          style="width:24px;height:24px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:11px;flex-shrink:0;background:${row.isSub?'var(--accent-light)':'var(--surface)'};color:${row.isSub?'var(--accent)':'var(--text3)'}">↳</button>
-        <input type="text" value="${row.label.replace(/"/g,'&quot;')}" oninput="rcptUpdateRow(${i},'label',this.value)"
+        <button onclick="rcptToggleSub(${i})" title="${isSub?'ยกเลิกหัวข้อย่อย':'ทำเป็นหัวข้อย่อย'}"
+          style="width:24px;height:24px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:11px;flex-shrink:0;
+                 background:${isSub?'var(--accent-light)':'var(--surface)'};color:${isSub?'var(--accent)':'var(--text3)'}">↳</button>
+        ${typeTag}
+        <input type="text" value="${(row.label||'').replace(/"/g,'&quot;')}" oninput="rcptUpdateRow(${i},'label',this.value)"
           placeholder="รายการ..."
           style="flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:5px;font-size:13px;min-width:0;width:100%">
-        <button onclick="rcptRemoveRow(${i})" style="width:24px;height:24px;border:1px solid #f5b8b0;border-radius:4px;cursor:pointer;font-size:14px;color:var(--danger);background:var(--danger-light);flex-shrink:0">×</button>
+        <button onclick="rcptRemoveRow(${i})"
+          style="width:24px;height:24px;border:1px solid #f5b8b0;border-radius:4px;cursor:pointer;font-size:14px;color:var(--danger);background:var(--danger-light);flex-shrink:0">×</button>
       </div>
-      <div style="display:flex;align-items:center;gap:4px;padding-left:46px">
+      <div style="display:flex;align-items:center;gap:4px;padding-left:46px;flex-wrap:wrap">
         <span style="font-size:11px;color:var(--text3);flex-shrink:0">จำนวน</span>
         <input type="number" value="${row.qty}" placeholder="—" oninput="rcptUpdateRow(${i},'qty',this.value)"
           style="width:64px;padding:4px 6px;border:1px solid var(--border);border-radius:5px;font-size:12px;text-align:center">
         <span style="font-size:11px;color:var(--text3);flex-shrink:0">ราคา/หน่วย</span>
         <input type="number" value="${row.price}" placeholder="—" oninput="rcptUpdateRow(${i},'price',this.value)"
           style="width:96px;padding:4px 6px;border:1px solid var(--border);border-radius:5px;font-size:12px;text-align:right">
-        <span style="font-size:11px;color:var(--text3);margin-left:4px">= ฿${(((parseFloat(row.qty)||0)*(parseFloat(row.price)||0))||parseFloat(row.amount)||0).toLocaleString()}</span>
+        <span style="font-size:11px;font-weight:600;color:${total>0?'#1a6b4a':'var(--text3)'};margin-left:4px">
+          = ฿${total.toLocaleString()}
+        </span>
       </div>
     </div>`;
   }).join('');
@@ -3774,6 +3799,7 @@ function renderRcptEditor() {
 let _rcptLabelDebounce = null;
 function rcptUpdateRow(i, field, val) {
   if (!_rcptLineItems[i]) return;
+  _rcptUserEdited = true;
   _rcptLineItems[i][field] = val;
   if (field === 'label') {
     // mark as user-edited so refresh won't overwrite
@@ -3802,6 +3828,7 @@ function rcptUpdateRow(i, field, val) {
 
 function rcptToggleSub(i) {
   if (!_rcptLineItems[i]) return;
+  _rcptUserEdited = true;
   _rcptLineItems[i].isSub = !_rcptLineItems[i].isSub;
   renderRcptEditor();
   reRenderReceipt();
@@ -3809,6 +3836,7 @@ function rcptToggleSub(i) {
 }
 
 function rcptAddRow() {
+  _rcptUserEdited = true;
   _rcptLineItems.push({ id:'row_'+Date.now(), label:'', qty:1, price:0, amount:0, isSub:false, isOther:false, isReq:false });
   renderRcptEditor();
   reRenderReceipt();
@@ -3816,10 +3844,46 @@ function rcptAddRow() {
 }
 
 function rcptRemoveRow(i) {
+  _rcptUserEdited = true;
   _rcptLineItems.splice(i, 1);
   renderRcptEditor();
   reRenderReceipt();
   _saveRcptEdits();
+}
+
+// รีโหลดรายการของที่เบิกจาก Firebase ใหม่ (โดยไม่แตะรายการอื่น)
+function rcptReloadReqItems() {
+  if (!_rcptCtx) return;
+  const { custId, targetMonth } = _rcptCtx;
+  const c = customers.find(x => x.id === custId);
+  if (!c) return;
+  const overrideDay = parseInt(document.getElementById('rcpt-override-day').value) || parseDueDay(c.due_date);
+  const [ty, tm] = targetMonth.split('-').map(Number);
+  const prevDate  = new Date(ty, tm - 2, 1);
+  const prevYM    = `${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}`;
+  const allReqList = [
+    ...(requisitions[reqKey(custId, prevYM)] || []),
+    ...(requisitions[reqKey(custId, targetMonth)] || [])
+  ];
+  const newDefs     = rcptBuildDefaultItems(c, overrideDay, targetMonth, prevYM, allReqList);
+  const newSubItems = newDefs.filter(r => r.isReq);
+  // เอาเฉพาะ non-req rows เดิมไว้ แล้วเติม req rows ใหม่ต่อท้าย
+  _rcptLineItems  = [..._rcptLineItems.filter(r => !r.isReq), ...newSubItems];
+  _rcptUserEdited = true; // ยังถือว่า user-edited เพื่อไม่ให้ overwrite อีก
+  renderRcptEditor();
+  reRenderReceipt();
+  _saveRcptEdits();
+}
+
+// รีเซ็ตทั้งหมด — ล้าง saved edits แล้วสร้างใหม่จากข้อมูลจริง
+function rcptResetAll() {
+  if (!_rcptCtx) return;
+  if (!confirm('ล้างการแก้ไขทั้งหมดและสร้างใบเสร็จใหม่จากข้อมูลจริง?')) return;
+  const key = _rcptKey(_rcptCtx.custId, _rcptCtx.targetMonth);
+  delete _rcptEditsCache[key];
+  if (window._fbSave) window._fbSave('rcpt_edits/' + key, null);
+  _rcptUserEdited = false;
+  reRenderReceipt();
 }
 
 function renderReceiptContent() {
@@ -3857,10 +3921,12 @@ function renderReceiptContent() {
     }
   });
 
-  // Replace all isReq sub-items with freshly filtered ones
-  const nonReq    = _rcptLineItems.filter(r => !r.isReq);
-  const newSubItems = newDefaults.filter(r => r.isReq);
-  _rcptLineItems  = [...nonReq, ...newSubItems];
+  // Replace req sub-items only if user hasn't manually edited yet
+  if (!_rcptUserEdited) {
+    const nonReq      = _rcptLineItems.filter(r => !r.isReq);
+    const newSubItems = newDefaults.filter(r => r.isReq);
+    _rcptLineItems    = [...nonReq, ...newSubItems];
+  }
 
   // Only re-render editor if not triggered by user typing in editor
   if (!window._rcptEditorTyping) renderRcptEditor();
