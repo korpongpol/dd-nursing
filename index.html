@@ -2059,12 +2059,25 @@ function calcTotalBill(custId, month) {
 
   return c.fee + reqTotal;
 }
+// ยอดที่ต้องชำระ = ดึงจากใบเสร็จที่แก้ไขแล้ว (rcpt_edits) ถ้าไม่มีค่อยคำนวณจากข้อมูลดิบ
+function calcBillTotal(custId, month) {
+  const key   = custId.replace(/\//g,'_') + '_' + month;
+  const saved = (_rcptEditsCache || {})[key];
+  if (saved && saved.length > 0) {
+    return saved.reduce((s, item) => {
+      if (item.isOther) return s;
+      return s + (parseFloat(item.amount) || (parseFloat(item.qty)||0) * (parseFloat(item.price)||0));
+    }, 0);
+  }
+  return calcTotalBill(custId, month);
+}
+
 function getPayStatus(id, month) {
   const k = payKey(id, month);
   if(!payments[k]) return 'unpaid';
   const c = customers.find(x=>x.id===id);
   if(!c) return 'unpaid';
-  const total = calcTotalBill(id, month);
+  const total = calcBillTotal(id, month);
   if(payments[k].amount >= total) return 'paid';
   if(payments[k].amount > 0) return 'partial';
   return 'unpaid';
@@ -2185,7 +2198,7 @@ function renderBilling() {
   data.forEach(c=>{
     const s    = getPayStatus(c.id,currentMonth);
     const paid = payments[payKey(c.id,currentMonth)]?.amount||0;
-    const tot  = calcTotalBill(c.id, currentMonth);
+    const tot  = calcBillTotal(c.id, currentMonth);
     if(s==='paid'){paidN++;paidAmt+=tot;}
     else if(s==='partial'){partialN++;partialAmt+=paid;}
     else{unpaidN++;unpaidAmt+=tot;}
@@ -2197,7 +2210,7 @@ function renderBilling() {
   document.getElementById('b-unpaid-n').textContent=unpaidN;
   document.getElementById('b-unpaid-amt').textContent='฿'+fmt(unpaidAmt);
 
-  const totalFee  = data.reduce((s,c)=>s+calcTotalBill(c.id,currentMonth),0);
+  const totalFee  = data.reduce((s,c)=>s+calcBillTotal(c.id,currentMonth),0);
   const totalPaid = data.reduce((s,c)=>s+(payments[payKey(c.id,currentMonth)]?.amount||0),0);
   document.getElementById('bill-sum-total').textContent=fmt(totalFee);
   document.getElementById('bill-sum-paid').textContent=fmt(totalPaid);
@@ -2207,7 +2220,7 @@ function renderBilling() {
     const k    = payKey(c.id,currentMonth);
     const p    = payments[k];
     const s    = getPayStatus(c.id,currentMonth);
-    const tot  = calcTotalBill(c.id, currentMonth);
+    const tot  = calcBillTotal(c.id, currentMonth);
     const hasReq = tot > c.fee;
     return `<tr>
       <td class="td-id">${c.id}</td>
@@ -2427,7 +2440,7 @@ function openPayModal(id){
   const c = customers.find(x=>x.id===id);
   if(!c) return;
   closeModal('detail-modal');
-  const totalBill = calcTotalBill(id, currentMonth);
+  const totalBill = calcBillTotal(id, currentMonth);
   const hasReq    = totalBill > c.fee;
   document.getElementById('pm-cust-info').innerHTML = `
     <div style="font-weight:600;margin-bottom:4px">${c.name} <span style="color:var(--text3);font-size:12px">${c.id}</span></div>
@@ -2780,16 +2793,16 @@ function updateDashboard(){
     paidN    = activeCusts.filter(c=>getPayStatus(c.id,viewMonth)==='paid').length;
     partialN = activeCusts.filter(c=>getPayStatus(c.id,viewMonth)==='partial').length;
     unpaidN  = activeCusts.filter(c=>getPayStatus(c.id,viewMonth)==='unpaid').length;
-    paidRev  = activeCusts.filter(c=>getPayStatus(c.id,viewMonth)==='paid').reduce((s,c)=>s+calcTotalBill(c.id,viewMonth),0);
+    paidRev  = activeCusts.filter(c=>getPayStatus(c.id,viewMonth)==='paid').reduce((s,c)=>s+calcBillTotal(c.id,viewMonth),0);
   } else {
     viewMonths.forEach(mo=>{
       paidN   +=activeCusts.filter(c=>getPayStatus(c.id,mo)==='paid').length;
       partialN+=activeCusts.filter(c=>getPayStatus(c.id,mo)==='partial').length;
       unpaidN +=activeCusts.filter(c=>getPayStatus(c.id,mo)==='unpaid').length;
-      paidRev +=activeCusts.filter(c=>getPayStatus(c.id,mo)==='paid').reduce((s,c)=>s+calcTotalBill(c.id,mo),0);
+      paidRev +=activeCusts.filter(c=>getPayStatus(c.id,mo)==='paid').reduce((s,c)=>s+calcBillTotal(c.id,mo),0);
     });
   }
-  const totalTarget = activeCusts.reduce((s,c)=>s+calcTotalBill(c.id,viewMonth),0)*(viewMonths.length||1);
+  const totalTarget = activeCusts.reduce((s,c)=>s+calcBillTotal(c.id,viewMonth),0)*(viewMonths.length||1);
 
   const revLabel = _dashView==='year' ? `รายได้รวมปี ${yThai}` : `รายได้ ${_THAI_M[vm]} ${yThai}`;
   document.getElementById('s-total').textContent=total;
@@ -4257,7 +4270,7 @@ function openRefundModal(refundId, prefillCustId) {
       // Pre-fill paid amount from latest payment
       const p = payments[payKey(c.id, currentMonth)];
       if (p) document.getElementById('rf-paid').value = p.amount;
-      const tot = calcTotalBill(c.id, currentMonth);
+      const tot = calcBillTotal(c.id, currentMonth);
       document.getElementById('rf-actual').value = tot;
       calcRefundAmount();
     }
@@ -4325,7 +4338,7 @@ function selectRfCust(id) {
   showRfCustInfo(id);
   // Auto-fill paid & actual
   const p   = payments[payKey(id, currentMonth)];
-  const tot = calcTotalBill(id, currentMonth);
+  const tot = calcBillTotal(id, currentMonth);
   if (p && !document.getElementById('rf-paid').value)
     document.getElementById('rf-paid').value = p.amount;
   if (!document.getElementById('rf-actual').value)
@@ -4336,7 +4349,7 @@ function selectRfCust(id) {
 function showRfCustInfo(id) {
   const c = customers.find(x => x.id === id);
   const p = payments[payKey(id, currentMonth)];
-  const tot = calcTotalBill(id, currentMonth);
+  const tot = calcBillTotal(id, currentMonth);
   const el = document.getElementById('rf-cust-info');
   el.style.display = 'block';
   el.innerHTML = `
