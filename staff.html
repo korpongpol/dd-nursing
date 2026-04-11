@@ -8,6 +8,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 const firebaseConfig = {
   apiKey: "AIzaSyDdt1rc23hxWNQFXDhp1we4rfN-lW0wh60",
   authDomain: "dd-data-88eb0.firebaseapp.com",
@@ -24,7 +25,29 @@ window._ref     = ref;
 window._set     = set;
 window._get     = get;
 window._onValue = onValue;
-window.dispatchEvent(new Event("firebaseReady"));
+// ===== GOOGLE AUTH =====
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+window._auth = auth;
+window._googleSignIn = () => signInWithPopup(auth, googleProvider);
+window._signOut = () => signOut(auth);
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    window._currentUser = user;
+    const ls = document.getElementById("staff-login-screen");
+    if (ls) ls.style.display = "none";
+    const uname = document.getElementById("staff-user-name");
+    const uphoto = document.getElementById("staff-user-photo");
+    if (uname) uname.textContent = user.displayName || user.email;
+    if (uphoto && user.photoURL) { uphoto.src = user.photoURL; uphoto.style.display = "block"; }
+    window.dispatchEvent(new Event("firebaseReady"));
+  } else {
+    window._currentUser = null;
+    const ls = document.getElementById("staff-login-screen");
+    if (ls) ls.style.display = "flex";
+  }
+});
 </script>
 <script>
 // CAT_META: default values, will be overwritten by Firebase realtime sync
@@ -1114,6 +1137,40 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
 </style>
 </head>
 <body>
+<style>
+#staff-login-screen {
+  position:fixed;inset:0;background:#f5f3ef;display:flex;align-items:center;
+  justify-content:center;z-index:9999;font-family:"IBM Plex Sans Thai",sans-serif;
+}
+.staff-login-box {
+  background:#fff;border-radius:16px;padding:36px 32px;width:320px;
+  box-shadow:0 4px 24px rgba(0,0,0,.12);text-align:center;
+}
+.staff-login-box h1 { font-size:18px;font-weight:700;color:#c45570;margin-bottom:4px; }
+.staff-login-box p  { font-size:12px;color:#999;margin-bottom:24px; }
+.staff-google-btn {
+  width:100%;padding:12px 16px;background:#fff;color:#3c4043;border:1px solid #dadce0;
+  border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);transition:box-shadow .15s,background .15s;
+}
+.staff-google-btn:hover { background:#f8f9fa;box-shadow:0 2px 6px rgba(0,0,0,.12); }
+.staff-login-err { color:#c0392b;font-size:12px;margin-top:10px;display:none; }
+</style>
+
+<div id="staff-login-screen">
+  <div class="staff-login-box">
+    <div style="font-size:48px;margin-bottom:12px">🏥</div>
+    <h1>DD Nursing</h1>
+    <p>ระบบพนักงาน — กรุณาเข้าสู่ระบบ</p>
+    <button class="staff-google-btn" onclick="window._googleSignIn && window._googleSignIn().catch(e=>{ const err=document.getElementById('staff-login-err'); err.style.display='block'; err.textContent=e.message||'เกิดข้อผิดพลาด'; })">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.9 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-21 0-1.3-.2-2.7-.5-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.7 19.2 14 24 14c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2c-7.6 0-14.2 4.6-17.7 11.3z" opacity=".7"/><path fill="#FBBC05" d="M24 46c5.5 0 10.5-1.9 14.4-5l-6.7-5.5C29.6 37 26.9 38 24 38c-5.8 0-10.8-3.8-12.6-9l-7 5.4C8.1 41.6 15.4 46 24 46z" opacity=".7"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.9 37 24 37c-2.9 0-5.5-1-7.6-2.6l-7 5.4C13.2 43.6 18.3 46 24 46c11 0 21-8 21-21 0-1.3-.2-2.7-.5-4z" opacity=".7"/></svg>
+      เข้าสู่ระบบด้วย Google
+    </button>
+    <div class="staff-login-err" id="staff-login-err"></div>
+  </div>
+</div>
+
 <div class="app-layout">
 
   <!-- ===== SIDEBAR ===== -->
@@ -1134,6 +1191,13 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
 
     <!-- รายชื่อเคส (ซ่อน - แสดงใน dashboard แทน) -->
     <div class="sidebar-cases" id="sidebar-cases-list" style="display:none"></div>
+    <div style="padding:10px 14px;border-top:1px solid #f0ede8;margin-top:auto">
+      <div id="staff-sidebar-user" style="display:flex;align-items:center;gap:8px;font-size:12px;color:#666;margin-bottom:6px">
+        <img id="staff-user-photo" style="width:24px;height:24px;border-radius:50%;display:none" src="">
+        <span id="staff-user-name" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1"></span>
+      </div>
+      <button onclick="window._signOut && window._signOut()" style="width:100%;padding:7px;background:#fff5f5;color:#c0392b;border:1px solid #f5c6cb;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500">🚪 ออกจากระบบ</button>
+    </div>
   </aside>
 
   <!-- ===== MAIN ===== -->
