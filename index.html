@@ -1688,7 +1688,7 @@ async function schedUdEditNurseNote(nid) {
   if (newNote === null) return;
   const trimmed = newNote.trim();
   try {
-    await set(ref(db, `schedule_nurses_ud/${nid}/note`), trimmed || null);
+    await set(ref(db, `schedule_ud_nurses/${nid}/note`), trimmed || null);
   } catch(e) { alert('บันทึกไม่สำเร็จ: ' + e.message); }
 }
 window.schedMainEditNurseNote = schedMainEditNurseNote;
