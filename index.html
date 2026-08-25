@@ -993,6 +993,7 @@ const _SCHEDMAIN_CHIP_COLORS = {
   'ช3':['#ffedd5','#c2410c'],'ด3':['#fce7f3','#9d174d'],
   'ห': ['#fee2e2','#dc2626'],'ล': ['#fef9c3','#854d0e'],
   'บ': ['#fef3c7','#b45309'],'ว': ['#d1fae5','#065f46'],
+  'ค': ['#f0e6ff','#7c3aed'],
 };
 function _schedMainChipStyle(shift, branch) {
   const c = _SCHEDMAIN_CHIP_COLORS[shift+branch] || _SCHEDMAIN_CHIP_COLORS[shift] || ['#f3f4f6','#555'];
@@ -1077,8 +1078,8 @@ function _schedMainRenderTable() {
     const canDown = _i < nurses.length-1 && (nurses[_i+1][1].branch||'') === branch;
     const nd = _schedMainData[nid] || {};
     const rowBg = branch==='1'?'#f0f6ff':branch==='2'?'#f0faf4':branch==='3'?'#fff8f0':'#fafaf8';
-    const countMap = {ช:0,ด:0,ห:0,ล:0};
-    let workDays = 0, otNight = 0, cells = '';
+    const countMap = {ช:0,ด:0,ค:0,ห:0,ล:0};
+    let workDays = 0, offDays = 0, otNight = 0, cells = '';
 
     for (let d = 1; d <= days; d++) {
       const dow   = _schedMainDayOfWeek(ym, d);
@@ -1088,7 +1089,12 @@ function _schedMainRenderTable() {
       const slots = _schedMainParseVal(val);
       const shifts = slots.map(s => s.shift);
       shifts.forEach(sh => { if (countMap[sh]!==undefined) countMap[sh]++; });
-      if (shifts.some(sh=>sh==='ช'||sh==='ด')) workDays++;
+      // นับวันทำงาน: กะเต็ม = +1, ครึ่งวัน (ค) = +0.5
+      const hasFullShift = shifts.some(sh => sh==='ช'||sh==='ด'||sh==='บ');
+      const hasHalfDay   = shifts.includes('ค');
+      if (hasFullShift)      workDays += 1;
+      else if (hasHalfDay) { workDays += 0.5; offDays += 0.5; }
+      if (shifts.includes('ห')) offDays += 1;
       if (shifts.includes('ช') && shifts.includes('ด')) otNight++;
       const chips = slots.map(s =>
         `<span class="sched-chip" style="${_schedMainChipStyle(s.shift,s.branch)}">${_schedShiftGlyph(s.shift)}${s.branch||''}</span>`
@@ -1103,12 +1109,12 @@ function _schedMainRenderTable() {
     }
 
     const wdCell = `<td class="sched-sum-val">${workDays||'—'}</td>`;
-    const offCell = `<td class="sched-sum-val" style="${countMap['ห']>0?'color:#dc2626;font-weight:700':'color:#ccc'}">${countMap['ห']>0?countMap['ห']:'—'}</td>`;
+    const offCell = `<td class="sched-sum-val" style="${offDays>0?'color:#dc2626;font-weight:700':'color:#ccc'}">${offDays>0?offDays:'—'}</td>`;
     const otCell = `<td class="sched-sum-val" style="${otNight>0?'color:#6d28d9;font-weight:700':'color:#ccc'}">${otNight>0?otNight:'—'}</td>`;
     const otHolRaw = (nd._ot_holiday != null && nd._ot_holiday !== '') ? nd._ot_holiday : null;
     const otHolCell = `<td class="sched-sum-val sched-cell" style="${otHolRaw!=null?'color:#92400e;font-weight:700':'color:#ccc'}" onclick="schedMainEditOT('${nid}')">${otHolRaw!=null?otHolRaw:'—'}</td>`;
     const summary = Object.entries(countMap).filter(([,v])=>v>0)
-      .map(([k,v])=>`<span class="sched-sum-tag">${k}<b>${v}</b></span>`).join('');
+      .map(([k,v])=>`<span class="sched-sum-tag">${_schedShiftGlyph(k)}<b>${v}</b></span>`).join('');
     const sumCell = `<td class="sched-sum-val">${summary||'—'}</td>`;
     const nurseNote = nurse.note || '';
     const nurseNoteCell = `<td class="sched-sum-val sched-cell" style="font-size:11px;min-width:80px;max-width:130px;white-space:normal;line-height:1.4;cursor:pointer;${nurseNote?'color:#374151':'color:#ccc'}" onclick="schedMainEditNurseNote('${nid}')" title="${nurseNote?_schedEscHtml(nurseNote):'คลิกเพิ่มหมายเหตุ'}">${nurseNote?_schedEscHtml(nurseNote):'—'}</td>`;
@@ -1303,6 +1309,7 @@ const _SCHEDUD_CHIP_COLORS = {
   'ล': ['#fef9c3','#854d0e'],
   'บ': ['#fef3c7','#b45309'],
   'ว': ['#d1fae5','#065f46'],
+  'ค': ['#f0e6ff','#7c3aed'],
 };
 function _schedUdChipStyle(shift) {
   const c = _SCHEDUD_CHIP_COLORS[shift] || ['#f3f4f6','#555'];
@@ -1376,8 +1383,8 @@ function _schedUdRenderTable() {
     const canUp   = _i > 0;
     const canDown = _i < nurses.length-1;
     const nd = _schedUdData[nid] || {};
-    const countMap = {ช:0, ด:0, ห:0, ล:0};
-    let workDays = 0, otNight = 0, cells = '';
+    const countMap = {ช:0, ด:0, ค:0, ห:0, ล:0};
+    let workDays = 0, offDays = 0, otNight = 0, cells = '';
 
     for (let d = 1; d <= days; d++) {
       const dow   = _schedUdDayOfWeek(ym, d);
@@ -1387,7 +1394,12 @@ function _schedUdRenderTable() {
       const slots = _schedUdParseVal(val);
       const shifts = slots.map(s => s.shift);
       shifts.forEach(sh => { if (countMap[sh]!==undefined) countMap[sh]++; });
-      if (shifts.some(sh=>sh==='ช'||sh==='ด')) workDays++;
+      // นับวันทำงาน: กะเต็ม = +1, ครึ่งวัน (ค) = +0.5
+      const hasFullShift = shifts.some(sh => sh==='ช'||sh==='ด'||sh==='บ');
+      const hasHalfDay   = shifts.includes('ค');
+      if (hasFullShift)      workDays += 1;
+      else if (hasHalfDay) { workDays += 0.5; offDays += 0.5; }
+      if (shifts.includes('ห')) offDays += 1;
       if (shifts.includes('ช') && shifts.includes('ด')) otNight++;
       const chips = slots.map(s =>
         `<span class="sched-chip" style="${_schedUdChipStyle(s.shift)}">${_schedShiftGlyph(s.shift)}</span>`
@@ -1402,12 +1414,12 @@ function _schedUdRenderTable() {
     }
 
     const wdCell = `<td class="sched-sum-val">${workDays||'—'}</td>`;
-    const offCell = `<td class="sched-sum-val" style="${countMap['ห']>0?'color:#dc2626;font-weight:700':'color:#ccc'}">${countMap['ห']>0?countMap['ห']:'—'}</td>`;
+    const offCell = `<td class="sched-sum-val" style="${offDays>0?'color:#dc2626;font-weight:700':'color:#ccc'}">${offDays>0?offDays:'—'}</td>`;
     const otCell = `<td class="sched-sum-val" style="${otNight>0?'color:#6d28d9;font-weight:700':'color:#ccc'}">${otNight>0?otNight:'—'}</td>`;
     const otHolRaw = (nd._ot_holiday!=null && nd._ot_holiday!=='') ? nd._ot_holiday : null;
     const otHolCell = `<td class="sched-sum-val sched-cell" style="${otHolRaw!=null?'color:#92400e;font-weight:700':'color:#ccc'}" onclick="schedUdEditOT('${nid}')">${otHolRaw!=null?otHolRaw:'—'}</td>`;
     const summary = Object.entries(countMap).filter(([,v])=>v>0)
-      .map(([k,v])=>`<span class="sched-sum-tag">${k}<b>${v}</b></span>`).join('');
+      .map(([k,v])=>`<span class="sched-sum-tag">${_schedShiftGlyph(k)}<b>${v}</b></span>`).join('');
     const sumCell = `<td class="sched-sum-val">${summary||'—'}</td>`;
     const nurseNote = nurse.note || '';
     const nurseNoteCell = `<td class="sched-sum-val sched-cell" style="font-size:11px;min-width:80px;max-width:130px;white-space:normal;line-height:1.4;cursor:pointer;${nurseNote?'color:#374151':'color:#ccc'}" onclick="schedUdEditNurseNote('${nid}')" title="${nurseNote?_schedEscHtml(nurseNote):'คลิกเพิ่มหมายเหตุ'}">${nurseNote?_schedEscHtml(nurseNote):'—'}</td>`;
@@ -1690,6 +1702,7 @@ const _SCHED_SHIFT_CODES = [
   { code: 'ช', label: 'ช เช้า' },
   { code: 'ด', label: 'ด ดึก' },
   { code: 'บ', label: 'บ บ่าย' },
+  { code: 'ค', label: '½ ครึ่งวัน' },
   { code: 'ห', label: 'ห หยุด' },
   { code: 'ล', label: 'ล ลา' },
   { code: 'ว', label: 'ว วันหยุด' },
@@ -1760,7 +1773,9 @@ function _schedHighlightNote(s) {
 
 // แสดงกะ "ห" (หยุด) เป็นกากบาทสีแดงในตาราง แทนตัวอักษร (ค่าที่บันทึกจริงยังเป็น 'ห' เหมือนเดิม)
 function _schedShiftGlyph(shift) {
-  return shift === 'ห' ? '✗' : shift;
+  if (shift === 'ห') return '✗';
+  if (shift === 'ค') return '½';
+  return shift;
 }
 
 function _schedShiftMaxDay(branchType, ym) {
