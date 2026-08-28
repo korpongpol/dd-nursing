@@ -6794,6 +6794,9 @@ function printReceipt(custId, month) {
 function reRenderReceipt() {
   if (!_rcptCtx) return;
   _rcptCtx.targetMonth = document.getElementById('rcpt-override-month').value;
+  // อัปเดตวันที่ชำระให้ตรงกับเดือนที่เลือก (ถ้ามีข้อมูลชำระ)
+  const _newP = payments[payKey(_rcptCtx.custId, _rcptCtx.targetMonth)];
+  document.getElementById('rcpt-pay-date').value = _newP?.date || '';
   renderReceiptContent();
 }
 
