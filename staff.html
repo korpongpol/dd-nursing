@@ -4558,9 +4558,12 @@ function staffSchedInit() {
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
 img,video,canvas,svg,iframe{max-width:100%}
 input,select,textarea{max-width:100%}
-body{font-family:"Sarabun",sans-serif;background:#f8f7fb;color:#2b2733;font-size:16px;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+body{font-family:"Sarabun",sans-serif;background:#f8f7fb;color:#2b2733;font-size:16px;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;-webkit-text-size-adjust:100%}
+/* iOS Safari auto-zooms the page when a focused input's computed font-size is under 16px */
+@media (max-width:640px){ input,select,textarea{font-size:16px !important} }
 /* ===== APP LAYOUT ===== */
 .app-layout{display:flex;flex:1;min-height:0;overflow:hidden}
 /* main content */
