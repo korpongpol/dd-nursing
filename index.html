@@ -7,53 +7,65 @@
 <meta name="apple-mobile-web-app-title" content="DD Nursing Home">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#b85450">
+<meta name="theme-color" content="#c2588a">
 <link rel="manifest" href="manifest.json">
 <title>DD Nursing Home — ระบบจัดการลูกค้า</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f3ef;
+  --bg: #f8f7fb;
   --surface: #ffffff;
-  --surface2: #f0ede8;
-  --border: #e0dbd2;
-  --border2: #ccc8be;
-  --text: #1a1916;
-  --text2: #6b6760;
-  --text3: #9a9690;
-  --accent: #1a6b4a;
-  --accent-light: #e8f5ee;
-  --accent-mid: #2e9e6e;
-  --danger: #c0392b;
-  --danger-light: #fdf0ee;
-  --warning: #b8620a;
-  --warning-light: #fef6ed;
-  --info: #1a5c9e;
-  --info-light: #edf4fd;
-  --b1: #1a5c9e; --b1l: #deeaf8;
-  --b2: #1a6b4a; --b2l: #ddf0e8;
-  --b3: #7a4f0d; --b3l: #f5e8d0;
-  --b4: #7c3aed; --b4l: #ede9fe;
-  --paid: #1a6b4a; --paid-bg: #e8f5ee;
-  --unpaid: #c0392b; --unpaid-bg: #fdf0ee;
-  --partial: #b8620a; --partial-bg: #fef6ed;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.10);
+  --surface2: #f1eef7;
+  --border: #e3ddec;
+  --border2: #cfc6de;
+  --text: #2b2733;
+  --text2: #6c6577;
+  --text3: #9f97ab;
+  --accent: #c2588a;
+  --accent-dark: #a04270;
+  --accent-light: #fbe7f0;
+  --accent-mid: #5b9bd5;
+  --accent-mid-light: #e3eefa;
+  --danger: #d7263d;
+  --danger-light: #fdecec;
+  --warning: #a8660a;
+  --warning-light: #fbf1de;
+  --info: #4a86bd;
+  --info-light: #e3eefa;
+  --b1: #4a86bd; --b1l: #e3eefa;
+  --b2: #3f7d3a; --b2l: #e7f3e2;
+  --b3: #8a5a17; --b3l: #f6ecd9;
+  --b4: #8a5aa8; --b4l: #f2e9f7;
+  --paid: #3f7d3a; --paid-bg: #e7f3e2;
+  --unpaid: #d7263d; --unpaid-bg: #fdecec;
+  --partial: #a8660a; --partial-bg: #fbf1de;
+  --radius: 7px;
+  --radius-lg: 10px;
+  --shadow: 0 1px 2px rgba(60,40,80,.08), 0 1px 1px rgba(60,40,80,.04);
+  --shadow-md: 0 3px 14px rgba(60,40,80,.12);
+  /* Chrome (topbar/hero) — soft pink→blue pastel, distinct from the neutral page surface */
+  --sb-bg: #fbe9f1;
+  --sb-bg2: #ffffff;
+  --sb-border: #ecd9e5;
+  --sb-text: var(--text);
+  --sb-text-dim: var(--text2);
+  --sb-active-bg: var(--accent-light);
+  --sb-active-text: var(--accent);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'IBM Plex Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+body { font-family: 'Sarabun', 'Noto Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; min-height: 100vh; }
 input, select, textarea, button { font-family: inherit; font-size: 14px; }
+h1, h2, h3, .brand-logo, .tb-brand-name, .stat-value, .hp-stat-val, .hp-greeting, .topbar-title { font-family: 'Kanit', 'Sarabun', sans-serif; }
+.stat-value, .hp-stat-val, .td-id, .td-fee, .bill-amount { font-variant-numeric: tabular-nums; }
 
 /* Layout */
 .app { display: flex; height: 100vh; overflow: hidden; }
-.sidebar { width: 220px; min-width: 220px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: transform .25s, width .2s; z-index: 200; }
+.sidebar { width: 220px; min-width: 220px; background: var(--sb-bg); border-right: 1px solid var(--sb-border); display: flex; flex-direction: column; transition: transform .25s, width .2s; z-index: 200; }
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
 /* Sidebar collapse (ย่อ/ขยาย sidebar บนหน้าจอเดสก์ท็อป) */
-.sidebar-toggle-btn { flex-shrink: 0; width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
-.sidebar-toggle-btn:hover { background: var(--border); }
+.sidebar-toggle-btn { flex-shrink: 0; width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--sb-border); background: var(--sb-bg2); color: var(--sb-text-dim); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+.sidebar-toggle-btn:hover { background: var(--sb-border); color: var(--sb-text); }
 .sidebar.collapsed { width: 68px; min-width: 68px; }
 .sidebar.collapsed .brand-row { justify-content: center; }
 .sidebar.collapsed .brand-text, .sidebar.collapsed .nav-label, .sidebar.collapsed .nav-badge, .sidebar.collapsed .nav-section-label, .sidebar.collapsed #admin-user-name { display: none; }
@@ -61,7 +73,7 @@ input, select, textarea, button { font-family: inherit; font-size: 14px; }
 .sidebar.collapsed .sidebar-footer { padding: 12px 8px; display: flex; flex-direction: column; align-items: center; }
 .sidebar.collapsed .sidebar-signout-btn { width: auto; padding: 8px; }
 @media (max-width: 640px) { .sidebar.collapsed { width: 240px !important; min-width: 240px !important; } .sidebar.collapsed .brand-text, .sidebar.collapsed .nav-label, .sidebar.collapsed .nav-badge, .sidebar.collapsed .nav-section-label, .sidebar.collapsed #admin-user-name { display: block; } .sidebar.collapsed .nav-item { justify-content: flex-start; padding: 10px 16px; gap: 10px; } .sidebar.collapsed .sidebar-footer { display: block; } .sidebar.collapsed .sidebar-signout-btn { width: 100%; } .sidebar.collapsed .brand-row { justify-content: space-between; } }
-.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 12px; }
+.topbar { background: linear-gradient(120deg, var(--sb-bg) 0%, var(--accent-mid-light) 100%); border-bottom: 3px solid var(--accent); padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 12px; }
 .content { flex: 1; overflow-y: auto; padding: 20px; }
 
 /* Mobile responsive */
@@ -103,23 +115,23 @@ input, select, textarea, button { font-family: inherit; font-size: 14px; }
 }
 
 /* Sidebar */
-.brand { padding: 16px 16px 12px; border-bottom: 1px solid var(--border); }
-.brand-logo { font-size: 18px; font-weight: 600; color: var(--accent); letter-spacing: -.3px; }
-.brand-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
-.nav { padding: 8px 0; flex: 1; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; color: var(--text2); font-size: 13px; border-radius: 0; transition: all .15s; border-left: 3px solid transparent; -webkit-tap-highlight-color: transparent; }
-.nav-item:hover { background: var(--surface2); color: var(--text); }
-.nav-item.active { background: var(--accent-light); color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
+.brand { padding: 18px 16px 14px; border-bottom: 1px solid var(--sb-border); background: var(--sb-bg); border-left: 3px solid var(--accent-mid); }
+.brand-logo { font-size: 17px; font-weight: 600; color: var(--sb-text); letter-spacing: -.2px; }
+.brand-sub { font-size: 10px; color: var(--sb-text-dim); margin-top: 2px; text-transform: uppercase; letter-spacing: .6px; }
+.nav { padding: 10px 0; flex: 1; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; color: var(--sb-text-dim); font-size: 13px; border-radius: 0; transition: background .15s, color .15s; border-left: 3px solid transparent; -webkit-tap-highlight-color: transparent; }
+.nav-item:hover { background: var(--sb-bg2); color: var(--sb-text); }
+.nav-item.active { background: var(--sb-active-bg); color: var(--sb-active-text); border-left-color: var(--accent-mid); font-weight: 500; }
 .nav-icon { width: 18px; text-align: center; font-size: 15px; }
 .nav-badge { margin-left: auto; background: var(--danger); color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 20px; }
-.sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); }
-#admin-user-name { font-weight:600; color:var(--text2); margin-bottom:8px; font-size:12px; }
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--sb-border); font-size: 11px; color: var(--sb-text-dim); }
+#admin-user-name { font-weight:600; color:var(--sb-text); margin-bottom:8px; font-size:12px; }
 .sidebar-signout-btn {
-  width:100%; padding:8px; background:transparent; color:var(--text2); border:1px solid var(--border);
-  border-radius:8px; font-size:12px; font-family:inherit; cursor:pointer; display:flex; align-items:center;
-  justify-content:center; gap:6px;
+  width:100%; padding:8px; background:transparent; color:var(--sb-text-dim); border:1px solid var(--sb-border);
+  border-radius:7px; font-size:12px; font-family:inherit; cursor:pointer; display:flex; align-items:center;
+  justify-content:center; gap:6px; transition: all .15s;
 }
-.sidebar-signout-btn:hover { background:var(--border); }
+.sidebar-signout-btn:hover { background:var(--sb-bg2); color:var(--sb-text); border-color: var(--accent-mid); }
 
 /* Top bar */
 .topbar-title { font-size: 15px; font-weight: 500; color: var(--text); flex: 1; }
@@ -128,9 +140,9 @@ input, select, textarea, button { font-family: inherit; font-size: 14px; }
 .search-wrap input:focus { border-color: var(--accent); background: var(--surface); }
 .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 13px; }
 .btn { padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border); cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s; background: var(--surface); color: var(--text2); }
-.btn:hover { background: var(--surface2); color: var(--text); }
+.btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
 .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-.btn-primary:hover { background: #155c3e; }
+.btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
 .btn-sm { padding: 4px 10px; font-size: 12px; }
 
@@ -142,9 +154,10 @@ input, select, textarea, button { font-family: inherit; font-size: 14px; }
 
 /* Stats row */
 .stats-row { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 20px; }
-.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: border-color .15s; }
+.stat-card:hover { border-top-color: var(--accent-mid); }
 .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-.stat-value { font-size: 30px; font-weight: 600; color: var(--text); font-family: 'IBM Plex Mono', monospace; }
+.stat-value { font-size: 30px; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
 .stat-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
 .stat-card.green .stat-value { color: var(--accent); }
 .stat-card.red .stat-value { color: var(--danger); }
@@ -163,9 +176,9 @@ tbody tr { cursor: pointer; transition: background .1s; }
 tbody tr:hover { background: var(--accent-light); }
 tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
 td { padding: 10px 12px; font-size: 13px; vertical-align: middle; }
-.td-id { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text2); }
+.td-id { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text2); }
 .td-name { font-weight: 500; }
-.td-fee { font-family: 'IBM Plex Mono', monospace; text-align: right; }
+.td-fee { font-family: 'JetBrains Mono', monospace; text-align: right; }
 .td-branch span { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
 .b1-tag { background: var(--b1l); color: var(--b1); }
 .b2-tag { background: var(--b2l); color: var(--b2); }
@@ -209,7 +222,7 @@ td { padding: 10px 12px; font-size: 13px; vertical-align: middle; }
 .bill-list { display: flex; flex-direction: column; gap: 8px; }
 .bill-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
 .bill-month { font-size: 13px; font-weight: 600; min-width: 80px; }
-.bill-amount { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; }
+.bill-amount { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 500; }
 .bill-date { font-size: 12px; color: var(--text3); margin-left: auto; }
 .bill-note { font-size: 12px; color: var(--text2); }
 
@@ -248,11 +261,11 @@ td { padding: 10px 12px; font-size: 13px; vertical-align: middle; }
 .sum-row { padding: 10px 12px; background: var(--surface2); border-top: 2px solid var(--border2); font-size: 13px; font-weight: 600; display: flex; justify-content: flex-end; gap: 24px; color: var(--text); }
 
 /* Inactive / discharged */
-.status-inactive { background: #ededea; color: #6b6760; }
+.status-inactive { background: #ededea; color: #6b6152; }
 tr.row-inactive { opacity: .55; background: #fafaf8 !important; }
 tr.row-inactive:hover { background: #f3f2ef !important; }
-.inactive-tag { background: #ededea; color: #6b6760; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 4px; font-weight: 600; letter-spacing: .2px; }
-.discharged-banner { background: #f5f3ef; border: 1px solid #d6d3cc; border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); }
+.inactive-tag { background: #ededea; color: #6b6152; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 4px; font-weight: 600; letter-spacing: .2px; }
+.discharged-banner { background: #f2efe7; border: 1px solid #d6d3cc; border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); }
 .discharged-banner .db-icon { font-size: 18px; }
 .discharged-banner strong { color: var(--text); }
 
@@ -332,14 +345,14 @@ tr.row-inactive:hover { background: #f3f2ef !important; }
 .reminder-card-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
 .reminder-card-head h3 { font-size: 13px; font-weight: 600; flex: 1; }
 .reminder-badge { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; }
-.reminder-today { background: #fde8e6; color: #c0392b; border: 1px solid #f5b8b0; }
-.reminder-soon  { background: #fef6ed; color: #b8620a; border: 1px solid #f0c490; }
+.reminder-today { background: #fde8e6; color: #d7263d; border: 1px solid #f5b8b0; }
+.reminder-soon  { background: #fbf1de; color: #a8660a; border: 1px solid #f0c490; }
 .reminder-row { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 0.5px solid var(--border); font-size: 13px; cursor: pointer; transition: background .1s; }
 .reminder-row:last-child { border-bottom: none; }
 .reminder-row:hover { background: var(--surface2); }
 .reminder-due { font-size: 11px; color: var(--text3); min-width: 60px; }
-.reminder-dot-today { width:8px;height:8px;border-radius:50%;background:#c0392b;flex-shrink:0; }
-.reminder-dot-soon  { width:8px;height:8px;border-radius:50%;background:#b8620a;flex-shrink:0; }
+.reminder-dot-today { width:8px;height:8px;border-radius:50%;background:#d7263d;flex-shrink:0; }
+.reminder-dot-soon  { width:8px;height:8px;border-radius:50%;background:#a8660a;flex-shrink:0; }
 
 /* Print */
 @media print { .sidebar, .topbar { display: none; } .content { padding: 0; } }
@@ -397,38 +410,43 @@ tr.row-inactive:hover { background: #f3f2ef !important; }
   padding: 5px 10px 5px 0; border-radius: 8px; transition: background .15s;
   flex-shrink: 0; user-select: none;
 }
-.tb-brand:hover { background: var(--surface2); }
+.tb-brand:hover { background: var(--sb-bg2); }
 .tb-brand-icon { font-size: 22px; line-height: 1; }
-.tb-brand-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -.3px; white-space: nowrap; }
-.tb-brand-sub { font-size: 10px; color: var(--text3); line-height: 1; }
+.tb-brand-name { font-size: 15px; font-weight: 700; color: var(--sb-text); letter-spacing: -.3px; white-space: nowrap; }
+.tb-brand-sub { font-size: 10px; color: var(--sb-text-dim); line-height: 1; }
 
-.tb-divider { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; margin: 0 4px; }
+.tb-divider { width: 1px; height: 22px; background: var(--sb-border); flex-shrink: 0; margin: 0 4px; }
 
 .tb-crumb { display: none; align-items: center; gap: 6px; flex-shrink: 0; }
 .tb-crumb.show { display: flex; }
-.tb-crumb-sep { color: var(--text3); font-size: 16px; line-height: 1; }
-.tb-crumb-page { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+.tb-crumb-sep { color: var(--sb-text-dim); font-size: 16px; line-height: 1; }
+.tb-crumb-page { font-size: 14px; font-weight: 500; color: var(--sb-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
 
 .tb-action {
   display: flex; align-items: center; gap: 5px;
-  padding: 5px 11px; border: 1px solid var(--border); border-radius: 8px;
-  background: var(--surface); color: var(--text2); cursor: pointer;
+  padding: 5px 11px; border: 1px solid var(--sb-border); border-radius: 8px;
+  background: var(--sb-bg2); color: var(--sb-text-dim); cursor: pointer;
   font-size: 12px; font-family: inherit; transition: all .15s; flex-shrink: 0;
   line-height: 1.4;
 }
-.tb-action:hover { background: var(--surface2); border-color: var(--border2); color: var(--text); }
-.tb-action.has-alert { background: var(--danger-light); border-color: #fca5a5; color: var(--danger); }
+.tb-action:hover { background: var(--sb-border); color: var(--sb-text); }
+.tb-action.has-alert { background: var(--danger-light); border-color: #f3b8be; color: var(--danger); }
 .tb-cnt { background: var(--danger); color: #fff; border-radius: 20px; padding: 1px 6px; font-size: 10px; font-weight: 700; min-width: 16px; text-align: center; line-height: 1.6; }
-.tb-cnt.zero { background: var(--border); color: var(--text3); }
+.tb-cnt.zero { background: var(--sb-border); color: var(--sb-text-dim); }
 
 .tb-user { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 0 4px; }
-.tb-user-name { font-size: 12px; font-weight: 500; color: var(--text2); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tb-user-name { font-size: 12px; font-weight: 500; color: var(--sb-text-dim); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tb-signout {
-  padding: 5px 10px; border: 1px solid var(--border); border-radius: 8px;
-  background: transparent; color: var(--text2); cursor: pointer; font-family: inherit;
+  padding: 5px 10px; border: 1px solid var(--sb-border); border-radius: 8px;
+  background: transparent; color: var(--sb-text-dim); cursor: pointer; font-family: inherit;
   font-size: 12px; transition: all .15s; white-space: nowrap;
 }
-.tb-signout:hover { background: var(--danger-light); color: var(--danger); border-color: #fca5a5; }
+.tb-signout:hover { background: var(--danger-light); color: var(--danger); border-color: #f3b8be; }
+
+.search-wrap input { background: var(--sb-bg2); border-color: var(--sb-border); color: var(--sb-text); }
+.search-wrap input::placeholder { color: var(--sb-text-dim); }
+.search-wrap input:focus { border-color: var(--accent-mid); background: var(--sb-bg2); }
+.search-wrap .search-icon { color: var(--sb-text-dim); }
 
 /* Hide old sidebar refs */
 .hamburger { display: none !important; }
@@ -477,94 +495,59 @@ tr.row-inactive:hover { background: #f3f2ef !important; }
 }
 
 /* ===== SIDEBAR REDESIGN ===== */
-.brand {
-  background: linear-gradient(155deg, #0f4a33 0%, #1a6b4a 60%, #1a5c9e 100%);
-  padding: 18px 16px 14px;
-}
-.brand-logo { color: #fff; font-size: 18px; letter-spacing: -.3px; }
-.brand-sub { color: rgba(255,255,255,.6); font-size: 10px; margin-top: 2px; }
-.brand-row { display:flex; align-items:center; justify-content:space-between; }
-.sidebar-toggle-btn {
-  background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.25);
-  color: rgba(255,255,255,.85);
-}
-.sidebar-toggle-btn:hover { background: rgba(255,255,255,.28); }
-
-/* Pill-style nav */
+/* (base dark-ink styling lives in the Sidebar section above; this pass only
+   restates the layout tweaks the later cascade relies on) */
 .nav { padding: 6px 0; }
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px; cursor: pointer; color: var(--text2);
-  font-size: 13px; transition: all .15s;
-  border-left: 3px solid transparent;
-  border-radius: 0; margin: 0;
-}
-.nav-item:hover { background: var(--surface2); color: var(--text); }
-.nav-item.active {
-  background: var(--accent-light); color: var(--accent);
-  border-left-color: var(--accent); font-weight: 500;
-}
 .nav-section-label {
-  font-size: 10px; font-weight: 600; color: var(--text3);
+  font-size: 10px; font-weight: 600; color: var(--sb-text-dim);
   text-transform: uppercase; letter-spacing: .7px;
   padding: 12px 16px 4px; pointer-events: none;
 }
 
 /* Topbar improvements */
-.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 12px; }
+.topbar { background: linear-gradient(120deg, var(--sb-bg) 0%, var(--accent-mid-light) 100%); border-bottom: 3px solid var(--accent); padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 12px; }
 
 /* ===== HOMEPAGE ===== */
 .hp-wrap { max-width: none; width: 100%; }
 
 .hp-hero {
-  background: linear-gradient(135deg, #0f4a33 0%, #1a6b4a 45%, #1a5c9e 100%);
-  border-radius: 16px; padding: 28px 32px; margin-bottom: 24px;
-  color: #fff; position: relative; overflow: hidden;
+  background: linear-gradient(120deg, var(--accent-light) 0%, var(--accent-mid-light) 100%);
+  border-radius: var(--radius-lg); padding: 26px 32px; margin-bottom: 24px;
+  color: var(--text); position: relative; overflow: hidden;
+  border-left: 4px solid var(--accent);
 }
-.hp-hero::before {
-  content: ''; position: absolute; top: -50px; right: -50px;
-  width: 220px; height: 220px; background: rgba(255,255,255,.06);
-  border-radius: 50%;
-}
-.hp-hero::after {
-  content: ''; position: absolute; bottom: -70px; right: 80px;
-  width: 180px; height: 180px; background: rgba(255,255,255,.04);
-  border-radius: 50%;
-}
+.hp-hero::before { content: none; }
+.hp-hero::after { content: none; }
 .hp-hero-inner { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-.hp-greeting { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
-.hp-date { font-size: 13px; opacity: .7; }
-.hp-hero-badge { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); border-radius: 20px; padding: 5px 14px; font-size: 12px; white-space: nowrap; }
+.hp-greeting { font-size: 23px; font-weight: 600; margin-bottom: 4px; }
+.hp-date { font-size: 13px; color: var(--sb-text-dim); }
+.hp-hero-badge { background: var(--sb-bg2); border: 1px solid var(--sb-border); color: var(--sb-active-text); border-radius: 6px; padding: 5px 14px; font-size: 12px; white-space: nowrap; }
 
 .hp-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
 .hp-stat {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 14px; padding: 18px 20px;
+  background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
   display: flex; align-items: center; gap: 14px;
-  cursor: pointer; transition: box-shadow .18s, transform .18s;
+  cursor: pointer; transition: border-color .16s, background .16s;
 }
-.hp-stat:hover { box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
-.hp-stat-icon { font-size: 28px; flex-shrink: 0; }
-.hp-stat-val { font-size: 26px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; line-height: 1; }
+.hp-stat:hover { border-top-color: var(--accent-mid); background: var(--accent-light); }
+.hp-stat-icon { font-size: 26px; flex-shrink: 0; }
+.hp-stat-val { font-size: 25px; font-weight: 600; font-family: 'JetBrains Mono', monospace; line-height: 1; }
 .hp-stat-lbl { font-size: 11px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: .4px; }
 
 .hp-section { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .7px; margin: 0 0 12px; }
 
 .hp-modules { display: grid; grid-template-columns: repeat(auto-fill, minmax(172px, 1fr)); gap: 10px; margin-bottom: 24px; }
 .hp-mod {
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 14px; padding: 18px 16px;
-  cursor: pointer; transition: border-color .16s, box-shadow .16s, transform .16s;
+  background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--border);
+  border-radius: var(--radius); padding: 18px 16px;
+  cursor: pointer; transition: border-color .14s, background .14s;
   display: flex; flex-direction: column; gap: 7px;
   position: relative; overflow: hidden;
 }
-.hp-mod::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: var(--mc, var(--accent)); opacity: 0; transition: opacity .16s;
-}
-.hp-mod:hover { border-color: var(--mc, var(--accent)); box-shadow: 0 4px 18px rgba(0,0,0,.09); transform: translateY(-2px); }
-.hp-mod:hover::after { opacity: 1; }
-.hp-mod-icon { font-size: 26px; }
+.hp-mod::after { content: none; }
+.hp-mod:hover { border-left-color: var(--mc, var(--accent-mid)); background: var(--surface2); }
+.hp-mod-icon { font-size: 24px; }
 .hp-mod-name { font-size: 13px; font-weight: 600; color: var(--text); }
 .hp-mod-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
 .hp-mod-badge {
@@ -988,12 +971,12 @@ function renderSchedMainPage() {
 }
 
 const _SCHEDMAIN_CHIP_COLORS = {
-  'ช1':['#dbeafe','#1d4ed8'],'ด1':['#ede9fe','#5b21b6'],
+  'ช1':['#dbeafe','#1d4ed8'],'ด1':['#efe7f7','#5b21b6'],
   'ช2':['#d1fae5','#065f46'],'ด2':['#fde68a','#78350f'],
   'ช3':['#ffedd5','#c2410c'],'ด3':['#fce7f3','#9d174d'],
   'ห': ['#fee2e2','#dc2626'],'ล': ['#fef9c3','#854d0e'],
   'บ': ['#fef3c7','#b45309'],'ว': ['#d1fae5','#065f46'],
-  'ค': ['#f0e6ff','#7c3aed'],
+  'ค': ['#f0e6ff','#6b3fa0'],
 };
 function _schedMainChipStyle(shift, branch) {
   const c = _SCHEDMAIN_CHIP_COLORS[shift+branch] || _SCHEDMAIN_CHIP_COLORS[shift] || ['#f3f4f6','#555'];
@@ -1051,7 +1034,7 @@ function _schedMainRenderTable() {
     if (branch !== lastBranch) {
       lastBranch = branch;
       const bLabel = branch==='1'?'🏥 สาขา 1':branch==='2'?'🏥 สาขา 2':branch==='3'?'🏥 สาขา 3':'📋 ยังไม่ระบุสาขา';
-      const bBg    = branch==='1'?'#dbeafe':branch==='2'?'#d1fae5':branch==='3'?'#ffedd5':'#f0ede8';
+      const bBg    = branch==='1'?'#dbeafe':branch==='2'?'#d1fae5':branch==='3'?'#ffedd5':'#eae3d5';
       const bColor = branch==='1'?'#1d4ed8':branch==='2'?'#065f46':branch==='3'?'#c2410c':'#888';
       html += `<tr class="sched-branch-row"><td colspan="${days+9}" style="background:${bBg};color:${bColor}">${bLabel}</td></tr>`;
       // ── แถวหมายเหตุประจำวัน (ต่อจากหัวสาขา) ──────────────────────────
@@ -1309,7 +1292,7 @@ const _SCHEDUD_CHIP_COLORS = {
   'ล': ['#fef9c3','#854d0e'],
   'บ': ['#fef3c7','#b45309'],
   'ว': ['#d1fae5','#065f46'],
-  'ค': ['#f0e6ff','#7c3aed'],
+  'ค': ['#f0e6ff','#6b3fa0'],
 };
 function _schedUdChipStyle(shift) {
   const c = _SCHEDUD_CHIP_COLORS[shift] || ['#f3f4f6','#555'];
@@ -2240,16 +2223,17 @@ window.fbDiagnose = async function(branchPrefix) {
 
 <style id="login-style">
 #login-screen {
-  position:fixed;inset:0;background:#f5f3ef;display:flex;align-items:center;
-  justify-content:center;z-index:9999;font-family:"IBM Plex Sans Thai",sans-serif;
+  position:fixed;inset:0;background:linear-gradient(135deg, #fbe0ec 0%, #dbe9fa 100%);display:flex;align-items:center;
+  justify-content:center;z-index:9999;font-family:"Sarabun",sans-serif;
 }
 .login-box {
-  background:#fff;border-radius:16px;padding:36px 32px;width:340px;
-  box-shadow:0 4px 24px rgba(0,0,0,.12);text-align:center;
+  background:#fff;border-radius:14px;padding:36px 32px;width:340px;
+  border-top:4px solid #c2588a;
+  box-shadow:0 12px 40px rgba(90,60,90,.18);text-align:center;
 }
-.login-box img { width:80px;height:80px;object-fit:contain;margin-bottom:12px;border-radius:50%; }
-.login-box h1 { font-size:18px;font-weight:600;color:#c45570;margin-bottom:4px; }
-.login-box p  { font-size:12px;color:#999;margin-bottom:20px; }
+.login-box img { width:76px;height:76px;object-fit:contain;margin-bottom:12px;border-radius:10px; }
+.login-box h1 { font-family:"Kanit",sans-serif; font-size:19px;font-weight:600;color:#2b2733;margin-bottom:4px; }
+.login-box p  { font-size:12px;color:#9f97ab;margin-bottom:20px; }
 .login-google-btn {
   width:100%;padding:12px 16px;background:#fff;color:#3c4043;border:1px solid #dadce0;
   border-radius:8px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;
@@ -2257,7 +2241,7 @@ window.fbDiagnose = async function(branchPrefix) {
   box-shadow:0 1px 3px rgba(0,0,0,.08);transition:box-shadow .15s,background .15s;
 }
 .login-google-btn:hover { box-shadow:0 2px 6px rgba(0,0,0,.15); background:#f8f8f8; }
-.login-err { color:#c0392b;font-size:12px;margin-top:10px;display:none; }
+.login-err { color:var(--danger);font-size:12px;margin-top:10px;display:none; }
 </style>
 <script>
 // ลงทะเบียน sw.js (Service Worker เปล่า ไม่แคชอะไร) — มีไว้แค่ให้ Android/Chrome จัดเป็น PWA ติดตั้งได้
@@ -2416,7 +2400,7 @@ if ('serviceWorker' in navigator) {
           <div id="dc-progress">
             <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
               <span>ชำระแล้ว <b id="dc-paid-pct">0%</b></span>
-              <span id="dc-paid-amt" style="font-family:'IBM Plex Mono',monospace;font-size:13px">฿0 / ฿0</span>
+              <span id="dc-paid-amt" style="font-family:'JetBrains Mono',monospace;font-size:13px">฿0 / ฿0</span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="dc-fill" style="width:0%"></div></div>
             <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
@@ -2816,7 +2800,7 @@ if ('serviceWorker' in navigator) {
 
     <!-- ISSUES PAGE -->
     <div class="page" id="page-issues">
-      <div class="alert alert-ok" style="background:#e8f5ee;border-color:#b0d8c0">
+      <div class="alert alert-ok" style="background:#fbe7f0;border-color:#b0d8c0">
         <span class="alert-icon">✅</span>
         <b>ไม่พบข้อมูลซ้ำซ้อน</b> — ข้อมูลลูกค้าปัจจุบันทั้งหมดไม่มีชื่อซ้ำกันค่ะ
       </div>
@@ -2907,7 +2891,7 @@ if ('serviceWorker' in navigator) {
       margin-bottom: 28px;
     }
     .bm-building-header {
-      background: linear-gradient(135deg, #b85450 0%, #6b2d2b 100%);
+      background: linear-gradient(135deg, #c2588a 0%, #7d3f68 100%);
       padding: 14px 20px;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
@@ -3010,20 +2994,20 @@ if ('serviceWorker' in navigator) {
 
     <style>
     .sched-table{border-collapse:collapse;width:100%;min-width:max-content;font-size:15px;font-family:inherit}
-    .sched-table th{position:sticky;top:0;z-index:2;background:var(--surface2);color:#555;font-weight:600;padding:7px 4px;text-align:center;border-bottom:2px solid #e0dbd2;border-right:1px solid #ddd6cc;white-space:nowrap;min-width:26px}
+    .sched-table th{position:sticky;top:0;z-index:2;background:var(--surface2);color:#555;font-weight:600;padding:7px 4px;text-align:center;border-bottom:2px solid #ddd2ba;border-right:1px solid #ddd6cc;white-space:nowrap;min-width:26px}
     .sched-table td{padding:5px 4px;text-align:center;border-bottom:1px solid #e9e5dd;border-right:1px solid #e9e5dd;vertical-align:middle;min-width:26px}
-    .sched-name-col{position:sticky;left:0;z-index:3;background:var(--surface2)!important;text-align:left!important;min-width:130px;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:12px!important;padding-right:10px!important;border-right:1.5px solid #e0dbd2;font-weight:500}
+    .sched-name-col{position:sticky;left:0;z-index:3;background:var(--surface2)!important;text-align:left!important;min-width:130px;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:12px!important;padding-right:10px!important;border-right:1.5px solid #ddd2ba;font-weight:500}
     .sched-table th.sched-name-col{z-index:4}
     .sched-today-col{background:#f0fdf4!important;color:#16a34a!important;font-weight:700}
-    .sched-daynote-row td{background:#f7f5f0!important;padding:3px 2px!important;border-bottom:2px solid #e0dbd2!important}
+    .sched-daynote-row td{background:#f7f5f0!important;padding:3px 2px!important;border-bottom:2px solid #ddd2ba!important}
     .sched-daynote-cell{cursor:pointer;text-align:center}
     .sched-daynote-cell:hover{background:#ede8e0!important}
     .sched-chip{display:inline-block;padding:2px 5px;border-radius:5px;font-size:14px;font-weight:600;line-height:1.3;white-space:nowrap;margin-bottom:2px}
     .sched-empty{color:#ddd;font-size:12px}
     .sched-cell-note{margin-top:3px;font-size:10.5px;color:var(--text3);line-height:1.25;max-width:64px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:auto;margin-right:auto;font-weight:400}
     .sched-branch-row td{font-size:13px;font-weight:700;padding:5px 12px;letter-spacing:.3px;position:sticky;left:0}
-    .sched-sum-col{position:sticky;top:0;z-index:2;font-size:13px;font-weight:600;padding:6px 5px;text-align:center;white-space:nowrap;border-left:2px solid #e0dbd2}
-    .sched-sum-val{text-align:center;font-size:15px;padding:5px 7px;border-left:2px solid #e0dbd2;vertical-align:middle}
+    .sched-sum-col{position:sticky;top:0;z-index:2;font-size:13px;font-weight:600;padding:6px 5px;text-align:center;white-space:nowrap;border-left:2px solid #ddd2ba}
+    .sched-sum-val{text-align:center;font-size:15px;padding:5px 7px;border-left:2px solid #ddd2ba;vertical-align:middle}
     .sched-sum-tag{display:inline-block;margin:1px 2px;font-size:13px;color:#555;white-space:nowrap}
     .sched-sum-tag b{margin-left:1px;color:#333}
     .sched-cell{cursor:pointer;transition:background .1s}
@@ -3034,14 +3018,14 @@ if ('serviceWorker' in navigator) {
     .sched-month-nav{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #e8e5e0}
     .sched-month-nav .btn{padding:6px 12px}
     .sched-month-nav .sched-month-label{font-size:15px;font-weight:600;min-width:120px;text-align:center}
-    .sched-tab-btn{padding:9px 20px;border-radius:var(--radius);border:1px solid #e0dbd2;background:#fff;color:var(--text2);font-weight:600;cursor:pointer;font-size:14px}
+    .sched-tab-btn{padding:9px 20px;border-radius:var(--radius);border:1px solid #ddd2ba;background:#fff;color:var(--text2);font-weight:600;cursor:pointer;font-size:14px}
     .sched-tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
     .sched-clear-btn{background:none;border:none;color:var(--danger);font-size:12px;text-decoration:underline;cursor:pointer;opacity:.75;padding:0}
     .sched-clear-btn:hover{opacity:1}
-    .sched-collapse-btn{background:none;border:1px solid #e0dbd2;border-radius:var(--radius);color:var(--text2);font-size:12px;cursor:pointer;padding:4px 10px;white-space:nowrap}
+    .sched-collapse-btn{background:none;border:1px solid #ddd2ba;border-radius:var(--radius);color:var(--text2);font-size:12px;cursor:pointer;padding:4px 10px;white-space:nowrap}
     .sched-collapse-btn:hover{background:var(--surface2)}
     .sched-table-scroll{overflow:auto;max-height:72vh}
-    .sched-shift-btn,.sched-branch-btn{padding:8px 14px;border-radius:var(--radius);border:1px solid #e0dbd2;background:#fff;color:var(--text2);font-weight:600;cursor:pointer;font-size:14px;margin:3px}
+    .sched-shift-btn,.sched-branch-btn{padding:8px 14px;border-radius:var(--radius);border:1px solid #ddd2ba;background:#fff;color:var(--text2);font-weight:600;cursor:pointer;font-size:14px;margin:3px}
     .sched-shift-btn.active,.sched-branch-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
     .sched-shift-btns,.sched-branch-btns{display:flex;flex-wrap:wrap;margin:0 -3px}
     .sched-branch-btns{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
@@ -3061,7 +3045,7 @@ if ('serviceWorker' in navigator) {
           จัดการตารางเวรพนักงานสาขาหลัก — เพิ่ม/ลบพนักงานในตาราง และคลิกที่ช่องวันที่เพื่อกำหนดกะได้โดยตรง พนักงานจะเห็นตารางนี้แบบอ่านอย่างเดียวในแอป staff.html
           <div style="margin-top:8px">
             <span class="sched-legend-tag" style="background:#dbeafe;color:#1d4ed8">ช1/ช2/ช3 เช้า</span>
-            <span class="sched-legend-tag" style="background:#ede9fe;color:#5b21b6">ด1/ด2/ด3 ดึก</span>
+            <span class="sched-legend-tag" style="background:#efe7f7;color:#5b21b6">ด1/ด2/ด3 ดึก</span>
             <span class="sched-legend-tag" style="background:#f1f5f9;color:#475569">ห หยุด</span>
             <span class="sched-legend-tag" style="background:#fef9c3;color:#854d0e">ล ลา</span>
             <span class="sched-legend-tag" style="background:#fef3c7;color:#b45309">บ บ่าย</span>
@@ -3839,11 +3823,11 @@ if ('serviceWorker' in navigator) {
         </div>
         <div class="form-group">
           <label>สีตัวอักษร</label>
-          <input type="color" id="ct-color" value="#1a6b4a" oninput="updateCatTypePreview()" style="height:38px;padding:2px 4px;border:1px solid var(--border);border-radius:var(--radius)">
+          <input type="color" id="ct-color" value="#c2588a" oninput="updateCatTypePreview()" style="height:38px;padding:2px 4px;border:1px solid var(--border);border-radius:var(--radius)">
         </div>
         <div class="form-group">
           <label>สีพื้นหลัง</label>
-          <input type="color" id="ct-bg" value="#e8f5ee" oninput="updateCatTypePreview()" style="height:38px;padding:2px 4px;border:1px solid var(--border);border-radius:var(--radius)">
+          <input type="color" id="ct-bg" value="#fbe7f0" oninput="updateCatTypePreview()" style="height:38px;padding:2px 4px;border:1px solid var(--border);border-radius:var(--radius)">
         </div>
       </div>
       <!-- Preview -->
@@ -3971,21 +3955,21 @@ if ('serviceWorker' in navigator) {
         <button class="btn btn-sm" onclick="rcptAddDiscount()" style="font-size:11px;padding:3px 10px;background:#fff0f0;border-color:#fca5a5;color:#b91c1c;font-weight:600">🏷️ เพิ่มส่วนลด</button>
         <button class="btn btn-sm" onclick="reRenderReceipt()" style="font-size:11px;padding:3px 10px">🔄 อัพเดตใบเสร็จ</button>
         <button class="btn btn-sm" onclick="rcptShowAddReqPanel()" style="font-size:11px;padding:3px 10px;background:#fffbeb;border-color:#f59e0b;color:#92400e">📦 เพิ่มรายการเบิก</button>
-        <button class="btn btn-sm" id="rcpt-split-toggle-btn" onclick="rcptToggleSplitPanel()" style="font-size:11px;padding:3px 10px;background:#f0fdf4;border-color:#86efac;color:#1a6b4a;font-weight:600">✂️ แบ่ง 2 งวด</button>
+        <button class="btn btn-sm" id="rcpt-split-toggle-btn" onclick="rcptToggleSplitPanel()" style="font-size:11px;padding:3px 10px;background:#f0fdf4;border-color:#86efac;color:#c2588a;font-weight:600">✂️ แบ่ง 2 งวด</button>
       </div>
 
       <!-- Split-bill panel inside receipt modal -->
       <div id="rcpt-split-panel" style="display:none;margin-bottom:10px;padding:14px 16px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="font-size:13px;font-weight:700;color:#1a6b4a">✂️ แบ่งจ่าย 2 งวด — ออกใบวางบิลให้ลูกค้า</div>
-          <div id="rcpt-split-total-display" style="font-size:12px;color:#1a6b4a;font-weight:600"></div>
+          <div style="font-size:13px;font-weight:700;color:#c2588a">✂️ แบ่งจ่าย 2 งวด — ออกใบวางบิลให้ลูกค้า</div>
+          <div id="rcpt-split-total-display" style="font-size:12px;color:#c2588a;font-weight:600"></div>
         </div>
 
         <!-- Installment 1 -->
         <div style="background:#fff;border:1.5px solid #b0d8c0;border-radius:8px;padding:12px 14px;margin-bottom:10px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <span style="font-weight:700;font-size:13px;color:#1a6b4a">งวดที่ 1</span>
-            <button onclick="rcptPrintInstBill(1)" class="btn btn-sm" style="font-size:11px;padding:3px 10px;background:#1a6b4a;color:#fff;border-color:#1a6b4a">📄 พิมพ์ใบวางบิลงวด 1</button>
+            <span style="font-weight:700;font-size:13px;color:#c2588a">งวดที่ 1</span>
+            <button onclick="rcptPrintInstBill(1)" class="btn btn-sm" style="font-size:11px;padding:3px 10px;background:#c2588a;color:#fff;border-color:#c2588a">📄 พิมพ์ใบวางบิลงวด 1</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
             <div><label style="font-size:11px;color:#555;display:block;margin-bottom:3px">จำนวนเงิน (บาท)</label>
@@ -4000,8 +3984,8 @@ if ('serviceWorker' in navigator) {
         <!-- Installment 2 -->
         <div style="background:#fff;border:1.5px solid #b0d8c0;border-radius:8px;padding:12px 14px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <span style="font-weight:700;font-size:13px;color:#1a6b4a">งวดที่ 2</span>
-            <button onclick="rcptPrintInstBill(2)" class="btn btn-sm" style="font-size:11px;padding:3px 10px;background:#1a6b4a;color:#fff;border-color:#1a6b4a">📄 พิมพ์ใบวางบิลงวด 2</button>
+            <span style="font-weight:700;font-size:13px;color:#c2588a">งวดที่ 2</span>
+            <button onclick="rcptPrintInstBill(2)" class="btn btn-sm" style="font-size:11px;padding:3px 10px;background:#c2588a;color:#fff;border-color:#c2588a">📄 พิมพ์ใบวางบิลงวด 2</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
             <div><label style="font-size:11px;color:#555;display:block;margin-bottom:3px">จำนวนเงิน (บาท)</label>
@@ -4061,7 +4045,7 @@ if ('serviceWorker' in navigator) {
 
 <style id="receipt-print-styles">
 #receipt-print-area {
-  font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+  font-family: 'Sarabun', sans-serif;
   font-size: 13px;
   color: #111;
   background: #fff;
@@ -4454,7 +4438,7 @@ function buildBillingReminders() {
               : '<span class="status-badge status-unpaid" style="font-size:10px">ยังไม่ชำระ</span>'}
             ${isInvoiced(c.id, c.billMonth)
               ? `<span onclick="event.stopPropagation();toggleInvoiced('${c.id}','${c.billMonth}')" title="คลิกเพื่อยกเลิก"
-                  style="display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:#e8f5ee;color:#1a6b4a;border:1px solid #b0d8c0;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">
+                  style="display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:#fbe7f0;color:#c2588a;border:1px solid #b0d8c0;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">
                   ✅ ออกบิลแล้ว
                 </span>`
               : `<button onclick="event.stopPropagation();toggleInvoiced('${c.id}','${c.billMonth}')"
@@ -4497,7 +4481,7 @@ function _syncTopbarBadges() {
 window._syncTopbarBadges = _syncTopbarBadges;
 
 // ========== DATA ==========
-const RAW = [{"id": "DD1/03", "name": "คุณ สามารถ สถิตย์วงศ์", "branch": "สาขา 1", "fee": 16000, "address": "2528/28 ถ.กรุงเทพ-นนทบุรี แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "089-699-9809 , 085-110-1105", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "3-ก.ค.-2567"}, {"id": "DD1/04", "name": "คุณ เนียม สิงห์เอี่ยม", "branch": "สาขา 1", "fee": 18000, "address": "127/115 ซ.วิภาวดีรังสิต 60 แยก 18-4-6 แขวงตลาดบางเขน เขตหลักสี่ กรุงเทพมหานคร", "phone": "085-138-3253", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-พ.ค.-2566"}, {"id": "DD1/05", "name": "คุณ สุภา ลิมปิสวัสดิ์", "branch": "สาขา 1", "fee": 15000, "address": "51/1 ซ.อินทามระ45 แขวงดินแดง เขตดินแดง  กรุงเทพมหานคร", "phone": "081-400-6782", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "7-ส.ค.-2568"}, {"id": "DD1/06", "name": "คุณ สุรชัย ศิริบุญละม่อม", "branch": "สาขา 1", "fee": 13000, "address": "240/6 ม.7 ต.สําโรงกลาง อ.พระประแดง จ.สมุทรปราการ", "phone": "089-893-537 , 086-098-5575", "bank": "ธนาคารกรุงศรีอยุธยา", "account_no": "626-1-05076-5", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "9-ส.ค.-2568"}, {"id": "DD1/07", "name": "คุณ พยุง ราชนิยม", "branch": "สาขา 1", "fee": 14500, "address": "323/38 ถ.ริมทางรถไฟสายแปดริ้ว แขวงทุ่งพญาไท เขตราชเทวี กรุงเทพมหานคร", "phone": "085-160-6818 , 086-509-9924", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "9-มี.ค.-2568"}, {"id": "DD1/10", "name": "คุณ พรสวรรค์ แก้วถึง", "branch": "สาขา 1", "fee": 18000, "address": "610 ซ.เจริญนคร 40 ถ.เจริญนคร แขวงบางลำภูล่าง เขตคลองสาน กรุงเทพมหานคร", "phone": "081-633-1149 , 061-697-9633", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.ค.-2568"}, {"id": "DD1/11", "name": "คุณ เฉลียว กิจวรรณี", "branch": "สาขา 1", "fee": 16000, "address": "14 ซ.ประชาราษฎร์ 14แยก1 เขตตลาดขวัญ อำเภอเมืองนนทบุรี จ.นนทบุรี", "phone": "094-163-3081", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.ค.-2565"}, {"id": "DD1/12", "name": "คุณ อรทัย โชติช่วง", "branch": "สาขา 1", "fee": 18000, "address": "358/830 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "094-427-2566, 099-114-1689", "bank": "ธนาคารไทยพาณิชย์", "account_no": "829-2-57154-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-มิ.ย.-2567"}, {"id": "DD1/14", "name": "คุณ สุนทร สุตะพาหะ", "branch": "สาขา 1", "fee": 16000, "address": "23 ซ.สามัคคี58/22 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-927-4250", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-เม.ย.-2568"}, {"id": "DD1/17", "name": "คุณ ไพลิน วงศ์วัฒนพิมล", "branch": "สาขา 1", "fee": 14000, "address": "154/191 ต.ท่าทราย อ.เมือง จ.นนทบุรี", "phone": "086-565-9616", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "25-มี.ค.-2567"}, {"id": "DD1/18", "name": "คุณ บุญนาค บุญจฑิตย์", "branch": "สาขา 1", "fee": 15000, "address": "10 ซ.ติวานนท์ 25 แยก 8 ต.บางกระสอ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "081-989-2355, 098-831-1058", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-เม.ย.-2567"}, {"id": "DD1/19", "name": "คุณ กันยา ไชยสาร", "branch": "สาขา 1", "fee": 16000, "address": "183/1449 ถ.สรงประภา แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "081-425-4119, 065-628-4893", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "25-ส.ค.-2567"}, {"id": "DD1/20", "name": "คุณ จาฑิกุญ เมธาคุณวุฒิ", "branch": "สาขา 1", "fee": 16000, "address": "17/24 ซ.ประชาชื่น 14 (ม.การไฟฟ้าส่วนภูมิภาค) แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "085-492-9791", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "30-ธ.ค.-2567"}, {"id": "DD1/21", "name": "คุณ วรรณศิริ เหล่ามีผล", "branch": "สาขา 1", "fee": 16000, "address": "154 ถ.นราธิวาสราชนครินทร์ แขวงช่องนนทรี เขตยานนาวา กรุงเทพมหานคร", "phone": "088-835-8771 , 089-986-7434", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "27-ส.ค.-2568"}, {"id": "DD1/22", "name": "คุณ ประดิษฐ์ เอี่ยมทิม", "branch": "สาขา 1", "fee": 16000, "address": "144/1 ซ.เฉลิมสุข แขวงจันทรเกษม เขตจตุจักร กรุงเทพมหานคร", "phone": "084-526-9286, 081-850-0418", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "27-ก.พ.-2566"}, {"id": "DD1/23", "name": "คุณ สวง พุทธสอน", "branch": "สาขา 1", "fee": 18000, "address": "69/142 หมู่ที่ 3 ต.คลองพระอุดม อ.ปากเกร็ด จ.นนทบุรี", "phone": "095-793-9635 , 098-798-6961", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "27-ก.พ.-2568"}, {"id": "DD1/24", "name": "คุณ ศุภชัย ไขรัศมี", "branch": "สาขา 1", "fee": 16000, "address": "5/1 ซ.นนทบุรี 40 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "084-874-3022 , 086-366-6552", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "30-ธ.ค.-2567"}, {"id": "DD1/25", "name": "คุณ อุบล ชูเกิด", "branch": "สาขา 1", "fee": 16000, "address": "90/58 ซ.เปรมสมบัติ แขวงดินแดง เขตดินแดง กรุงเทพมหานคร", "phone": "087-049-4990 , 086-503-3319", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-ก.ย.-2568"}, {"id": "DD1/28", "name": "คุณ สุภิญญา เหมือนวงศ์", "branch": "สาขา 1", "fee": 16000, "address": "5/346 หมู่ที่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "081-925-8643 , 081-909-0028", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "5-ต.ค.-2568"}, {"id": "DD1/31", "name": "คุณ นิรชา ตามใจเพียร", "branch": "สาขา 1", "fee": 16000, "address": "29/433 ถ.ประชาชื่นนนทบุรี ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "061-403-3589 , 064-469-1449", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "16-พ.ย.-2568"}, {"id": "DD1/33", "name": "คุณ ถนอม ปราศจาก", "branch": "สาขา 1", "fee": 16000, "address": "23/353 ซ.อินทามระ 2 ถ.สุทธิสารวินิจฉัย แขวงสามเสนใน เขตพญาไท กรุงเทพมหานคร", "phone": "063-495-3262", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "8-ธ.ค.-2568"}, {"id": "DD1/34", "name": "คุณ กองงัน ชูสอน", "branch": "สาขา 1", "fee": 17000, "address": "44 หมู่ที่ 7 ต.กองโพน อ.นาตาล จ.อุบลราชธานี", "phone": "088-079-4666, 085-021-1750", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ธ.ค.-2568"}, {"id": "DD1/35", "name": "คุณ ชลันธร โสมนัส", "branch": "สาขา 1", "fee": 16000, "address": "8 ซ.ประชาชื่นนนทบุรี 8 แยก 7 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "097-924-5700", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ม.ค.-2569"}, {"id": "DD1/36", "name": "คุณ นัยนา สุนทรียภาส", "branch": "สาขา 1", "fee": 16000, "address": "60 ซ.วัดหลวง แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "091-774-5094", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-ม.ค.-2569"}, {"id": "DD1/37", "name": "คุณ เพ็ง สีจำปา", "branch": "สาขา 1", "fee": 15000, "address": "149/185-310 ถ.พระราม5 แขวงถนนนครไชยศรี เขตดุสิต กรุงเทพมหานคร", "phone": "084-933-3992", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "20-พ.ย.-2568"}, {"id": "DD1/40", "name": "คุณ โสภา นามมงคล", "branch": "สาขา 1", "fee": 16000, "address": "21 หมู่ที่ 12 ต.เสอเพลอ อ.กุมภวาปี จ.อุดรธานี", "phone": "089-456-9308", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "29-ม.ค.-2569"}, {"id": "DD1/41", "name": "คุณ ศกุนตลา ดิฐานนท์", "branch": "สาขา 1", "fee": 16000, "address": "118/38 ถ.พหลโยธิน แขวงอนุเสาวรีย์ เขตบางเขน กรุงเทพมหานคร", "phone": "089-456-9308", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-ต.ค.-2568"}, {"id": "DD1/42", "name": "คุณ สมบัติ สังข์อุดม", "branch": "สาขา 1", "fee": 17000, "address": "18/2 ถ.ประชาชื่น แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "096-931-5263", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.พ.-2569"}, {"id": "DD1/43", "name": "คุณ วัชรีย์บูรย์ สกุลมงคล", "branch": "สาขา 1", "fee": 16000, "address": "399/159 หมู่ที่ 4 ต.บางเดื่อ อ.เมืองปทุมธานี จ.ปทุมธานี", "phone": "088-565-4246 , 062-767-4774", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "13-ก.พ.-2569"}, {"id": "DD1/44", "name": "คุณ ประจวบ รัชเวทย์", "branch": "สาขา 1", "fee": 16000, "address": "1 ซ.ประชานิเวศน์ 3 ซอย 8/5 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "091-891-9298", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ก.พ.-2569"}, {"id": "DD1/45", "name": "คุณ จิตรา ฤทธิ์อิ่ม", "branch": "สาขา 1", "fee": 16000, "address": "90/19 ซ.หมู่บ้านหัวดอน ต.หนองแก อ.หัวหิน จ.ประจวบคีรีขันธ์", "phone": "089-402-7028 , 081-412-7774", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "24-ก.พ.-2569"}, {"id": "DD1/47", "name": "คุณ เมธี ยาทิพย์", "branch": "สาขา 1", "fee": 15000, "address": "3/488 หมู่ที่8 ต.บางโฉลง อ.บางพลี จ.สมุทรปราการ", "phone": "092-883-3995 , 065-880-3403", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "20-มี.ค.-2569"}, {"id": "DD1/01", "name": "คุณ ชาติชาย คุ้มทอง", "branch": "สาขา 2", "fee": 14000, "address": "45/5 ถ.เทศบาลนิมิตเหนือ แขวงลาดยาว เขตจตุจักร กรุงเทพมหานคร", "phone": "086-395-6826", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "1-เม.ย.-2562"}, {"id": "DD2/02", "name": "คุณ อำไพ สุนทรวรรณ", "branch": "สาขา 2", "fee": 16000, "address": "183/1601 ถ.สรงประภา แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "094-624-8705", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "2-ก.พ.-2566"}, {"id": "DD2/04", "name": "คุณ ภัทรา อุบล", "branch": "สาขา 2", "fee": 16000, "address": "47/125 หมู่9 ต.บางพูด อ.ปากเกร็ด จ.นนทบุรี", "phone": "083-079-6771", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "2-มี.ค.-2566"}, {"id": "DD2/05", "name": "คุณ สมฤดี ยาประยงค์", "branch": "สาขา 2", "fee": 15000, "address": "46/67 ถ.ติวานนท์ ต.บางกระสอ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "-", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "3-เม.ย.-2567"}, {"id": "DD2/07", "name": "คุณ มนสันต์ เทพนวล", "branch": "สาขา 2", "fee": 15000, "address": "32/84 ซ.นวมินทร์ 135 แยก 4-1 แขวงนวลจันทร์ เขตบึงกุ่ม กรุงเทพมหานคร", "phone": "082-416-1982", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "5-ส.ค.-2568"}, {"id": "DD2/08", "name": "คุณ ผุสดี เนตรสิงห์", "branch": "สาขา 2", "fee": 16000, "address": "1/59 หมู่ 6 แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "094-545-4215, 097-054-2433", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "6-พ.ย.-2561"}, {"id": "DD2/09", "name": "คุณ พหล ลุประสิทธิ์", "branch": "สาขา 2", "fee": 15000, "address": "36/7 ม.5 ต.ปากเกร็ด อ.ปากเกร็ด จ.นนทบุรี", "phone": "085-917-1055, 081-694-9893", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "6-ก.ค.-2563"}, {"id": "DD2/11", "name": "คุณ รจนา", "branch": "สาขา 2", "fee": 16000, "address": "17 ซ.เทพนิมิตร 2 แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "081-629-0723 , 081-938-3030", "bank": "ธนาคารกรุงศรีอยุธยา", "account_no": "626-1-05076-5", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "8-ก.ย.-2567"}, {"id": "DD2/12", "name": "คุณ อรุณ นิชกูล", "branch": "สาขา 2", "fee": 16000, "address": "20 ซ.ประชานิเวศน์ 3 ซอย 14/2 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-904-7155 , 089-043-2509", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "10-ม.ค.-2568"}, {"id": "DD2/13", "name": "คุณ ศิริรัตน์ สอระสุข", "branch": "สาขา 2", "fee": 14000, "address": "622/24 แขวงคลองถนน เขตสายไหม กรุงเทพมหานคร", "phone": "086-997-3392", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "14-ส.ค.-2568"}, {"id": "DD2/15", "name": "คุณ จรุงศรี เศวตนันทน์", "branch": "สาขา 2", "fee": 15000, "address": "320 ซ.โชติวัฒน์ซ.3 แขวงบางซื่อ เขตบางซื่อ  กรุงเทพมหานคร", "phone": "081-802-3507", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-เม.ย.-2564"}, {"id": "DD2/16", "name": "คุณ ลำจวน  สกุลมา", "branch": "สาขา 2", "fee": 13000, "address": "107/196 หมู่ 6 ต.บางบัวทอง อ.บางบัวทอง จ.นนทบุรี", "phone": "081-489-4008", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "22-เม.ย.-2561"}, {"id": "DD2/17", "name": "คุณ ศรีศักดิ์ เจนธุระกิจ", "branch": "สาขา 2", "fee": 16000, "address": "20 ซ.ประชานิเวศน์ 3 ซอย 8/8 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "086-779-3795 , 085-188-9693", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "23-เม.ย.-2568"}, {"id": "DD2/18", "name": "คุณ ราตรี พินิตตานนท์", "branch": "สาขา 2", "fee": 17000, "address": "485 ถ.ชลนิเวศน์ แขวงลาดยาว เขตจตุจักร กรุงเทพมหานคร", "phone": "089-456-4223 , 02-585-4119 , 094-842-0855", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "24-ม.ค.-2568"}, {"id": "DD2/19", "name": "คุณ ศสิมา ณ ถลาง", "branch": "สาขา 2", "fee": 16000, "address": "21 ซ.สามัคคี58/14  ต.ท่าทราย อ.เมืองนนทบุรี  จ.นนทบุรี", "phone": "081-625-8033", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "25-ก.ย.-2565"}, {"id": "DD2/20", "name": "คุณ สุจิตรา ศุภชูชัย", "branch": "สาขา 2", "fee": 16000, "address": "5/576 หมู่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "089-181-7080", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "26-มิ.ย.-2567"}, {"id": "DD2/21", "name": "คุณ อุไร สุวรรณประทีป", "branch": "สาขา 2", "fee": 16000, "address": "115 ซ.พระรามที่ 2 ซอย 42 แขวงบางมด เขตจอมทอง กรุงเทพมหานคร", "phone": "097-205-8767", "bank": "ธนาคารกรุงเทพ", "account_no": "101-7-60365-3", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "26-พ.ย.-2567"}, {"id": "DD2/22", "name": "คุณ ทัศนีย์ ต้นงามตรง", "branch": "สาขา 2", "fee": 17000, "address": "59/33 ม.1 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "085-810-1438", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "26-ม.ค.-2563"}, {"id": "DD2/23", "name": "คุณ เอมอร เอมะบุตร", "branch": "สาขา 2", "fee": 16000, "address": "80 ซ.โชคชัย 4 ซอย 39 ถ.โชคชัย 4 แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร", "phone": "085-113-2546", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "26-เม.ย.-2566"}, {"id": "DD2/24", "name": "คุณ เพ็ญพิไลพรรณ บุนนาค", "branch": "สาขา 2", "fee": 18000, "address": "387/375 ตรอกข้าวสาร แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "094-424-3565", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "28-พ.ย.-2567"}, {"id": "DD2/25", "name": "คุณ สุรพล พงษ์กุญแจกาญจน์", "branch": "สาขา 2", "fee": 15000, "address": "580/112 ถ.ลาดพร้าว แขวงจันทรเกษม เขตจตุจักร กรุงเทพมหานคร", "phone": "080-061-4355", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "29-ต.ค.-2565"}, {"id": "DD2/26", "name": "คุณ วีระ ทองเชื้อ", "branch": "สาขา 2", "fee": 16000, "address": "88/30 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-896-4056", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "30-ก.ย.-2562"}, {"id": "DD2/27", "name": "คุณ ทองคำ ปั้นอรุณ", "branch": "สาขา 2", "fee": 16000, "address": "457/1 ถ.กรุงเทพ-นนทบุรี ต.บางซื่อ อ.บางซื่อ จ.นนทบุรี", "phone": "086-964-5462 , 062-694-6962", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "30-พ.ย.-2567"}, {"id": "DD2/28", "name": "คุณ นงลักษณ์ สงทิพย์", "branch": "สาขา 2", "fee": 15000, "address": "85 ซ.ประชานิเวศน์3 ซอย13 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "095-546-0085 , 095-709-6101", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "26-ส.ค.-2568"}, {"id": "DD2/29", "name": "คุณ ศิริพร แซ่ก๊วย", "branch": "สาขา 2", "fee": 16000, "address": "1368 ถ.ประชาชื่น แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "083-549-4196 , 081-842-7119", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "28-ส.ค.-2568"}, {"id": "DD2/33", "name": "คุณ ประสาน โชควิเชียร", "branch": "สาขา 2", "fee": 16000, "address": "5/1442 หมู่ 10 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "066-156-1553 , 094-464-1659", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "5-ธ.ค.-2568"}, {"id": "DD2/34", "name": "คุณ มณี แซ่ลี้", "branch": "สาขา 2", "fee": 17000, "address": "131 หมู่ที่4 ต.แม่งอน อ.ฝาง จ.เชียงใหม่", "phone": "081-884-6257", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "9-พ.ย.-2568"}, {"id": "DD2/35", "name": "คุณ ซิวเซ่ง แซ่จัง", "branch": "สาขา 2", "fee": 17000, "address": "333/487 ถ.ประชาราษฎร์1 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "080-268-2220 , 081-928-2540", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "1-ม.ค.-2569"}, {"id": "DD2/36", "name": "คุณ วีระชัย เวศนานนท์", "branch": "สาขา 2", "fee": 16000, "address": "5/153 หมู่ที่ 9 ต.บางตลาด อ.ปากเกร็ด จ.นนทบุรี", "phone": "084-158-1010", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "11-มี.ค.-2569"}, {"id": "DD2/37", "name": "คุณ สละ เสือพลาย", "branch": "สาขา 2", "fee": 16000, "address": "73/4 หมู่ที่ 3 ต.บางรักน้อย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "088-187-7214 , 089-443-9460", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "7-ม.ค.-2569"}, {"id": "DD2/38", "name": "คุณ ศรีสุดา วัชราพิพัฒน์พันธ์", "branch": "สาขา 2", "fee": 16000, "address": "4 ซ.สามัคคี 28 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "083-047-2524", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "8-ม.ค.-2569"}, {"id": "DD2/39", "name": "คุณ สมจิตร คำอ้อน", "branch": "สาขา 2", "fee": 15000, "address": "168/292 หมู่ที่ 2 ต.บ้านกลาง อ.เมืองปทุมธานี จ.ปทุมธานี", "phone": "084-698-6278", "bank": "ธนาคารกรุงไทย", "account_no": "467-0-94588-2", "account_name": "นาย เศรษฐศักดิ์ สถิรวงศ์วรรณ", "due_date": "21-ก.พ.-2569"}, {"id": "DD1/01", "name": "คุณ เซียมเกียง แซ่ตั้ง", "branch": "สาขา 3", "fee": 17000, "address": "48/94 ซ.งามวงศ์วาน 6 แยก 21 ต.บางเขน อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-484-9439 ,091-569-6266", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "3-พ.ค.-2568"}, {"id": "DD3/02", "name": "คุณ สรรเพชญ ไชยสิริยะสวัสดิ์", "branch": "สาขา 3", "fee": 28000, "address": "11 ซ.ประชาชื่น 9/1 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-004-3975", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.ค.-2568"}, {"id": "DD3/03", "name": "คุณ มนพิชัย ชันไชสง", "branch": "สาขา 3", "fee": 15000, "address": "168/5 ซ.ดำเนินการใต้ ถ.ราชดำเนิน แขวงบวรนิเวศ เขตพระนคร กรุงเทพมหานคร", "phone": "081-772-1929", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "15-ธ.ค.-2564"}, {"id": "DD3/04", "name": "คุณ ธรรมนูญ ขาวสนิท", "branch": "สาขา 3", "fee": 17000, "address": "558/23 ถ.ดินแดง แขวงดินแดง เขตดินแดง กรุงเทพมหานคร", "phone": "081-636-0322", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "16-ก.ค.-2568"}, {"id": "DD3/05", "name": "คุณ กุ้ยเฮง สุภาพงษ์", "branch": "สาขา 3", "fee": 17000, "address": "17/188 ซ.ประชาชื่น14  แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร", "phone": "089-1111-800", "bank": "ธนาคารไทยพาณิชย์", "account_no": "829-2-57154-8", "account_name": "นางพนมกร พลราชม", "due_date": "17-ก.พ.-2560"}, {"id": "DD3/06", "name": "คุณ นันทนา ชินะวนิชกิจ", "branch": "สาขา 3", "fee": 17000, "address": "111/9 ถ.นวมินทร์ แขวงคลองกุ่ม เขตบึงกุ่ม กรุงเทพมหานคร", "phone": "061-538-7878 , 081-701-7177", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "18-ม.ค.-2568"}, {"id": "DD3/07", "name": "คุณ กิตติ ศิริมธุรส", "branch": "สาขา 3", "fee": 13000, "address": "20/150 ถ.ติวานนท์ ต.ตลาดขวัญ อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-122-1019", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "19-ม.ค.-2567"}, {"id": "DD3/08", "name": "คุณ มุกดา สุทธิเจริญ", "branch": "สาขา 3", "fee": 10000, "address": "187 ซ.สายสิน แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร", "phone": "086-044-4362", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "20-ก.ค.-2560"}, {"id": "DD3/09", "name": "คุณ ศิริพงษ์ สุงสุวรรณ", "branch": "สาขา 3", "fee": 16000, "address": "144 ถ.ประชานิเวศน์ 3 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "098-929-5252 , 099-462-6541", "bank": "ธนาคารไทยพาณิชย์", "account_no": "328-2-11366-9", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "20-ธ.ค.-2567"}, {"id": "DD3/10", "name": "คุณ พินิจ เหลื่อมสมบัติ", "branch": "สาขา 3", "fee": 12000, "address": "107 ซ.ติวานนท์ ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "081-702-1183, 081-817-1883", "bank": "ธนาคารไทยพาณิชย์", "account_no": "376-2-54240-1", "account_name": "บริษัท เนอร์สซิ่งโฮม ดีดี จำกัด", "due_date": "23-ธ.ค.-2555"}, {"id": "DD3/11", "name": "คุณ จรวย ส่งท่ามะพลา", "branch": "สาขา 3", "fee": 16000, "address": "6 ซ.จรัญสนิทวงศ์ 63 แขวงบางบำหรุ เขตบางพลัด กรุงเทพมหานคร", "phone": "095-485-4313", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-เม.ย.-2568"}, {"id": "DD3/12", "name": "คุณ ไสว สุขสวัสดิ์", "branch": "สาขา 3", "fee": 17000, "address": "502/554 ซ.เดชะตุงคะ 1 แขวงสีกัน เขตดอนเมือง กรุงเทพมหานคร", "phone": "089-129-1417 , 090-641-9206", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "28-มิ.ย.-2568"}, {"id": "DD3/17", "name": "คุณ สุรพล คัชมาตย์", "branch": "สาขา 3", "fee": 18000, "address": "42 ซ.สามัคคี 60/1 ต.ท่าทราย อ.เมืองนนทบุรี .นนทบุรี", "phone": "089-484-4125 , 081-371-6351", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "12-ก.ย.-2568"}, {"id": "DD3/24", "name": "คุณ จริยา สุประดิษฐ์", "branch": "สาขา 3", "fee": 16000, "address": "48 ซ.ประชาชื่นนนทบุรี ซอย 8 ต.บางเขน อ.บางเขน จ.นนทบุรี", "phone": "090-979-6136", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "30-ต.ค.-2568"}, {"id": "DD3/27", "name": "คุณ อดิสอน เศวตนันทน์", "branch": "สาขา 3", "fee": 15000, "address": "320 ซ.โชติวัฒน์ ซอย 3 แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "061-149-5144 , 081-802-3507 , 081-719-7955", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "1-ธ.ค.-2568"}, {"id": "DD3/30", "name": "คุณ พวงแก้ว ธนบัตร", "branch": "สาขา 3", "fee": 20000, "address": "10 ซ.ลาดพร้าว 64 แยก 12 แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพมหานคร", "phone": "085-919-8261 , 098-834-8849", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "30-ธ.ค.-2568"}, {"id": "DD3/31", "name": "คุณ อัมพร ชาตะสุภณ", "branch": "สาขา 3", "fee": 14500, "address": "23/72 หมู่ที่ 3 ต.คูคต อ.ลำลูกกา จ.ปทุมธานี", "phone": "096-915-6294 , 061-429-3092", "bank": "ธนาคารกสิกรไทย", "account_no": "762-2-42050-8", "account_name": "นายเศรษฐศักดิ์  สถิรวงศ์วรรณ", "due_date": "1-ม.ค.-2569"}, {"id": "DD3/32", "name": "คุณ สงวน วัฒนทรงสิทธิ์", "branch": "สาขา 3", "fee": 16000, "address": "43 ซ.นาคนิวาส 22 ถ.นาคนิวาส แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร", "phone": "081-556-5993 , 095-249-9378", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "25-ม.ค.-2569"}, {"id": "DD3/33", "name": "คุณ นันทิยา วงศ์ชัยสถาพร", "branch": "สาขา 3", "fee": 18000, "address": "10/26 ถ.ประชาชื่น แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร", "phone": "089-301-2279", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "15-ก.พ.-2569"}, {"id": "DD3/34", "name": "คุณ แจ๋ว วงค์นัน", "branch": "สาขา 3", "fee": 18000, "address": "16 ซ.นนทบุรี 52 ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "089-603-4926", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "20-ก.พ.-2569"}, {"id": "DD3/35", "name": "คุณ เชาวลิต แก้วสำเร็จ", "branch": "สาขา 3", "fee": 15500, "address": "5 ซ.วัดชมภูเวก ต.ท่าทราย อ.เมืองนนทบุรี จ.นนทบุรี", "phone": "062-584-5629 , 089-528-5674", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "22-ก.พ.-2569"}, {"id": "DD3/37", "name": "คุณ สิริรัตน์ จงประเสริฐ", "branch": "สาขา 3", "fee": 16000, "address": "98/192 หมู่ที่3 ต.ลำผักกูด อ.ธัญบุรี จ.ปทุมธานี", "phone": "085-100-5715 , 099-139-1452", "bank": "ธนาคารกรุงเทพ", "account_no": "082-0-37942-8", "account_name": "นางพนมกร พลราชม", "due_date": "8-มี.ค.-2569"}];
+const RAW = [];
 
 // Duplicate IDs
 const DUP_NAMES = [];
@@ -4639,20 +4623,20 @@ function renderTable() {
     const tr = getTransferRecord(c.id);
     return `
     <tr class="${inactive||transferred?'row-inactive':''}" onclick="openDetail('${c.id}')">
-      <td class="td-id">${c.id}${transferred?`<div style="font-size:10px;color:#7c3aed;margin-top:1px">→ ${c._transferredTo}</div>`:''}</td>
-      <td class="td-name">${c.name}${c._dupName?'<span class="dup-warn">ซ้ำ</span>':''}${inactive?'<span class="inactive-tag">ออกแล้ว</span>':''}${transferred?'<span class="inactive-tag" style="background:#f3e8ff;color:#7c3aed;border-color:#c4b5fd">ย้ายสาขาแล้ว</span>':''}</td>
-      <td class="td-branch">${branchTag(c.branch)}${transferred&&tr?`<div style="font-size:10px;color:#7c3aed">→ ${tr.toBranch}</div>`:''}</td>
+      <td class="td-id">${c.id}${transferred?`<div style="font-size:10px;color:#6b3fa0;margin-top:1px">→ ${c._transferredTo}</div>`:''}</td>
+      <td class="td-name">${c.name}${c._dupName?'<span class="dup-warn">ซ้ำ</span>':''}${inactive?'<span class="inactive-tag">ออกแล้ว</span>':''}${transferred?'<span class="inactive-tag" style="background:#f3e8ff;color:#6b3fa0;border-color:#c4b5fd">ย้ายสาขาแล้ว</span>':''}</td>
+      <td class="td-branch">${branchTag(c.branch)}${transferred&&tr?`<div style="font-size:10px;color:#6b3fa0">→ ${tr.toBranch}</div>`:''}</td>
       <td class="td-fee">฿${fmt(c.fee)}</td>
       <td style="font-size:12px;color:var(--text2)">${c.bank.replace('ธนาคาร','')}</td>
       <td style="font-size:12px;color:var(--text3)">${c.due_date}</td>
-      <td>${inactive ? '<span class="status-badge status-inactive">คืนเคส</span>' : transferred ? '<span class="status-badge" style="background:#f3e8ff;color:#7c3aed">ย้ายสาขา</span>' : statusBadge(getPayStatus(c.id,currentMonth))}</td>
+      <td>${inactive ? '<span class="status-badge status-inactive">คืนเคส</span>' : transferred ? '<span class="status-badge" style="background:#f3e8ff;color:#6b3fa0">ย้ายสาขา</span>' : statusBadge(getPayStatus(c.id,currentMonth))}</td>
       <td style="white-space:nowrap">
         ${inactive
           ? `<button class="btn btn-sm" onclick="event.stopPropagation();openRestoreModal('${c.id}')">↩ กลับเข้า</button>`
           : transferred
-          ? `<button class="btn btn-sm" onclick="event.stopPropagation();confirmRestoreTransfer('${c.id}')" style="color:#7c3aed;border-color:#7c3aed">🔀 ย้ายกลับ</button>`
+          ? `<button class="btn btn-sm" onclick="event.stopPropagation();confirmRestoreTransfer('${c.id}')" style="color:#6b3fa0;border-color:#6b3fa0">🔀 ย้ายกลับ</button>`
           : `<button class="btn btn-sm" onclick="event.stopPropagation();openPayModal('${c.id}')">💳 ชำระ</button>
-             <button class="btn btn-sm" onclick="event.stopPropagation();openTransferModal('${c.id}')" style="margin-left:4px;color:#7c3aed;border-color:#7c3aed" title="ย้ายสาขา">🔀</button>
+             <button class="btn btn-sm" onclick="event.stopPropagation();openTransferModal('${c.id}')" style="margin-left:4px;color:#6b3fa0;border-color:#6b3fa0" title="ย้ายสาขา">🔀</button>
              <button class="btn btn-sm" onclick="event.stopPropagation();openDischargeModal('${c.id}')" style="margin-left:4px;color:var(--warning);border-color:var(--warning)">🚪 ออก</button>`
         }
       </td>
@@ -4786,7 +4770,7 @@ function renderBilling() {
       <td style="text-align:center">
         ${isInvoiced(c.id, currentMonth)
           ? `<span onclick="toggleInvoiced('${c.id}',currentMonth)" title="คลิกเพื่อยกเลิก"
-              style="display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:#e8f5ee;color:#1a6b4a;border:1px solid #b0d8c0;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">
+              style="display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:#fbe7f0;color:#c2588a;border:1px solid #b0d8c0;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">
               ✅ ออกบิลแล้ว
             </span>`
           : `<button onclick="toggleInvoiced('${c.id}',currentMonth)"
@@ -4920,7 +4904,7 @@ function openDetail(id){
       <div class="detail-block">
         <div class="detail-block-title">ข้อมูลธนาคาร</div>
         <div class="detail-row"><span class="dl">ธนาคาร</span><span class="dv">${c.bank}</span></div>
-        <div class="detail-row"><span class="dl">เลขบัญชี</span><span class="dv" style="font-family:'IBM Plex Mono',monospace">${c.account_no}</span></div>
+        <div class="detail-row"><span class="dl">เลขบัญชี</span><span class="dv" style="font-family:'JetBrains Mono',monospace">${c.account_no}</span></div>
         <div class="detail-row"><span class="dl">ชื่อบัญชี</span><span class="dv">${c.account_name}</span></div>
       </div>
     </div>
@@ -5008,7 +4992,7 @@ function saveEditCustomer() {
 
 // ===== TRANSFER BRANCH =====
 const _ALL_BRANCHES = ['สาขา 1', 'สาขา 2', 'สาขา 3', 'สาขาอุดร'];
-const _BRANCH_COLORS = { 'สาขา 1': '#1a5c9e', 'สาขา 2': '#1a6b4a', 'สาขา 3': '#7c3aed', 'สาขาอุดร': '#b8620a' };
+const _BRANCH_COLORS = { 'สาขา 1': '#1f5f8b', 'สาขา 2': '#3f7d3a', 'สาขา 3': '#6b3fa0', 'สาขาอุดร': '#a8660a' };
 let _transferCustId = null;
 let _transferTargetBranch = null;
 
@@ -5023,7 +5007,7 @@ function openTransferModal(custId) {
     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:4px">
       <span>สาขาปัจจุบัน:</span> ${branchTag(c.branch)}
     </div>
-    <div style="font-size:11px;color:#7c3aed;background:#f3e8ff;padding:5px 9px;border-radius:7px;margin-top:4px">
+    <div style="font-size:11px;color:#6b3fa0;background:#f3e8ff;padding:5px 9px;border-radius:7px;margin-top:4px">
       ℹ️ รหัสลูกค้าจะเปลี่ยนตามสาขาใหม่ และรหัสเดิม (${c.id}) จะถูกเก็บไว้สำหรับกรณีย้ายกลับ
     </div>`;
 
@@ -5046,7 +5030,7 @@ function openTransferModal(custId) {
       ${isCurrent ? '<div style="position:absolute;top:5px;right:7px;font-size:10px;color:#888;font-weight:600">ปัจจุบัน</div>' : ''}
       <div style="font-size:20px;margin-bottom:4px">${b.includes('อุดร') ? '🌾' : b.includes('1') ? '🏠' : b.includes('2') ? '🏡' : '🏘'}</div>
       <div style="font-weight:700;font-size:12px;color:${color}">${b}</div>
-      ${!isCurrent ? `<div style="font-size:10px;color:#7c3aed;margin-top:3px;font-weight:600">รหัสใหม่: ${previewId}</div>` : ''}
+      ${!isCurrent ? `<div style="font-size:10px;color:#6b3fa0;margin-top:3px;font-weight:600">รหัสใหม่: ${previewId}</div>` : ''}
     </div>`;
   }).join('');
 
@@ -5184,7 +5168,7 @@ function restoreTransfer(oldId) {
 function _showToast(msg) {
   const t = document.createElement('div');
   t.textContent = msg;
-  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a6b4a;color:#fff;padding:10px 22px;border-radius:24px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.22);white-space:nowrap;pointer-events:none';
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#c2588a;color:#fff;padding:10px 22px;border-radius:24px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.22);white-space:nowrap;pointer-events:none';
   document.body.appendChild(t);
   setTimeout(() => t.style.transition = 'opacity .4s', 1800);
   setTimeout(() => t.style.opacity = '0', 1800);
@@ -5867,7 +5851,7 @@ function updateDashboard(){
     }).reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
   }
   const _dbBranches = ['สาขา 1','สาขา 2','สาขา 3','สาขาอุดร'];
-  const _dbColors   = ['#1a5c9e','#1a6b4a','#7a4f0d','#8e44ad'];
+  const _dbColors   = ['#1f5f8b','#3f7d3a','#8a5a17','#6b3fa0'];
   const _dbRevs      = _dbBranches.map(b=>revByBranch(b));
   const _dbBarColors = _dbBranches.map((b,i)=>(!_dashBranch || _dashBranch===b) ? _dbColors[i] : 'rgba(150,150,150,0.25)');
   if(chart1)chart1.destroy();
@@ -5883,7 +5867,7 @@ function updateDashboard(){
   if(chart2)chart2.destroy();
   chart2=new Chart(document.getElementById('dchart2'),{
     type:'bar',
-    data:{labels:allM.map(mo=>`${_THAI_M[parseInt(mo.split('-')[1])]}`),datasets:[{data:monthRevs,backgroundColor:allM.map(mo=>mo===currentMonth?'#1a6b4a':'#a8d5c0'),borderRadius:4,borderSkipped:false}]},
+    data:{labels:allM.map(mo=>`${_THAI_M[parseInt(mo.split('-')[1])]}`),datasets:[{data:monthRevs,backgroundColor:allM.map(mo=>mo===currentMonth?'#c2588a':'#a8d5c0'),borderRadius:4,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}},y:{grid:{color:'rgba(128,128,128,0.1)'},ticks:{color:'#999',callback:v=>'฿'+(v/1000).toFixed(0)+'K'}}}}
   });
 
@@ -6273,7 +6257,7 @@ function showReqToast(msg) {
   if (!el) {
     el = document.createElement('div');
     el.id = 'req-toast';
-    el.style.cssText = 'position:fixed;bottom:28px;right:28px;background:#1a6b4a;color:#fff;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.18)';
+    el.style.cssText = 'position:fixed;bottom:28px;right:28px;background:#c2588a;color:#fff;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.18)';
     document.body.appendChild(el);
   }
   el.textContent = msg;
@@ -6316,7 +6300,7 @@ function renderSavedReq() {
         return `<div style="margin-bottom:6px">
           <div class="req-summary-row" style="font-weight:600">
             <span>${item.name}</span>
-            <span style="font-family:'IBM Plex Mono',monospace;color:var(--accent)">รวม ${totalQty} ${item.unit} (${entries.length} ครั้ง)</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--accent)">รวม ${totalQty} ${item.unit} (${entries.length} ครั้ง)</span>
           </div>
           ${entries.map((e,ei) => {
             const bp = item.price||0;
@@ -6328,8 +6312,8 @@ function renderSavedReq() {
               <span style="color:var(--text3);min-width:16px">${ei+1}.</span>
               <span style="flex:1">${e.savedAt ? fmtDateThai(e.savedAt) : '—'}</span>
               <span>${e.qty} ${item.unit}</span>
-              <span style="font-family:'IBM Plex Mono',monospace;color:${isOvr?'#e67e22':'var(--text2)'};margin-left:6px" title="${isOvr?'ราคาแก้จาก ฿'+bp.toLocaleString():'ราคาปกติ'}">฿${ep.toLocaleString()}${isOvr?' 📌':''}</span>
-              <span style="font-family:'IBM Plex Mono',monospace;color:var(--accent);margin-left:4px">= ฿${lineAmt.toLocaleString()}</span>
+              <span style="font-family:'JetBrains Mono',monospace;color:${isOvr?'#e67e22':'var(--text2)'};margin-left:6px" title="${isOvr?'ราคาแก้จาก ฿'+bp.toLocaleString():'ราคาปกติ'}">฿${ep.toLocaleString()}${isOvr?' 📌':''}</span>
+              <span style="font-family:'JetBrains Mono',monospace;color:var(--accent);margin-left:4px">= ฿${lineAmt.toLocaleString()}</span>
             </div>`;
           }).join('')}
         </div>`;
@@ -6573,7 +6557,7 @@ function renderCatalog() {
         </select>
       </td>
       <td style="font-size:12px">${item.unit}</td>
-      <td style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px">${item.price != null ? '฿'+fmt(item.price) : '—'}</td>
+      <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px">${item.price != null ? '฿'+fmt(item.price) : '—'}</td>
       <td style="font-size:12px;color:var(--text3)">${item.note||'—'}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-sm" onclick="editCatalogItem('${item.id}')">✏️</button>
@@ -6883,7 +6867,7 @@ function renderRcptEditor() {
     const labelBorder      = row.isDiscount ? 'border:1px solid #fca5a5;' : 'border:1px solid var(--border);';
     const priceLbl  = row.isDiscount ? 'จำนวนส่วนลด (฿)' : 'ราคา/หน่วย';
     const discTag   = row.isDiscount ? `<span style="font-size:10px;padding:1px 6px;border-radius:10px;background:#fee2e2;color:#b91c1c;font-weight:700;flex-shrink:0">🏷️ ส่วนลด</span>` : '';
-    return `<div style="display:flex;flex-direction:column;gap:4px;padding:6px 4px;border-bottom:1px solid var(--border-light,#f0ede8);${rowBg}">
+    return `<div style="display:flex;flex-direction:column;gap:4px;padding:6px 4px;border-bottom:1px solid var(--border-light,#eae3d5);${rowBg}">
       <div style="display:flex;align-items:center;gap:4px">
         <span style="font-size:11px;color:var(--text3);width:18px;text-align:right;flex-shrink:0">${i+1}</span>
         ${subBtn}
@@ -6982,7 +6966,7 @@ function rcptToggleSplitPanel() {
   if (isOpen) {
     panel.style.display = 'none';
     btn.style.background = '#f0fdf4';
-    btn.style.color = '#1a6b4a';
+    btn.style.color = '#c2588a';
     return;
   }
   // Calculate current receipt total to prefill
@@ -7004,7 +6988,7 @@ function rcptToggleSplitPanel() {
     document.getElementById('rcpt-si2-to').value   = i2.dateTo   || '';
   }
   panel.style.display = 'block';
-  btn.style.background = '#1a6b4a';
+  btn.style.background = '#c2588a';
   btn.style.color = '#fff';
   rcptSplitValidate();
 }
@@ -7612,7 +7596,7 @@ function doPrint() {
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+  font-family: 'Sarabun', sans-serif;
   font-size: 13px; color: #111; background: #fff;
   padding: 16mm 14mm; line-height: 1.55;
 }
@@ -7806,7 +7790,7 @@ function printInstallmentReceipt(custId, month, instIdx) {
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif; font-size: 13px; color: #111; background: #fff; padding: 16mm 14mm; line-height: 1.55; }
+body { font-family: 'Sarabun', sans-serif; font-size: 13px; color: #111; background: #fff; padding: 16mm 14mm; line-height: 1.55; }
 .rcpt-header { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
 .rcpt-company-name { font-size: 16px; font-weight: 700; color: #c45570; margin-bottom: 2px; }
 .rcpt-company-en { font-size: 12px; color: #555; margin-bottom: 4px; }
@@ -7994,8 +7978,8 @@ function _buildInstallmentBillHTML(c, instNo, amount, channel, dateFrom, dateTo,
        <div class="rcpt-company-addr">1 หมู่บ้าน ประชานิเวศน์ 4 ตำบลท่าทราย อำเภอเมืองนนทบุรี จ.นนทบุรี 11000<br>โทร : 089-9444987 , 085-0015884&nbsp;&nbsp;|&nbsp;&nbsp;Email : DDnursinghome@outlook.com<br>เลขประจำตัวผู้เสียภาษีอากร : <b>0125562018704</b></div>`;
 
   const isCash = channel.includes('เงินสด');
-  const bankBlock = isCash ? '' : `<div class="rcpt-pay-block" style="border-color:#1a6b4a">
-    <div class="rcpt-pay-title" style="color:#1a6b4a">ข้อมูลการโอนเงิน</div>
+  const bankBlock = isCash ? '' : `<div class="rcpt-pay-block" style="border-color:#c2588a">
+    <div class="rcpt-pay-title" style="color:#c2588a">ข้อมูลการโอนเงิน</div>
     <div class="rcpt-pay-row"><span class="rcpt-pay-label">ธนาคาร</span><span class="rcpt-pay-value" style="font-size:12px">${c.bank||'—'}</span></div>
     <div class="rcpt-pay-row"><span class="rcpt-pay-label">เลขที่บัญชี</span><span class="rcpt-pay-value">${c.account_no||'—'}</span></div>
     <div class="rcpt-pay-row"><span class="rcpt-pay-label">ชื่อบัญชี</span><span class="rcpt-pay-value" style="font-size:12px">${c.account_name||'—'}</span></div>
@@ -8006,15 +7990,15 @@ function _buildInstallmentBillHTML(c, instNo, amount, channel, dateFrom, dateTo,
     <img src="${rcptLogoSrc}" style="width:${isUdonBranch?150:80}px;height:${isUdonBranch?140:80}px;object-fit:contain;flex-shrink:0" alt="DD Logo">
     <div style="flex:1">${companyHtml}</div>
     <div style="text-align:center;flex-shrink:0;margin-left:8px">
-      <div class="rcpt-copy-box" style="border-color:#1a6b4a">
-        <div class="rcpt-copy-title" style="color:#1a6b4a">ใบวางบิล</div>
+      <div class="rcpt-copy-box" style="border-color:#c2588a">
+        <div class="rcpt-copy-title" style="color:#c2588a">ใบวางบิล</div>
         <div class="rcpt-copy-sub">งวดที่ ${instNo}/2</div>
       </div>
     </div>
   </div>
   <hr class="rcpt-divider">
   <div class="rcpt-title-row">
-    <div class="rcpt-title" style="color:#1a6b4a">ใบวางบิล / BILLING NOTE</div>
+    <div class="rcpt-title" style="color:#c2588a">ใบวางบิล / BILLING NOTE</div>
     <div class="rcpt-title-en">งวดที่ ${instNo} จาก 2 งวด (แบ่งชำระ)</div>
   </div>
   <div class="rcpt-info-grid">
@@ -8047,7 +8031,7 @@ function _buildInstallmentBillHTML(c, instNo, amount, channel, dateFrom, dateTo,
     </tbody>
   </table>
   <div class="rcpt-total-section">
-    <div class="rcpt-grand-row" style="border-top-color:#1a6b4a;background:#f0fdf4">
+    <div class="rcpt-grand-row" style="border-top-color:#c2588a;background:#f0fdf4">
       <div class="rcpt-grand-label">ยอดเงินที่ต้องชำระ</div>
       <div class="rcpt-grand-value">฿${fmt(amount)}</div>
     </div>
@@ -8061,7 +8045,7 @@ function _buildInstallmentBillHTML(c, instNo, amount, channel, dateFrom, dateTo,
       <div class="rcpt-pay-title">ช่องทางชำระเงิน</div>
       <div class="rcpt-pay-row"><span class="rcpt-pay-label">ช่องทาง</span><span class="rcpt-pay-value">${channel||'—'}</span></div>
       <div class="rcpt-pay-row"><span class="rcpt-pay-label">กำหนดชำระ</span><span class="rcpt-pay-value">${dateTo ? fmtDateThai(dateTo) : '—'}</span></div>
-      <div class="rcpt-pay-row"><span class="rcpt-pay-label">จำนวน</span><span class="rcpt-pay-value" style="color:#1a6b4a;font-weight:700">฿${fmt(amount)}</span></div>
+      <div class="rcpt-pay-row"><span class="rcpt-pay-label">จำนวน</span><span class="rcpt-pay-value" style="color:#c2588a;font-weight:700">฿${fmt(amount)}</span></div>
     </div>
     ${bankBlock}
   </div>
@@ -8092,7 +8076,7 @@ function _openBillWindow(title, htmlContent) {
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif; font-size: 13px; color: #111; background: #fff; padding: 16mm 14mm; line-height: 1.55; }
+body { font-family: 'Sarabun', sans-serif; font-size: 13px; color: #111; background: #fff; padding: 16mm 14mm; line-height: 1.55; }
 .rcpt-header { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
 .rcpt-company-name { font-size: 16px; font-weight: 700; color: #c45570; margin-bottom: 2px; }
 .rcpt-company-en { font-size: 12px; color: #555; margin-bottom: 4px; }
@@ -8109,7 +8093,7 @@ body { font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif; font-size: 13px
 .rcpt-info-label { color: #555; white-space: nowrap; flex-shrink: 0; }
 .rcpt-info-value { font-weight: 500; border-bottom: 1px dotted #aaa; flex: 1; min-width: 0; padding-bottom: 1px; }
 .rcpt-table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 13px; }
-.rcpt-table th { background: #1a6b4a; color: #fff; padding: 7px 10px; text-align: center; font-weight: 600; font-size: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.rcpt-table th { background: #c2588a; color: #fff; padding: 7px 10px; text-align: center; font-weight: 600; font-size: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .rcpt-table th:nth-child(2) { text-align: left; }
 .rcpt-table td { padding: 7px 10px; border-bottom: 1px solid #ddd; vertical-align: middle; text-align: center; }
 .rcpt-table td:nth-child(2) { text-align: left; }
@@ -8117,7 +8101,7 @@ body { font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif; font-size: 13px
 .rcpt-table td:last-child { text-align: right; font-family: monospace; font-weight: 600; }
 .rcpt-empty-rows td { height: 26px; }
 .rcpt-total-section { border-top: 2px solid #111; }
-.rcpt-grand-row { padding: 8px 10px; border-top: 2px solid #1a6b4a; display: flex; justify-content: space-between; align-items: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.rcpt-grand-row { padding: 8px 10px; border-top: 2px solid #c2588a; display: flex; justify-content: space-between; align-items: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .rcpt-grand-label { font-size: 13px; font-weight: 600; }
 .rcpt-grand-value { font-size: 16px; font-weight: 700; font-family: monospace; color: #111; }
 .rcpt-words { display: flex; gap: 8px; align-items: center; padding: 8px 10px 12px; font-size: 12.5px; border-bottom: 1px solid #ddd; }
@@ -8191,26 +8175,26 @@ function openInstPrintMenu(custId, month) {
         <span onclick="document.getElementById('inst-print-menu').remove()" style="cursor:pointer;font-size:18px;color:var(--text3);line-height:1;padding:4px 6px">×</span>
       </div>
       <div style="padding:14px 16px">
-        <div style="font-size:11px;font-weight:700;color:#1a6b4a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📄 ใบวางบิล — ออกให้ลูกค้าก่อนชำระ</div>
+        <div style="font-size:11px;font-weight:700;color:#c2588a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📄 ใบวางบิล — ออกให้ลูกค้าก่อนชำระ</div>
 
         <button onclick="printInstallmentBill('${custId}','${month}',0);document.getElementById('inst-print-menu').remove()"
           style="width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #b0d8c0;border-radius:9px;background:#f0fdf4;cursor:pointer;margin-bottom:8px;text-align:left;font-family:inherit">
           <span style="font-size:20px">📄</span>
           <div style="flex:1;min-width:0">
-            <div style="font-weight:600;font-size:13px;color:#1a6b4a">ใบวางบิล งวดที่ 1</div>
+            <div style="font-weight:600;font-size:13px;color:#c2588a">ใบวางบิล งวดที่ 1</div>
             <div style="font-size:11px;color:#555">${periodStr(i1)} · ฿${fmt(i1?.amount||0)}</div>
           </div>
-          <span style="font-size:11px;color:#1a6b4a;font-weight:600">พิมพ์ →</span>
+          <span style="font-size:11px;color:#c2588a;font-weight:600">พิมพ์ →</span>
         </button>
 
         <button onclick="printInstallmentBill('${custId}','${month}',1);document.getElementById('inst-print-menu').remove()"
           style="width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #b0d8c0;border-radius:9px;background:#f0fdf4;cursor:pointer;margin-bottom:14px;text-align:left;font-family:inherit">
           <span style="font-size:20px">📄</span>
           <div style="flex:1;min-width:0">
-            <div style="font-weight:600;font-size:13px;color:#1a6b4a">ใบวางบิล งวดที่ 2</div>
+            <div style="font-weight:600;font-size:13px;color:#c2588a">ใบวางบิล งวดที่ 2</div>
             <div style="font-size:11px;color:#555">${periodStr(i2)} · ฿${fmt(i2?.amount||0)}</div>
           </div>
-          <span style="font-size:11px;color:#1a6b4a;font-weight:600">พิมพ์ →</span>
+          <span style="font-size:11px;color:#c2588a;font-weight:600">พิมพ์ →</span>
         </button>
 
         <div style="border-top:1px solid var(--border);margin-bottom:10px"></div>
@@ -8551,7 +8535,7 @@ function printRefundReceipt(id) {
     `<tr><td>&nbsp;</td><td></td><td></td><td></td></tr>`).join('');
 
   document.getElementById('refund-receipt-area').innerHTML = `
-    <div style="font-family:'IBM Plex Sans Thai',Sarabun,sans-serif;font-size:13px;padding:24px 28px;color:#111;line-height:1.55">
+    <div style="font-family:'Sarabun',sans-serif;font-size:13px;padding:24px 28px;color:#111;line-height:1.55">
       <!-- Header -->
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px">
         ${logoSrc ? `<img src="${logoSrc}" style="width:${isUdonBranchRf?124:72}px;height:${isUdonBranchRf?124:72}px;object-fit:contain;flex-shrink:0">` : ''}
@@ -8598,7 +8582,7 @@ function printRefundReceipt(id) {
           </tr>
           <tr><td style="padding:6px 10px;border-bottom:1px solid #eee">จำนวนที่ลูกค้าชำระ</td><td style="padding:6px 10px;text-align:right;font-family:monospace;border-bottom:1px solid #eee">฿${fmt(r.paid)}</td></tr>
           <tr><td style="padding:6px 10px;border-bottom:1px solid #eee">ค่าใช้จ่ายทั้งหมด</td><td style="padding:6px 10px;text-align:right;font-family:monospace;border-bottom:1px solid #eee">฿${fmt(r.actual)}</td></tr>
-          ${(r.discount||0) > 0 ? `<tr><td style="padding:6px 10px;border-bottom:1px solid #eee;color:#1a6b4a">ส่วนลด</td><td style="padding:6px 10px;text-align:right;font-family:monospace;border-bottom:1px solid #eee;color:#1a6b4a">฿${fmt(r.discount)}</td></tr>` : ''}
+          ${(r.discount||0) > 0 ? `<tr><td style="padding:6px 10px;border-bottom:1px solid #eee;color:#c2588a">ส่วนลด</td><td style="padding:6px 10px;text-align:right;font-family:monospace;border-bottom:1px solid #eee;color:#c2588a">฿${fmt(r.discount)}</td></tr>` : ''}
           <tr style="background:#fef6f8">
             <td style="padding:7px 10px;font-weight:700">ค่าใช้จ่ายคืนลูกค้า</td>
             <td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:700;font-size:15px;color:#c45570">฿${fmt(r.refundAmt)}</td>
@@ -8645,7 +8629,7 @@ function doPrintRefund() {
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'IBM Plex Sans Thai',Sarabun,sans-serif; font-size:13px; color:#111; background:#fff; padding:16mm 14mm; line-height:1.55; }
+body { font-family:'Sarabun',sans-serif; font-size:13px; color:#111; background:#fff; padding:16mm 14mm; line-height:1.55; }
 table { border-collapse:collapse; }
 img { max-width:100%; }
 @media print {
@@ -8673,15 +8657,15 @@ window.onload = function() { setTimeout(function() { window.print(); }, 600); };
 // ========== goPage (includes requisition) ==========
 // ========== HOMEPAGE ==========
 const _HP_MODULES = [
-  { id:'dashboard',  icon:'📊', name:'ภาพรวม',          desc:'สถิติและกราฟแสดงผลรวม',      color:'#1a6b4a' },
-  { id:'customers',  icon:'👥', name:'ลูกค้าทั้งหมด',   desc:'จัดการข้อมูลผู้พักอาศัย',    color:'#1a5c9e' },
-  { id:'billing',    icon:'💳', name:'ชำระบิล',          desc:'บิลรายเดือนและใบเสร็จ',      color:'#7c3aed', badge:'unpaid' },
-  { id:'reminders',  icon:'🔔', name:'แจ้งเตือนบิล',    desc:'ค้างชำระและใกล้ครบกำหนด',   color:'#b8620a', badge:'reminder' },
+  { id:'dashboard',  icon:'📊', name:'ภาพรวม',          desc:'สถิติและกราฟแสดงผลรวม',      color:'#c2588a' },
+  { id:'customers',  icon:'👥', name:'ลูกค้าทั้งหมด',   desc:'จัดการข้อมูลผู้พักอาศัย',    color:'#1f5f8b' },
+  { id:'billing',    icon:'💳', name:'ชำระบิล',          desc:'บิลรายเดือนและใบเสร็จ',      color:'#6b3fa0', badge:'unpaid' },
+  { id:'reminders',  icon:'🔔', name:'แจ้งเตือนบิล',    desc:'ค้างชำระและใกล้ครบกำหนด',   color:'#a8660a', badge:'reminder' },
   { id:'requisition',icon:'📦', name:'เบิกของ',          desc:'สั่งเบิกวัสดุสิ้นเปลือง',   color:'#0e7490' },
   { id:'history',    icon:'📋', name:'ประวัติการชำระ',   desc:'บันทึกการชำระทั้งหมด',      color:'#6b7280' },
   { id:'refund',     icon:'↩️', name:'คืนเงินลูกค้า',   desc:'จัดการรายการคืนเงิน',       color:'#dc2626' },
-  { id:'sched',      icon:'🗓️', name:'ตารางเวร',         desc:'จัดตารางเวรพนักงาน',        color:'#7c3aed' },
-  { id:'bedmap',     icon:'🛏', name:'แผนผังเตียง',      desc:'สถานะเตียงแบบ visual',      color:'#b85450' },
+  { id:'sched',      icon:'🗓️', name:'ตารางเวร',         desc:'จัดตารางเวรพนักงาน',        color:'#6b3fa0' },
+  { id:'bedmap',     icon:'🛏', name:'แผนผังเตียง',      desc:'สถานะเตียงแบบ visual',      color:'#c2588a' },
   { id:'discharged', icon:'🚪', name:'คืนเคส',           desc:'รายชื่อผู้พักที่จำหน่ายแล้ว',color:'#6b7280' },
   { id:'permission', icon:'🔐', name:'สิทธิ์การเข้าถึง', desc:'จัดการผู้ใช้และสิทธิ์',    color:'#374151' },
 ];
@@ -9132,7 +9116,7 @@ function _renderS1FloorSVG(floorNum, allBeds) {
       <rect class="rm-main" x="${eff.x}" y="${eff.y}" width="${eff.w}" height="${eff.h}"
             rx="5" fill="${eff.fill}" stroke="${eff.stroke}" stroke-width="1.5"/>
       <text x="${eff.x+7}" y="${eff.y+15}" font-size="9.5" fill="${lColor}" font-weight="700"
-            font-family="IBM Plex Sans Thai,sans-serif" pointer-events="none">${eff.label}</text>
+            font-family="Sarabun,sans-serif" pointer-events="none">${eff.label}</text>
       ${editRing}${rh}
     </g>`;
   }).join('');
@@ -9164,8 +9148,8 @@ function _renderS1FloorSVG(floorNum, allBeds) {
       <circle cx="${eff.x}" cy="${eff.y+1}" r="${r+2}" fill="#00000018"/>
       <circle cx="${eff.x}" cy="${eff.y}" r="${r}" fill="${c.fill}" stroke="${c.stroke}" stroke-width="2.5"/>
       <text x="${eff.x}" y="${eff.y+(nm?(-r*.24):(r*.22))}" font-size="${fs}" text-anchor="middle"
-            fill="${c.text}" font-weight="800" font-family="IBM Plex Sans Thai,sans-serif" pointer-events="none">${b.no}</text>
-      ${nm?`<text x="${eff.x}" y="${eff.y+(r*.42)}" font-size="${fss}" text-anchor="middle" fill="${c.text}" font-family="IBM Plex Sans Thai,sans-serif" pointer-events="none">${nm}</text>`:''}
+            fill="${c.text}" font-weight="800" font-family="Sarabun,sans-serif" pointer-events="none">${b.no}</text>
+      ${nm?`<text x="${eff.x}" y="${eff.y+(r*.42)}" font-size="${fss}" text-anchor="middle" fill="${c.text}" font-family="Sarabun,sans-serif" pointer-events="none">${nm}</text>`:''}
       ${editRingG}
     </g>`;
   }).join('');
@@ -9173,13 +9157,13 @@ function _renderS1FloorSVG(floorNum, allBeds) {
   const guide = edit ? `
     <rect x="5" y="${plan.h-22}" width="${plan.w-10}" height="18" rx="4" fill="#1e40af18"/>
     <text x="${plan.w/2}" y="${plan.h-10}" font-size="9" text-anchor="middle" fill="#1e40af"
-          font-family="IBM Plex Sans Thai,sans-serif">
+          font-family="Sarabun,sans-serif">
       ✦ ลากเตียง (วงกลม) เพื่อย้าย  •  ลากพื้นห้องเพื่อย้ายห้อง  •  กดปุ่มน้ำเงิน ■ มุมขวาล่างของห้องเพื่อปรับขนาด
     </text>` : '';
 
   return `<svg viewBox="${plan.vb}" xmlns="http://www.w3.org/2000/svg"
           style="width:100%;touch-action:none;user-select:none">
-    <rect x="0" y="0" width="${plan.w}" height="${plan.h}" fill="#f0ede8" rx="8"/>
+    <rect x="0" y="0" width="${plan.w}" height="${plan.h}" fill="#eae3d5" rx="8"/>
     ${roomsSVG}${bedsSVG}${guide}
   </svg>`;
 }
@@ -9492,8 +9476,8 @@ function openAddCatType() {
   document.getElementById('cat-type-modal-title').textContent = 'เพิ่มหมวดหมู่';
   document.getElementById('ct-label').value = '';
   document.getElementById('ct-icon').value  = '📦';
-  document.getElementById('ct-color').value = '#1a6b4a';
-  document.getElementById('ct-bg').value    = '#e8f5ee';
+  document.getElementById('ct-color').value = '#c2588a';
+  document.getElementById('ct-bg').value    = '#fbe7f0';
   updateCatTypePreview();
   document.getElementById('cat-type-modal').classList.add('open');
 }
@@ -9513,8 +9497,8 @@ function editCatType(key) {
 function updateCatTypePreview() {
   const label = document.getElementById('ct-label')?.value || 'ชื่อหมวด';
   const icon  = document.getElementById('ct-icon')?.value  || '📦';
-  const color = document.getElementById('ct-color')?.value || '#1a6b4a';
-  const bg    = document.getElementById('ct-bg')?.value    || '#e8f5ee';
+  const color = document.getElementById('ct-color')?.value || '#c2588a';
+  const bg    = document.getElementById('ct-bg')?.value    || '#fbe7f0';
   const prev  = document.getElementById('ct-preview');
   if (prev) {
     prev.style.background = bg;

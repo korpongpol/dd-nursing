@@ -12,11 +12,11 @@
 <meta name="apple-mobile-web-app-title" content="DD Nursing Home">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#b85450">
+<meta name="theme-color" content="#c2588a">
 <link rel="manifest" href="manifest-staff.json">
 
 <title>DD Nursing — บันทึกเบิกของ</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script type="module">
 // top-level await supported in module scripts
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -61,10 +61,10 @@ function _showStaffMessage(html, type) {
   // type: 'denied' | 'pending' | 'error'
   const errEl = document.getElementById("staff-login-err");
   const btn   = document.querySelector(".staff-google-btn");
-  const colors = { denied:'#c0392b', pending:'#e67e22', error:'#c0392b' };
+  const colors = { denied:'#d7263d', pending:'#e67e22', error:'#d7263d' };
   if (errEl) {
     errEl.style.display   = "block";
-    errEl.style.color     = colors[type] || '#c0392b';
+    errEl.style.color     = colors[type] || '#d7263d';
     errEl.style.background = type === 'pending' ? '#fff8f0' : '#fff5f5';
     errEl.style.border    = type === 'pending' ? '1px solid #fde8c8' : '1px solid #f5c6cb';
     errEl.style.borderRadius = '8px';
@@ -524,28 +524,28 @@ function renderItems() {
     const entries = reqEntries.filter(e=>e.itemId===item.id);
     const hasEntries = entries.length > 0;
     const entryRows = entries.map((e,ei) => `
-      <div style="display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 8px;background:#fff;border-radius:6px;border:1px solid #e0dbd2">
+      <div style="display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 8px;background:#fff;border-radius:6px;border:1px solid #e3ddec">
         <span style="font-size:13px;color:#999;min-width:16px">${ei+1}.</span>
         <button type="button" id="tdp_btn_${item.id}_${ei}"
           onclick="openTdp('${item.id}',${ei},'${e.date}')"
-          style="flex:1;min-width:90px;padding:5px 8px;border:1px solid #e0dbd2;border-radius:5px;font-size:14px;color:#444;background:#fff;cursor:pointer;text-align:left;white-space:nowrap">
+          style="flex:1;min-width:90px;padding:5px 8px;border:1px solid #e3ddec;border-radius:5px;font-size:14px;color:#444;background:#fff;cursor:pointer;text-align:left;white-space:nowrap">
           📅 ${fmtDate(e.date)}
         </button>
         <button onclick="adjEntry('${item.id}',${ei},-1)" style="width:26px;height:26px;border:1px solid #ccc;border-radius:5px;cursor:pointer;background:#fff;font-size:17px">−</button>
         <input type="number" min="1" value="${e.qty}" onchange="updateEntry('${item.id}',${ei},'qty',this.value)"
-          style="width:50px;padding:4px 6px;border:1px solid #e0dbd2;border-radius:5px;font-size:15px;text-align:center">
-        <button onclick="adjEntry('${item.id}',${ei},1)" style="width:26px;height:26px;border:1px solid #1a6b4a;border-radius:5px;cursor:pointer;background:#e8f5ee;font-size:17px;color:#1a6b4a">+</button>
+          style="width:50px;padding:4px 6px;border:1px solid #e3ddec;border-radius:5px;font-size:15px;text-align:center">
+        <button onclick="adjEntry('${item.id}',${ei},1)" style="width:26px;height:26px;border:1px solid #c2588a;border-radius:5px;cursor:pointer;background:#fbe7f0;font-size:17px;color:#c2588a">+</button>
         <span style="font-size:13px;color:#999;min-width:28px">${item.unit}</span>
-        <button onclick="removeEntry('${item.id}',${ei})" style="width:24px;height:24px;border:1px solid #f5b8b0;border-radius:5px;cursor:pointer;font-size:15px;color:#c0392b;background:#fdf0ee">×</button>
+        <button onclick="removeEntry('${item.id}',${ei})" style="width:24px;height:24px;border:1px solid #f3b8be;border-radius:5px;cursor:pointer;font-size:15px;color:#d7263d;background:#fdecec">×</button>
       </div>`).join("");
 
-    return `<div id="srow_${item.id}" style="padding:8px 4px;border-bottom:1px solid #f0ede8;${hasEntries?"background:#f0fbf5;border-radius:8px;padding:8px;margin:2px 0":""}">
+    return `<div id="srow_${item.id}" style="padding:8px 4px;border-bottom:1px solid #f1eef7;${hasEntries?"background:#f0fbf5;border-radius:8px;padding:8px;margin:2px 0":""}">
       <div style="display:flex;align-items:center;gap:8px">
         ${itemSearch ? `<span style="font-size:12px;padding:1px 6px;border-radius:10px;background:${m.bg};color:${m.color};font-weight:500">${m.icon}</span>` : ""}
         <span style="flex:1;font-size:15px;font-weight:${hasEntries?"600":"400"}">${item.name}</span>
-        ${hasEntries ? `<span style="font-size:13px;color:#1a6b4a;font-weight:600">✓ ${entries.reduce((s,e)=>s+e.qty,0)} ${item.unit}</span>` : ""}
+        ${hasEntries ? `<span style="font-size:13px;color:#c2588a;font-weight:600">✓ ${entries.reduce((s,e)=>s+e.qty,0)} ${item.unit}</span>` : ""}
         <button onclick="addEntry('${item.id}')"
-          style="padding:4px 12px;border:1px solid #1a6b4a;border-radius:5px;cursor:pointer;font-size:14px;color:#1a6b4a;background:#e8f5ee;white-space:nowrap">+ เบิก</button>
+          style="padding:4px 12px;border:1px solid #c2588a;border-radius:5px;cursor:pointer;font-size:14px;color:#c2588a;background:#fbe7f0;white-space:nowrap">+ เบิก</button>
       </div>
       ${entryRows}
     </div>`;
@@ -612,7 +612,7 @@ function renderSaved() {
     return `<div style="margin-bottom:8px">
       <div style="font-size:13px;font-weight:600;color:#666;margin-bottom:4px">${m.icon} ${m.label}</div>
       ${items.map(i=>`
-        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:.5px solid #f0ede8;font-size:15px">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:.5px solid #f1eef7;font-size:15px">
           <span>${i.name}</span>
           <span style="color:#666;font-size:13px;margin:0 8px">${fmtDate(i.date)}</span>
           <span style="font-weight:600;font-family:monospace">${i.qty} ${i.unit}</span>
@@ -738,9 +738,9 @@ async function _logAction(action, detail) {
 function showStatus(msg,type) {
   const el=document.getElementById("status");
   el.textContent=msg; el.style.display="block";
-  el.style.background=type==="ok"?"#e8f5ee":type==="err"?"#fdf0ee":"#edf4fd";
-  el.style.color=type==="ok"?"#1a6b4a":type==="err"?"#c0392b":"#1a5c9e";
-  el.style.borderColor=type==="ok"?"#b0d8c0":type==="err"?"#f5b8b0":"#b0cef5";
+  el.style.background=type==="ok"?"#fbe7f0":type==="err"?"#fdecec":"#edf4fd";
+  el.style.color=type==="ok"?"#c2588a":type==="err"?"#d7263d":"#4a86bd";
+  el.style.borderColor=type==="ok"?"#b0d8c0":type==="err"?"#f3b8be":"#b0cef5";
   if(type==="ok") setTimeout(()=>el.style.display="none", 3000);
 }
 
@@ -814,7 +814,7 @@ function _renderTdpCalendar() {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <button onclick="tdpNavMonth(-1)"
         style="min-width:36px;min-height:36px;border:1px solid #e8e3dc;border-radius:8px;
-               background:#fafaf8;cursor:pointer;font-size:19px;color:#555;
+               background:#f8f7fb;cursor:pointer;font-size:19px;color:#555;
                display:flex;align-items:center;justify-content:center;
                -webkit-tap-highlight-color:transparent;touch-action:manipulation">‹</button>
       <span style="font-weight:700;font-size:17px;color:#222">
@@ -823,12 +823,12 @@ function _renderTdpCalendar() {
       <div style="display:flex;gap:4px">
         <button onclick="tdpNavMonth(1)"
           style="min-width:36px;min-height:36px;border:1px solid #e8e3dc;border-radius:8px;
-                 background:#fafaf8;cursor:pointer;font-size:19px;color:#555;
+                 background:#f8f7fb;cursor:pointer;font-size:19px;color:#555;
                  display:flex;align-items:center;justify-content:center;
                  -webkit-tap-highlight-color:transparent;touch-action:manipulation">›</button>
         <button onclick="closeTdp()"
           style="min-width:36px;min-height:36px;border:1px solid #e8e3dc;border-radius:8px;
-                 background:#fafaf8;cursor:pointer;font-size:15px;color:#bbb;
+                 background:#f8f7fb;cursor:pointer;font-size:15px;color:#bbb;
                  display:flex;align-items:center;justify-content:center;
                  -webkit-tap-highlight-color:transparent;touch-action:manipulation">✕</button>
       </div>
@@ -839,7 +839,7 @@ function _renderTdpCalendar() {
     <div style="display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px">
       ${_THAI_DOW.map((h,i) =>
         `<div style="text-align:center;font-size:13px;font-weight:700;padding:4px 0;
-                     color:${i===0?'#c0392b':i===6?'#2856b8':'#aaa'}">${h}</div>`
+                     color:${i===0?'#d7263d':i===6?'#2856b8':'#aaa'}">${h}</div>`
       ).join("")}
     </div>`;
 
@@ -849,9 +849,9 @@ function _renderTdpCalendar() {
     const isSel  = d === _tdpSelDay;
     const isTday = isCurMonth && d === todayD;
     const dow    = (firstDow + d - 1) % 7;
-    const col    = isSel ? '#fff' : dow===0 ? '#c0392b' : dow===6 ? '#2856b8' : '#222';
-    const bg     = isSel ? '#1a6b4a' : isTday ? '#e8f5ee' : 'transparent';
-    const border = isTday && !isSel ? '2px solid #1a6b4a' : 'none';
+    const col    = isSel ? '#fff' : dow===0 ? '#d7263d' : dow===6 ? '#2856b8' : '#222';
+    const bg     = isSel ? '#c2588a' : isTday ? '#fbe7f0' : 'transparent';
+    const border = isTday && !isSel ? '2px solid #c2588a' : 'none';
     const weight = isSel || isTday ? '700' : '400';
     const shadow = isSel ? 'box-shadow:0 2px 6px rgba(26,107,74,.28);' : '';
     cells.push(`
@@ -971,7 +971,7 @@ function renderSidebarCases() {
   });
   const branchOrder = ['สาขา 1','สาขา 2','สาขา 3'];
   const branches = [...branchOrder.filter(b => byBranch[b]), ...Object.keys(byBranch).filter(b => !branchOrder.includes(b)).sort()];
-  const bColors = {'สาขา 1':'#1a5c9e','สาขา 2':'#1a6b4a','สาขา 3':'#7a4f0d'};
+  const bColors = {'สาขา 1':'#4a86bd','สาขา 2':'#c2588a','สาขา 3':'#8a5a17'};
 
   el.innerHTML = branches.map(branch => {
     const custs = (byBranch[branch] || []).sort((a,b) => getDueDay(a.due_date) - getDueDay(b.due_date));
@@ -1349,9 +1349,9 @@ function loadAllVitalsFromFirebase() {
   window._get(window._ref(window._db, `vital_signs/${_vitalDate}`)).then(snap => {
     _vitalAllData = snap.exists() ? snap.val() : {};
     renderVitalTable();
-    if (msg) { msg.textContent = snap.exists() ? '✓ โหลดข้อมูลแล้ว' : 'ยังไม่มีข้อมูล'; msg.style.color = snap.exists() ? '#1a6b4a' : '#bbb'; }
+    if (msg) { msg.textContent = snap.exists() ? '✓ โหลดข้อมูลแล้ว' : 'ยังไม่มีข้อมูล'; msg.style.color = snap.exists() ? '#c2588a' : '#bbb'; }
   }).catch(e => {
-    if (msg) { msg.textContent = 'โหลดไม่ได้: '+e.message; msg.style.color='#c0392b'; }
+    if (msg) { msg.textContent = 'โหลดไม่ได้: '+e.message; msg.style.color='#d7263d'; }
     renderVitalTable();
   });
 }
@@ -1372,9 +1372,9 @@ function renderVitalTable() {
   if (empty) empty.style.display = 'none';
 
   // ─── วาด header 2 แถว ───
-  const timeColors = ['#e8f5ee','#e8eaf6','#fff8ec','#fde8f0','#e8f4fd','#f3e8fd'];
-  const timeTx     = ['#1a6b4a','#3949ab','#92400e','#c45570','#1565c0','#6d28d9'];
-  let h1 = `<tr style="background:#f0ede8;text-align:center">
+  const timeColors = ['#fbe7f0','#e8eaf6','#fff8ec','#fde8f0','#e8f4fd','#f3e8fd'];
+  const timeTx     = ['#c2588a','#3949ab','#92400e','#c45570','#1565c0','#6d28d9'];
+  let h1 = `<tr style="background:#f1eef7;text-align:center">
     <th rowspan="2" style="padding:7px 4px;border:1px solid #ddd;min-width:32px;font-size:13px">ลำดับ</th>
     <th rowspan="2" style="padding:7px 8px;border:1px solid #ddd;min-width:100px;max-width:140px;text-align:left;font-size:13px">ชื่อ-สกุล</th>
     <th rowspan="2" style="padding:7px 5px;border:1px solid #ddd;min-width:40px;font-size:13px">อายุ</th>`;
@@ -1396,7 +1396,7 @@ function renderVitalTable() {
     // แสดงชื่อพร้อม "คุณ " นำหน้า
     const _n = (c.name||'');
     const shortName = /^คุณ/.test(_n) ? _n : 'คุณ ' + _n;
-    const bg = idx % 2 === 0 ? '#fff' : '#fafaf8';
+    const bg = idx % 2 === 0 ? '#fff' : '#f8f7fb';
     let cells = '';
     VITAL_TIMES.forEach((t,i) => {
       const tk = t.replace(':','');
@@ -1410,13 +1410,13 @@ function renderVitalTable() {
           <input class="vital-input" type="${inputType}" ${step} placeholder="${placeholder}"
             value="${v[f]||''}"
             oninput="updateVital('${tk}','${cid}','${f}',this.value)"
-            style="width:100%;min-width:44px;padding:3px 4px;border:1px solid #e0dbd2;border-radius:4px;font-size:13px;text-align:center;font-family:inherit;background:transparent" /></td>`;
+            style="width:100%;min-width:44px;padding:3px 4px;border:1px solid #e3ddec;border-radius:4px;font-size:13px;text-align:center;font-family:inherit;background:transparent" /></td>`;
       });
     });
     return `<tr style="background:${bg}">
       <td style="padding:5px 4px;border:1px solid #eee;text-align:center;color:#aaa;font-size:13px">${idx+1}</td>
       <td style="padding:5px 8px;border:1px solid #eee;font-size:14px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name||''}">${shortName}</td>
-      <td style="padding:2px 3px;border:1px solid #eee"><input type="number" min="0" max="120" value="${age}" placeholder="-" oninput="updateVitalAge('${cid}',this.value)" style="width:44px;padding:3px 4px;border:1px solid #e0dbd2;border-radius:4px;font-size:13px;text-align:center;font-family:inherit;background:transparent"></td>
+      <td style="padding:2px 3px;border:1px solid #eee"><input type="number" min="0" max="120" value="${age}" placeholder="-" oninput="updateVitalAge('${cid}',this.value)" style="width:44px;padding:3px 4px;border:1px solid #e3ddec;border-radius:4px;font-size:13px;text-align:center;font-family:inherit;background:transparent"></td>
       ${cells}
     </tr>`;
   }).join('');
@@ -1467,10 +1467,10 @@ async function saveVitalSigns() {
       .filter(([,age]) => age !== '' && age != null)
       .map(([cid, age]) => window._set(window._ref(window._db, `case_summary/${yyyy}-${mm}/${cid}/age`), age));
     if (agePromises.length) await Promise.all(agePromises);
-    if (msg) { msg.textContent = `✓ บันทึกแล้ว (${totalRows} รายการ)`; msg.style.color = '#1a6b4a'; }
+    if (msg) { msg.textContent = `✓ บันทึกแล้ว (${totalRows} รายการ)`; msg.style.color = '#c2588a'; }
     if (btn) { btn.textContent = '✓ บันทึกแล้ว'; setTimeout(() => { btn.disabled=false; btn.textContent='💾 บันทึก'; }, 2500); }
   } catch(e) {
-    if (msg) { msg.textContent = 'บันทึกไม่สำเร็จ: '+e.message; msg.style.color='#c0392b'; }
+    if (msg) { msg.textContent = 'บันทึกไม่สำเร็จ: '+e.message; msg.style.color='#d7263d'; }
     if (btn) { btn.disabled=false; btn.textContent='💾 บันทึก'; }
   }
 }
@@ -1596,8 +1596,8 @@ function loadCaseSummary() {
   window._get(window._ref(window._db, `case_summary/${_summaryMonth}`)).then(snap => {
     _summaryData = snap.exists() ? snap.val() : {};
     renderCaseSummary();
-    if (msg) { msg.textContent = snap.exists() ? '✓ โหลดแล้ว' : 'ยังไม่มีข้อมูล'; msg.style.color = snap.exists() ? '#1a6b4a' : '#bbb'; }
-  }).catch(e => { if (msg) { msg.textContent='โหลดไม่ได้: '+e.message; msg.style.color='#c0392b'; } renderCaseSummary(); });
+    if (msg) { msg.textContent = snap.exists() ? '✓ โหลดแล้ว' : 'ยังไม่มีข้อมูล'; msg.style.color = snap.exists() ? '#c2588a' : '#bbb'; }
+  }).catch(e => { if (msg) { msg.textContent='โหลดไม่ได้: '+e.message; msg.style.color='#d7263d'; } renderCaseSummary(); });
 }
 
 function _fmtAdmitDate(s) {
@@ -1656,7 +1656,7 @@ function renderCaseSummary() {
   tbody.innerHTML = custs.map((c,i) => {
     const cid = (c.id||'').replace(/\//g,'_');
     const v = _summaryData[cid] || {};
-    const bg = i%2===0 ? '#fff' : '#fafaf8';
+    const bg = i%2===0 ? '#fff' : '#f8f7fb';
     const txt = (f, ph, xtra='') => `<input type="text" value="${v[f]||''}" placeholder="${ph}" oninput="updateSummary('${cid}','${f}',this.value)" style="${I}${xtra}">`;
     return `<tr style="background:${bg}">
       <td style="${TD};text-align:center;color:#888;font-size:13px">${i+1}</td>
@@ -1700,10 +1700,10 @@ async function saveCaseSummary() {
   });
   try {
     await window._set(window._ref(window._db,`case_summary/${_summaryMonth}`), Object.keys(saveObj).length?saveObj:null);
-    if (msg) { msg.textContent='✓ บันทึกแล้ว'; msg.style.color='#1a6b4a'; }
+    if (msg) { msg.textContent='✓ บันทึกแล้ว'; msg.style.color='#c2588a'; }
     if (btn) { btn.textContent='✓ บันทึกแล้ว'; setTimeout(()=>{ btn.disabled=false; btn.textContent='💾 บันทึก'; },2500); }
   } catch(e) {
-    if (msg) { msg.textContent='บันทึกไม่สำเร็จ: '+e.message; msg.style.color='#c0392b'; }
+    if (msg) { msg.textContent='บันทึกไม่สำเร็จ: '+e.message; msg.style.color='#d7263d'; }
     if (btn) { btn.disabled=false; btn.textContent='💾 บันทึก'; }
   }
 }
@@ -1745,7 +1745,7 @@ function renderCalendar() {
   let html=`<table style="width:100%;height:100%;border-collapse:collapse;font-size:16px;table-layout:fixed"><thead><tr style="height:36px">`;
   TH_DAYS_CAL.forEach((d,i)=>{
     const sun=i===0, sat=i===6;
-    html+=`<th style="padding:8px 4px;border:1px solid #ddd;background:#f0ede8;text-align:center;font-size:15px;font-weight:600;color:${sun?'#c0392b':sat?'#1a5c9e':'#555'}">${d}</th>`;
+    html+=`<th style="padding:8px 4px;border:1px solid #ddd;background:#f1eef7;text-align:center;font-size:15px;font-weight:600;color:${sun?'#d7263d':sat?'#4a86bd':'#555'}">${d}</th>`;
   });
   html+='</tr></thead><tbody>';
   let col=0, rowOpen=false;
@@ -1761,12 +1761,12 @@ function renderCalendar() {
     const isToday=ds===todayStr;
     const colIdx=col%7;
     const isSun=colIdx===sunCol, isSat=colIdx===satCol;
-    const numColor=isSun?'#c0392b':isSat?'#1a5c9e':'#444';
-    const bg=isToday?'#fff9e6':hasNote?'#e8f5ee':'#fff';
+    const numColor=isSun?'#d7263d':isSat?'#4a86bd':'#444';
+    const bg=isToday?'#fff9e6':hasNote?'#fbe7f0':'#fff';
     const border=isToday?'2px solid #f0a500':'1px solid #ddd';
     html+=`<td style="padding:6px 5px;border:${border};vertical-align:top;cursor:pointer;background:${bg}" onclick="openApptDay('${ds}')">
       <div style="font-size:16px;font-weight:700;color:${numColor};margin-bottom:3px${isToday?';background:#f0a500;color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center':''}">${day}</div>
-      <div style="font-size:13px;color:#1a6b4a;line-height:1.45;word-break:break-word">${text.replace(/\n/g,'<br>')}</div>
+      <div style="font-size:13px;color:#c2588a;line-height:1.45;word-break:break-word">${text.replace(/\n/g,'<br>')}</div>
     </td>`;
     col++;
     if(col%7===0&&day<daysInMonth){ closeRow(); startNewRow(); }
@@ -1809,8 +1809,8 @@ function loadRegistryExtra() {
   window._get(window._ref(window._db,'registry_extra')).then(snap=>{
     _registryExtra=snap.exists()?snap.val():{};
     renderRegistry();
-    if(msg){msg.textContent='✓ โหลดแล้ว';msg.style.color='#1a6b4a';setTimeout(()=>msg.textContent='',2000);}
-  }).catch(e=>{ if(msg){msg.textContent='โหลดไม่ได้: '+e.message;msg.style.color='#c0392b';} renderRegistry(); });
+    if(msg){msg.textContent='✓ โหลดแล้ว';msg.style.color='#c2588a';setTimeout(()=>msg.textContent='',2000);}
+  }).catch(e=>{ if(msg){msg.textContent='โหลดไม่ได้: '+e.message;msg.style.color='#d7263d';} renderRegistry(); });
 }
 
 // วัดความกว้างข้อความเพื่อ auto-resize input
@@ -1835,7 +1835,7 @@ function renderRegistry() {
   tbody.innerHTML=custs.map((c,i)=>{
     const cid=(c.id||'').replace(/\//g,'_');
     const e=_registryExtra[cid]||{};
-    const bg=i%2===0?'#fff':'#fafaf8';
+    const bg=i%2===0?'#fff':'#f8f7fb';
     const inp=(f,ph,tp='text')=>{
       const val=(e[f]||'').replace(/"/g,'&quot;');
       return `<input type="${tp}" value="${val}" placeholder="${ph}"
@@ -1865,10 +1865,10 @@ async function saveRegistry() {
   if(btn){btn.disabled=true;btn.textContent='กำลังบันทึก...';}
   try {
     await window._set(window._ref(window._db,'registry_extra'),Object.keys(_registryExtra).length?_registryExtra:null);
-    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#1a6b4a';}
+    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#c2588a';}
     if(btn){btn.textContent='✓ บันทึกแล้ว';setTimeout(()=>{btn.disabled=false;btn.textContent='💾 บันทึก';},2500);}
   } catch(e){
-    if(msg){msg.textContent='บันทึกไม่สำเร็จ: '+e.message;msg.style.color='#c0392b';}
+    if(msg){msg.textContent='บันทึกไม่สำเร็จ: '+e.message;msg.style.color='#d7263d';}
     if(btn){btn.disabled=false;btn.textContent='💾 บันทึก';}
   }
 }
@@ -1908,7 +1908,7 @@ function loadMedCheck() {
     _medCheckNotes=snap2.exists()?snap2.val():{};
     _medCheckExtraTimes=snap3.exists()?Object.values(snap3.val()).filter(Boolean):[];
     renderMedCheck();
-    if(msg){msg.textContent='✓ โหลดแล้ว';msg.style.color='#1a6b4a';}
+    if(msg){msg.textContent='✓ โหลดแล้ว';msg.style.color='#c2588a';}
     requestAnimationFrame(()=>requestAnimationFrame(_resizeMedCheck));
   }).catch(()=>{_medDailyData={};_medCheckNotes={};renderMedCheck();if(msg)msg.textContent='';});
 }
@@ -1998,14 +1998,14 @@ async function saveMedCheckNotes() {
 window.saveMedCheckNotes=saveMedCheckNotes;
 
 function _renderMedCheckRow(t, key, isExtra, extraIdx, totalRows, rowIdx) {
-  const bg=rowIdx%2===0?'#fff':'#fafaf8';
+  const bg=rowIdx%2===0?'#fff':'#f8f7fb';
   const custs=_getVitalCustomers();
   const patients=key?custs.filter(c=>{
     const cid=(c.id||'').replace(/\//g,'_');
     return _medDailyData[cid]&&_medDailyData[cid][key]===true;
   }):[];
   const chips=patients.length
-    ? patients.map(c=>`<span style="display:inline-block;padding:3px 10px;margin:2px 3px;background:#e8f5ee;color:#1a6b4a;border:1px solid #b2d8c4;border-radius:20px;font-size:14px;font-weight:500">${c.name}</span>`).join('')
+    ? patients.map(c=>`<span style="display:inline-block;padding:3px 10px;margin:2px 3px;background:#fbe7f0;color:#c2588a;border:1px solid #b2d8c4;border-radius:20px;font-size:14px;font-weight:500">${c.name}</span>`).join('')
     : '';
   const noteVal=(_medCheckNotes[key]||'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const delBtn=isExtra?`<button onclick="removeExtraMedTime(${extraIdx})" title="ลบ" style="margin-left:6px;padding:0 5px;border:none;background:transparent;color:#ccc;font-size:17px;cursor:pointer;line-height:1;flex-shrink:0" onmouseover="this.style.color='#e53935'" onmouseout="this.style.color='#ccc'">✕</button>`:'';
@@ -2056,7 +2056,7 @@ function loadMedDaily() {
   if(msg){msg.textContent='กำลังโหลด...';msg.style.color='#aaa';}
   window._get(window._ref(window._db,`med_daily/${_medDailyDate}`)).then(snap=>{
     _medDailyData=snap.exists()?snap.val():{};renderMedDaily();
-    if(msg){msg.textContent=snap.exists()?'✓ โหลดแล้ว':'ยังไม่มีข้อมูล';msg.style.color=snap.exists()?'#1a6b4a':'#bbb';}
+    if(msg){msg.textContent=snap.exists()?'✓ โหลดแล้ว':'ยังไม่มีข้อมูล';msg.style.color=snap.exists()?'#c2588a':'#bbb';}
   }).catch(()=>{_medDailyData={};renderMedDaily();});
 }
 
@@ -2083,7 +2083,7 @@ function renderMedDaily() {
   tbody.innerHTML=custs.map((c,i)=>{
     const cid=(c.id||'').replace(/\//g,'_');
     const v=_medDailyData[cid]||{};
-    const bg=i%2===0?'#fff':'#fafaf8';
+    const bg=i%2===0?'#fff':'#f8f7fb';
     const cells=MED_DAILY_COLS.map(col=>`<td style="padding:3px 4px;border:1px solid #eee;text-align:center">
       <input type="text" value="${(v[col.key]||'').replace(/"/g,'&quot;')}" maxlength="30" placeholder="—"
         oninput="_autoWidthMD(this);updateMedDaily('${cid}','${col.key}',this.value)"
@@ -2113,10 +2113,10 @@ async function saveMedDaily() {
   });
   try {
     await window._set(window._ref(window._db,`med_daily/${_medDailyDate}`),Object.keys(saveObj).length?saveObj:null);
-    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#1a6b4a';}
+    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#c2588a';}
     if(btn){btn.textContent='✓ บันทึกแล้ว';setTimeout(()=>{btn.disabled=false;btn.textContent='💾 บันทึก';},2500);}
   } catch(e){
-    if(msg){msg.textContent='บันทึกไม่สำเร็จ: '+e.message;msg.style.color='#c0392b';}
+    if(msg){msg.textContent='บันทึกไม่สำเร็จ: '+e.message;msg.style.color='#d7263d';}
     if(btn){btn.disabled=false;btn.textContent='💾 บันทึก';}
   }
 }
@@ -2160,7 +2160,7 @@ function loadCaseInfo() {
   window._get(window._ref(window._db,`case_info/${_caseInfoDate}`)).then(snap=>{
     _caseInfoAllData=snap.exists()?snap.val():{};
     renderCaseInfoTable();
-    if(msg){msg.textContent=snap.exists()?'✓ โหลดแล้ว':'ยังไม่มีข้อมูล';msg.style.color=snap.exists()?'#1a6b4a':'#bbb';}
+    if(msg){msg.textContent=snap.exists()?'✓ โหลดแล้ว':'ยังไม่มีข้อมูล';msg.style.color=snap.exists()?'#c2588a':'#bbb';}
   }).catch(()=>{_caseInfoAllData={};renderCaseInfoTable();if(msg)msg.textContent='';});
 }
 
@@ -2192,14 +2192,14 @@ function renderCaseInfoTable() {
   const containerW=wrap.clientWidth||375;
   const tblW=Math.max(containerW, minTblW);
   // header
-  const hdr=`<tr style="background:#f0ede8;text-align:center">
+  const hdr=`<tr style="background:#f1eef7;text-align:center">
     <th style="padding:6px 4px;border:1px solid #ddd;font-size:14px;white-space:nowrap">#</th>
     <th style="padding:6px 8px;border:1px solid #ddd;text-align:left;font-size:15px;white-space:nowrap">รายการประเมิน</th>
     ${pageCusts.map(c=>`<th style="padding:6px 5px;border:1px solid #ddd;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name||''}">${c.name||''}</th>`).join('')}
   </tr>`;
   const TA='width:100%;border:1px solid #ddd;border-radius:4px;padding:4px 5px;font-size:15px;font-family:inherit;resize:none;background:#fafafa;color:#333;box-sizing:border-box;overflow:hidden;line-height:1.4;min-height:30px';
   const rows=CASE_INFO_ITEMS.map((item,i)=>{
-    const bg=i%2===0?'#fff':'#fafaf8';
+    const bg=i%2===0?'#fff':'#f8f7fb';
     const cells=pageCusts.map(c=>{
       const cid=(c.id||'').replace(/\//g,'_');
       const v=(((_caseInfoAllData[cid]||{})[item.key])||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -2250,10 +2250,10 @@ async function saveCaseInfo() {
   });
   try {
     await window._set(window._ref(window._db,`case_info/${_caseInfoDate}`),Object.keys(saveObj).length?saveObj:null);
-    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#1a6b4a';}
+    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#c2588a';}
     if(btn){btn.textContent='✓ บันทึกแล้ว';setTimeout(()=>{btn.disabled=false;btn.textContent='💾 บันทึก';},2500);}
   } catch(e){
-    if(msg){msg.textContent='❌ บันทึกไม่สำเร็จ';msg.style.color='#c0392b';}
+    if(msg){msg.textContent='❌ บันทึกไม่สำเร็จ';msg.style.color='#d7263d';}
     if(btn){btn.disabled=false;btn.textContent='💾 บันทึก';}
   }
 }
@@ -2309,7 +2309,7 @@ function loadFeedTable() {
     _feedPage=0;
     _ensureFeedRows();
     renderFeedTable();
-    if(msg){msg.textContent=snap.exists()?'✓ โหลดแล้ว':'ยังไม่มีข้อมูล';msg.style.color=snap.exists()?'#1a6b4a':'#bbb';}
+    if(msg){msg.textContent=snap.exists()?'✓ โหลดแล้ว':'ยังไม่มีข้อมูล';msg.style.color=snap.exists()?'#c2588a':'#bbb';}
   }).catch(()=>{_feedRows=[];_ensureFeedRows();renderFeedTable();if(msg)msg.textContent='';});
 }
 
@@ -2392,7 +2392,7 @@ function renderFeedTable() {
   let html=`<tr style="display:none"><td><datalist id="feed-names-dl">${dlOpts}</datalist></td></tr>`;
   html+=pageRows.map((r,pi)=>{
     const gi=start+pi;
-    const bg=pi%2===0?'#fff':'#fafaf8';
+    const bg=pi%2===0?'#fff':'#f8f7fb';
     const feedVal=(r.feed||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     const timeCells=FEED_TIME_COLS.map(col=>`<td style="${TD}">
       <input type="text" value="${(r[col.key]||'').replace(/"/g,'&quot;')}" maxlength="20" placeholder="—"
@@ -2545,8 +2545,8 @@ function renderShift() {
   const CLEAN=isDD3?_CLEAN3:isDD2?_CLEAN2:_CLEAN1;
   const ddLabel=isDD3?'DD 3':isDD2?'DD 2':'DD 1';
   const badgeText=isDD3?'สาขา 3 (DD3)':isDD2?'สาขา 2 (DD2)':'สาขา 1 (DD1)';
-  const badgeBg=isDD3?'#fce4ec':isDD2?'#e8eaf6':'#e8f5ee';
-  const badgeColor=isDD3?'#c62828':isDD2?'#3949ab':'#1a6b4a';
+  const badgeBg=isDD3?'#fce4ec':isDD2?'#e8eaf6':'#fbe7f0';
+  const badgeColor=isDD3?'#c62828':isDD2?'#3949ab':'#c2588a';
   const badgeBorder=isDD3?'#ef9a9a':isDD2?'#9fa8da':'#a5d6a7';
   // update branch indicator badge
   const badge=document.getElementById('shift-branch-badge');
@@ -2560,24 +2560,24 @@ function renderShift() {
   const ct=document.getElementById('clean-title');
   if(ct) ct.textContent='🧹 ตารางการทำความสะอาด '+ddLabel;
   // render shift table (only once, data is same)
-  const T1='padding:6px 8px;border:1px solid #eee;color:#1a6b4a;font-weight:600;white-space:nowrap;vertical-align:top;font-size:15px';
+  const T1='padding:6px 8px;border:1px solid #eee;color:#c2588a;font-weight:600;white-space:nowrap;vertical-align:top;font-size:15px';
   const T2='padding:6px 8px;border:1px solid #eee;color:#3949ab;font-weight:600;white-space:nowrap;vertical-align:top;font-size:15px';
   const TA='padding:6px 10px;border:1px solid #eee;vertical-align:top;font-size:16px;line-height:1.6';
   const sb=document.getElementById('shift-tbody');
   if(sb&&!sb.children.length) sb.innerHTML=_SHIFT_ROWS.map(r=>{
-    const bg=r[0]?'#fff':'#fafaf8';
+    const bg=r[0]?'#fff':'#f8f7fb';
     return `<tr style="background:${bg}">
       <td style="${T1}">${r[0]}</td><td style="${TA}">${r[1]}</td>
       <td style="${T2}">${r[2]}</td><td style="${TA}">${r[3]}</td>
     </tr>`;
   }).join('');
   // render cleaning table
-  const NC='padding:6px 7px;border:1px solid #eee;text-align:center;vertical-align:top;font-size:15px;font-weight:700;color:#7a4f0d';
+  const NC='padding:6px 7px;border:1px solid #eee;text-align:center;vertical-align:top;font-size:15px;font-weight:700;color:#8a5a17';
   const NR='padding:6px 10px;border:1px solid #eee;vertical-align:top;font-size:16px';
   const NM='padding:6px 7px;border:1px solid #eee;text-align:center;vertical-align:middle;font-size:15px;color:#333';
   const cb=document.getElementById('clean-tbody');
   if(cb) cb.innerHTML=CLEAN.map(r=>{
-    const bg=r[0]?'#fff':'#fafaf8';
+    const bg=r[0]?'#fff':'#f8f7fb';
     return `<tr style="background:${bg}">
       <td style="${NC}">${r[0]}</td><td style="${NR}">${r[1]}</td>
       ${r.slice(2).map(v=>`<td style="${NM}">${v}</td>`).join('')}
@@ -2733,15 +2733,15 @@ function initCareStandard() {
   tbody.innerHTML=_CARE_DATA.map(([tp,no,txt],idx)=>{
     const btn=`<button id="ceval-${idx}" onclick="_careToggle(${idx})" style="width:46px;height:36px;border:2px solid #ddd;border-radius:8px;cursor:pointer;font-size:18px;font-weight:400;color:#bbb;background:#fafafa">—</button>`;
     if(tp==='S'){
-      return `<tr style="background:#1a6b4a">
+      return `<tr style="background:#c2588a">
         <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:16px;text-align:center;white-space:nowrap;width:40px">${no}</td>
         <td style="padding:8px 14px;border:1px solid rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:16px">${txt}</td>
         <td style="padding:6px 6px;border:1px solid rgba(255,255,255,.2);text-align:center;width:60px">${btn}</td>
       </tr>`;
     } else if(tp==='H'){
-      return `<tr style="background:#e8f5ee">
+      return `<tr style="background:#fbe7f0">
         <td style="padding:5px 8px;border:1px solid #c8e6c9"></td>
-        <td style="padding:6px 18px;border:1px solid #c8e6c9;color:#1a6b4a;font-weight:600;font-size:16px;font-style:italic">▸ ${txt}</td>
+        <td style="padding:6px 18px;border:1px solid #c8e6c9;color:#c2588a;font-weight:600;font-size:16px;font-style:italic">▸ ${txt}</td>
         <td style="padding:5px 6px;border:1px solid #c8e6c9"></td>
       </tr>`;
     } else {
@@ -2763,8 +2763,8 @@ function renderCareStandard() {
   if(badge){
     const b=_vitalBranch||'ทั้งหมด';
     const colors={
-      'ทั้งหมด':['#e8f5ee','#1a6b4a','#a5d6a7'],
-      'สาขา 1': ['#e8f5ee','#1a6b4a','#a5d6a7'],
+      'ทั้งหมด':['#fbe7f0','#c2588a','#a5d6a7'],
+      'สาขา 1': ['#fbe7f0','#c2588a','#a5d6a7'],
       'สาขา 2': ['#e8eaf6','#3949ab','#9fa8da'],
       'สาขา 3': ['#fce4ec','#c62828','#ef9a9a'],
     };
@@ -2889,8 +2889,8 @@ function renderChecklist(){
   if(badge){
     const b=_vitalBranch||'ทั้งหมด';
     const colors={
-      'ทั้งหมด':['#e8f5ee','#1a6b4a','#a5d6a7'],
-      'สาขา 1': ['#e8f5ee','#1a6b4a','#a5d6a7'],
+      'ทั้งหมด':['#fbe7f0','#c2588a','#a5d6a7'],
+      'สาขา 1': ['#fbe7f0','#c2588a','#a5d6a7'],
       'สาขา 2': ['#e8eaf6','#3949ab','#9fa8da'],
       'สาขา 3': ['#fce4ec','#c62828','#ef9a9a'],
     };
@@ -3172,7 +3172,7 @@ function _buildTimesheetTable(){
     const rowBg=d%2===0?'#f9faf9':'#fff';
     ['ช','ด'].forEach((shift,si)=>{
       const shBg=shift==='ช'?'#f1faf5':'#f0f4ff';
-      const shColor=shift==='ช'?'#1a6b4a':'#1565c0';
+      const shColor=shift==='ช'?'#c2588a':'#1565c0';
       const time=shift==='ช'?'6-18':'18-6';
       let pCells='';
       for(let p=1;p<=7;p++){
@@ -3183,7 +3183,7 @@ function _buildTimesheetTable(){
       const noteCell=`<td style="${B}padding:2px 3px;background:${rowBg}"><input id="ts-inp-${nk}" onblur="_timesheetBlur('${nk}',this)" style="${INP}"></td>`;
       if(si===0){
         html+=`<tr>
-          <td rowspan="2" style="${B}text-align:center;font-size:16px;font-weight:700;color:#1a6b4a;background:#eef7f1;vertical-align:middle;padding:2px">${d}</td>
+          <td rowspan="2" style="${B}text-align:center;font-size:16px;font-weight:700;color:#c2588a;background:#eef7f1;vertical-align:middle;padding:2px">${d}</td>
           <td style="${B}text-align:center;font-size:15px;font-weight:700;color:${shColor};background:${shBg};padding:3px 2px">ช</td>
           <td style="${B}text-align:center;font-size:14px;color:#666;background:${shBg};padding:3px 2px">6-18</td>
           ${pCells}${noteCell}
@@ -3336,8 +3336,8 @@ function _buildBranchworkTable(){
   const tbody=document.getElementById('bw-tbody');
   if(!thead||!tbody) return;
   const B='border:1px solid #e0e0e0;';
-  const TH_BASE='background:#1a6b4a;color:#fff;padding:10px 6px;font-size:15px;border:1px solid #155c3a;text-align:center;vertical-align:middle;';
-  const TH_VISIT='background:#1a6b4a;color:#fff;padding:8px 6px;font-size:15px;border:1px solid #155c3a;text-align:center;min-width:110px;';
+  const TH_BASE='background:#c2588a;color:#fff;padding:10px 6px;font-size:15px;border:1px solid #a04270;text-align:center;vertical-align:middle;';
+  const TH_VISIT='background:#c2588a;color:#fff;padding:8px 6px;font-size:15px;border:1px solid #a04270;text-align:center;min-width:110px;';
   const TA='width:100%;border:1px solid #ddd;border-radius:4px;padding:5px 7px;font-size:15px;font-family:inherit;outline:none;background:#fff;box-sizing:border-box;color:#222;resize:none;line-height:1.45;overflow:hidden;';
   // header — single row
   let vhds='';
@@ -3399,7 +3399,7 @@ function _resizeBranchworkCols(){
   // วัดความกว้างข้อความด้วย Canvas — ใช้ font ที่ตรงกับ rendered font จริง
   const canvas=document.createElement('canvas');
   const ctx=canvas.getContext('2d');
-  ctx.font='15px "IBM Plex Sans Thai", sans-serif';
+  ctx.font='15px "Sarabun", sans-serif';
   const maxFreqTextW=Math.ceil(Math.max(..._BRANCHWORK_ITEMS.map(i=>ctx.measureText(i.freq).width)));
   const freqW=Math.max(58, maxFreqTextW+16);
   const maxNoteTextW=Math.ceil(Math.max(..._BRANCHWORK_ITEMS.map(i=>ctx.measureText(i.note).width)));
@@ -3470,7 +3470,7 @@ function _resizeChkCols(){
   // วัด max text width ของ รายการ ด้วย canvas
   const canvas=document.createElement('canvas');
   const ctx=canvas.getContext('2d');
-  ctx.font='16px "IBM Plex Sans Thai", sans-serif';
+  ctx.font='16px "Sarabun", sans-serif';
   const maxNameW=Math.ceil(Math.max(..._CHK_ITEMS.map(i=>ctx.measureText(i.name).width)))+28; // +padding+safety
   // fixed columns: ที่=40 + รายการ=maxNameW + จำนวน=62
   const fixedW=40+maxNameW+62;
@@ -3515,10 +3515,10 @@ function _buildChkTable(){
   }
   thead.innerHTML=`
   <tr>
-    <th rowspan="2" style="padding:7px 6px;border:1px solid #7cb87c;background:#1a6b4a;color:#fff;font-size:15px;text-align:center;white-space:nowrap;overflow:hidden">ที่</th>
-    <th rowspan="2" style="padding:7px 10px;border:1px solid #7cb87c;background:#1a6b4a;color:#fff;font-size:15px;text-align:left;white-space:nowrap;overflow:hidden">รายการ</th>
-    <th rowspan="2" style="padding:7px 4px;border:1px solid #7cb87c;background:#1a6b4a;color:#fff;font-size:15px;text-align:center;white-space:nowrap;overflow:hidden">จำนวน</th>
-    <th colspan="31" style="padding:5px 6px;border:1px solid #7cb87c;background:#1a6b4a;color:#fff;font-size:15px;text-align:center;letter-spacing:.5px">วันที่</th>
+    <th rowspan="2" style="padding:7px 6px;border:1px solid #7cb87c;background:#c2588a;color:#fff;font-size:15px;text-align:center;white-space:nowrap;overflow:hidden">ที่</th>
+    <th rowspan="2" style="padding:7px 10px;border:1px solid #7cb87c;background:#c2588a;color:#fff;font-size:15px;text-align:left;white-space:nowrap;overflow:hidden">รายการ</th>
+    <th rowspan="2" style="padding:7px 4px;border:1px solid #7cb87c;background:#c2588a;color:#fff;font-size:15px;text-align:center;white-space:nowrap;overflow:hidden">จำนวน</th>
+    <th colspan="31" style="padding:5px 6px;border:1px solid #7cb87c;background:#c2588a;color:#fff;font-size:15px;text-align:center;letter-spacing:.5px">วันที่</th>
   </tr>
   <tr>
     ${thDays2}
@@ -3569,10 +3569,10 @@ async function saveFeedTable() {
   });
   try {
     await window._set(window._ref(window._db,`feed_table/${_feedDate}`),Object.keys(saveObj).length?saveObj:null);
-    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#1a6b4a';}
+    if(msg){msg.textContent='✓ บันทึกแล้ว';msg.style.color='#c2588a';}
     if(btn){btn.textContent='✓ บันทึกแล้ว';setTimeout(()=>{btn.disabled=false;btn.textContent='💾 บันทึก';},2500);}
   } catch(e){
-    if(msg){msg.textContent='❌ บันทึกไม่สำเร็จ';msg.style.color='#c0392b';}
+    if(msg){msg.textContent='❌ บันทึกไม่สำเร็จ';msg.style.color='#d7263d';}
     if(btn){btn.disabled=false;btn.textContent='💾 บันทึก';}
   }
 }
@@ -3653,7 +3653,7 @@ function _positionIndivList() {
   const list = _getIndivListEl();
   if (!inp) return;
   const r = inp.getBoundingClientRect();
-  list.style.cssText = `position:fixed!important;z-index:99999;background:#fff;border:1px solid #e0dbd2;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15);overflow-y:auto;-webkit-overflow-scrolling:touch;left:${r.left}px;width:${r.width}px;top:${r.bottom+4}px;max-height:${Math.min(260,window.innerHeight-r.bottom-10)}px`;
+  list.style.cssText = `position:fixed!important;z-index:99999;background:#fff;border:1px solid #e3ddec;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15);overflow-y:auto;-webkit-overflow-scrolling:touch;left:${r.left}px;width:${r.width}px;top:${r.bottom+4}px;max-height:${Math.min(260,window.innerHeight-r.bottom-10)}px`;
 }
 
 function renderIndivCustSelect() {
@@ -3774,11 +3774,11 @@ function renderIVTimeControl() {
   if (!el) return;
   el.innerHTML = `
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:5px;background:#f5f3ef;border:1px solid #e0dbd2;border-radius:8px;padding:4px 8px">
+      <div style="display:flex;align-items:center;gap:5px;background:#f8f7fb;border:1px solid #e3ddec;border-radius:8px;padding:4px 8px">
         <span style="font-size:13px;color:#888;white-space:nowrap">เวลา:</span>
         <input type="time" id="iv-time-input" value="${_ivTime}"
           onchange="setIVTime(this.value)"
-          style="border:none;background:transparent;font-size:16px;font-family:inherit;font-weight:600;color:#1a6b4a;outline:none;cursor:pointer;min-width:80px">
+          style="border:none;background:transparent;font-size:16px;font-family:inherit;font-weight:600;color:#c2588a;outline:none;cursor:pointer;min-width:80px">
         <span style="font-size:13px;color:#888">น.</span>
       </div>
       <div style="display:flex;gap:4px;flex-wrap:wrap">
@@ -3880,7 +3880,7 @@ function renderIndivIO(){
   const days=new Date(y,m,0).getDate();
   let ioRows='';
   for(let d=1;d<=days;d++){
-    const k=String(d).padStart(2,'0'), row=_iioData[k]||{}, bg=d%2===0?'#fafaf8':'#fff';
+    const k=String(d).padStart(2,'0'), row=_iioData[k]||{}, bg=d%2===0?'#f8f7fb':'#fff';
     ioRows+=`<tr style="background:${bg}">
       <td rowspan="2" style="padding:4px 6px;border:1px solid #eee;text-align:center;font-size:14px;font-weight:500;vertical-align:middle">${d}</td>
       <td style="padding:3px 6px;border:1px solid #eee;text-align:center"><span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:12px;font-weight:700;padding:1px 7px;border-radius:4px;min-width:18px">ช</span></td>
@@ -3900,7 +3900,7 @@ function renderIndivIO(){
     <td style="padding:2px;border:1px solid #eee"><input type="time" value="${r.time||''}" oninput="updateDTX(${i},'time',this.value)" style="font-size:13px;border:1px solid #ddd;border-radius:4px;padding:3px;width:90px"></td>
     <td style="padding:2px;border:1px solid #eee"><input type="number" value="${r.dtx||''}" placeholder="mg/dL" oninput="updateDTX(${i},'dtx',this.value)" style="width:70px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:13px;text-align:center"></td>
     <td style="padding:2px;border:1px solid #eee"><input type="text" value="${r.note||''}" placeholder="หมายเหตุ" oninput="updateDTX(${i},'note',this.value)" style="width:100%;min-width:80px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:13px"></td>
-    <td style="padding:2px;border:1px solid #eee;text-align:center"><button onclick="removeDTX(${i})" style="padding:2px 8px;border:1px solid #f5b8b0;border-radius:4px;background:#fdf0ee;color:#c0392b;cursor:pointer;font-size:13px">ลบ</button></td>
+    <td style="padding:2px;border:1px solid #eee;text-align:center"><button onclick="removeDTX(${i})" style="padding:2px 8px;border:1px solid #f3b8be;border-radius:4px;background:#fdecec;color:#d7263d;cursor:pointer;font-size:13px">ลบ</button></td>
   </tr>`).join('');
   const bmiRows=_ibmiData.map((r,i)=>`<tr>
     <td style="padding:2px;border:1px solid #eee"><input type="date" value="${r.date||''}" oninput="updateBMI(${i},'date',this.value)" style="font-size:13px;border:1px solid #ddd;border-radius:4px;padding:3px"></td>
@@ -3909,7 +3909,7 @@ function renderIndivIO(){
     <td style="padding:3px 6px;border:1px solid #eee;font-size:14px;text-align:center;font-weight:600" id="bmi-val-${i}">${r.bmi||''}</td>
     <td style="padding:3px 6px;border:1px solid #eee;font-size:13px" id="bmi-res-${i}">${r.result||''}</td>
     <td style="padding:2px;border:1px solid #eee"><input type="text" value="${r.change||''}" placeholder="เปลี่ยนแปลง" oninput="updateBMI(${i},'change',this.value)" style="width:90px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:13px"></td>
-    <td style="padding:2px;border:1px solid #eee;text-align:center"><button onclick="removeBMI(${i})" style="padding:2px 8px;border:1px solid #f5b8b0;border-radius:4px;background:#fdf0ee;color:#c0392b;cursor:pointer;font-size:13px">ลบ</button></td>
+    <td style="padding:2px;border:1px solid #eee;text-align:center"><button onclick="removeBMI(${i})" style="padding:2px 8px;border:1px solid #f3b8be;border-radius:4px;background:#fdecec;color:#d7263d;cursor:pointer;font-size:13px">ลบ</button></td>
   </tr>`).join('');
 
   const _sec=(id,bg,tc,title,body,btns)=>`
@@ -3924,9 +3924,9 @@ function renderIndivIO(){
     </div>
   </div>`;
   el.innerHTML=`<div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">` +
-  _sec('io','#e8f0fe','#1a5c9e','💧 น้ำเข้า-ออก (I/O)',`
+  _sec('io','#e8f0fe','#4a86bd','💧 น้ำเข้า-ออก (I/O)',`
     <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:14px;min-width:300px">
-      <thead><tr style="background:#f0ede8">
+      <thead><tr style="background:#f1eef7">
         <th style="padding:6px;border:1px solid #ddd">วันที่</th>
         <th style="padding:6px;border:1px solid #ddd">ชื่อเวร</th>
         <th style="padding:6px;border:1px solid #ddd">I</th>
@@ -3934,28 +3934,28 @@ function renderIndivIO(){
         <th style="padding:6px;border:1px solid #ddd">หมายเหตุ</th>
       </tr></thead><tbody>${ioRows}</tbody>
     </table></div>`,
-    `<button onclick="saveIndivIO()" style="padding:8px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-family:inherit;font-weight:600">💾 บันทึก I/O</button>`) +
-  _sec('dtx','#f5e8d0','#7a4f0d','🩸 บันทึก DTX',`
+    `<button onclick="saveIndivIO()" style="padding:8px 20px;background:#c2588a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-family:inherit;font-weight:600">💾 บันทึก I/O</button>`) +
+  _sec('dtx','#f6ecd9','#8a5a17','🩸 บันทึก DTX',`
     <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:14px;min-width:340px">
-      <thead><tr style="background:#f0ede8">
+      <thead><tr style="background:#f1eef7">
         <th style="padding:6px;border:1px solid #ddd">วดป.</th><th style="padding:6px;border:1px solid #ddd">เวลา</th>
         <th style="padding:6px;border:1px solid #ddd">DTX</th><th style="padding:6px;border:1px solid #ddd">หมายเหตุ</th>
         <th style="padding:6px;border:1px solid #ddd"></th>
       </tr></thead><tbody id="dtx-tbody">${dtxRows}</tbody>
     </table></div>`,
-    `<button onclick="addDTXRow()" style="padding:6px 14px;border:1px solid #7a4f0d;border-radius:6px;background:#f5e8d0;color:#7a4f0d;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มแถว</button>
-     <button onclick="saveIndivDTX()" style="padding:6px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก DTX</button>`) +
-  _sec('bmi','#e8f0fe','#1a5c9e','⚖️ บันทึก BMI',`
+    `<button onclick="addDTXRow()" style="padding:6px 14px;border:1px solid #8a5a17;border-radius:6px;background:#f6ecd9;color:#8a5a17;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มแถว</button>
+     <button onclick="saveIndivDTX()" style="padding:6px 20px;background:#c2588a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก DTX</button>`) +
+  _sec('bmi','#e8f0fe','#4a86bd','⚖️ บันทึก BMI',`
     <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:14px;min-width:420px">
-      <thead><tr style="background:#f0ede8">
+      <thead><tr style="background:#f1eef7">
         <th style="padding:6px;border:1px solid #ddd">วดป.</th><th style="padding:6px;border:1px solid #ddd">น้ำหนัก(กก.)</th>
         <th style="padding:6px;border:1px solid #ddd">ส่วนสูง(เมตร)</th><th style="padding:6px;border:1px solid #ddd">BMI</th>
         <th style="padding:6px;border:1px solid #ddd">แปลผล</th><th style="padding:6px;border:1px solid #ddd">เปลี่ยนแปลง</th>
         <th style="padding:6px;border:1px solid #ddd"></th>
       </tr></thead><tbody id="bmi-tbody">${bmiRows}</tbody>
     </table></div>`,
-    `<button onclick="addBMIRow()" style="padding:6px 14px;border:1px solid #1a5c9e;border-radius:6px;background:#e8f0fe;color:#1a5c9e;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มแถว</button>
-     <button onclick="saveIndivBMI()" style="padding:6px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก BMI</button>`) +
+    `<button onclick="addBMIRow()" style="padding:6px 14px;border:1px solid #4a86bd;border-radius:6px;background:#e8f0fe;color:#4a86bd;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มแถว</button>
+     <button onclick="saveIndivBMI()" style="padding:6px 20px;background:#c2588a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก BMI</button>`) +
   `</div>`;
 }
 function updateIO(day,f,val){if(!_iioData[day])_iioData[day]={};_iioData[day][f]=val;}
@@ -4022,14 +4022,14 @@ function renderIndivCare(){
   const [y,m]=_icareMonth.split('-').map(Number);
   const daysInMonth=new Date(y,m,0).getDate();
   const days=Array.from({length:daysInMonth},(_,i)=>i+1);
-  let hdr=`<th style="padding:5px 8px;border:1px solid #ddd;background:#f0ede8;min-width:150px;text-align:left;font-size:13px;position:sticky;left:0;z-index:2">กิจกรรม</th>`;
-  days.forEach(d=>{hdr+=`<th style="padding:3px 1px;border:1px solid #ddd;background:#f0ede8;text-align:center;font-size:12px;min-width:24px">${d}</th>`;});
+  let hdr=`<th style="padding:5px 8px;border:1px solid #ddd;background:#f1eef7;min-width:150px;text-align:left;font-size:13px;position:sticky;left:0;z-index:2">กิจกรรม</th>`;
+  days.forEach(d=>{hdr+=`<th style="padding:3px 1px;border:1px solid #ddd;background:#f1eef7;text-align:center;font-size:12px;min-width:24px">${d}</th>`;});
   const rows=CARE_ACTS.map((act,ai)=>{
-    const bg=ai%2===0?'#fff':'#fafaf8';
+    const bg=ai%2===0?'#fff':'#f8f7fb';
     let cells=`<td style="padding:5px 8px;border:1px solid #eee;font-size:13px;white-space:normal;word-break:break-word;position:sticky;left:0;background:${bg};z-index:1">${act}</td>`;
     days.forEach(d=>{
       const chk=(_icareData[ai]||{})[d];
-      cells+=`<td style="padding:1px;border:1px solid #eee;text-align:center;background:${bg}"><input type="checkbox" ${chk?'checked':''} onchange="updateCare(${ai},${d},this.checked)" style="width:13px;height:13px;cursor:pointer;accent-color:#1a6b4a"></td>`;
+      cells+=`<td style="padding:1px;border:1px solid #eee;text-align:center;background:${bg}"><input type="checkbox" ${chk?'checked':''} onchange="updateCare(${ai},${d},this.checked)" style="width:13px;height:13px;cursor:pointer;accent-color:#c2588a"></td>`;
     });
     return `<tr>${cells}</tr>`;
   }).join('');
@@ -4038,7 +4038,7 @@ function renderIndivCare(){
     <thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody>
   </table></div>
   <div style="padding:10px 14px">
-  <button onclick="saveIndivCare()" style="padding:10px 24px;background:#1a6b4a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-family:inherit;font-weight:600">💾 บันทึกกิจกรรม</button>
+  <button onclick="saveIndivCare()" style="padding:10px 24px;background:#c2588a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-family:inherit;font-weight:600">💾 บันทึกกิจกรรม</button>
   </div>`;
 }
 function updateCare(ai,day,val){if(!_icareData[ai])_icareData[ai]={};_icareData[ai][day]=val;}
@@ -4066,7 +4066,7 @@ function renderIndivMedFam(){
   if(!el)return;
   if(!_indivCustId){el.innerHTML='<div style="text-align:center;padding:20px;color:#bbb">กรุณาเลือกผู้ป่วยก่อน</div>';return;}
   const rows=_imedfamData.map((r,i)=>{
-    const bg=i%2===0?'#fff':'#fafaf8';
+    const bg=i%2===0?'#fff':'#f8f7fb';
     const inp=(f,ph,w='100%',tp='text')=>`<input type="${tp}" value="${(r[f]||'').toString().replace(/"/g,'&quot;')}" placeholder="${ph}" oninput="updateMedFam(${i},'${f}',this.value)" style="width:${w};padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-family:inherit">`;
     return `<tr style="background:${bg}">
       <td style="padding:4px 6px;border:1px solid #eee;text-align:center;color:#888;font-size:13px">${i+1}</td>
@@ -4076,11 +4076,11 @@ function renderIndivMedFam(){
       <td style="padding:3px;border:1px solid #eee">${inp('time','เวลา','80px')}</td>
       <td style="padding:3px;border:1px solid #eee">${inp('qty','จำนวน','70px','number')}</td>
       <td style="padding:3px;border:1px solid #eee">${inp('note','หมายเหตุ')}</td>
-      <td style="padding:3px;border:1px solid #eee;text-align:center"><button onclick="removeMedFam(${i})" style="padding:2px 8px;border:1px solid #f5b8b0;border-radius:4px;background:#fdf0ee;color:#c0392b;cursor:pointer;font-size:13px">ลบ</button></td>
+      <td style="padding:3px;border:1px solid #eee;text-align:center"><button onclick="removeMedFam(${i})" style="padding:2px 8px;border:1px solid #f3b8be;border-radius:4px;background:#fdecec;color:#d7263d;cursor:pointer;font-size:13px">ลบ</button></td>
     </tr>`;
   }).join('');
   el.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:14px;min-width:600px">
-    <thead><tr style="background:#f0ede8">
+    <thead><tr style="background:#f1eef7">
       <th style="padding:6px;border:1px solid #ddd;width:30px">ลำดับ</th>
       <th style="padding:6px;border:1px solid #ddd">ชื่อยา</th>
       <th style="padding:6px;border:1px solid #ddd">ครั้งละ</th>
@@ -4092,8 +4092,8 @@ function renderIndivMedFam(){
     </tr></thead><tbody>${rows}</tbody>
   </table></div>
   <div style="display:flex;gap:8px;margin-top:8px">
-    <button onclick="addMedFamRow()" style="padding:7px 16px;border:1px solid #1a6b4a;border-radius:6px;background:#e8f5ee;color:#1a6b4a;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มรายการยา</button>
-    <button onclick="saveIndivMedFam()" style="padding:7px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
+    <button onclick="addMedFamRow()" style="padding:7px 16px;border:1px solid #c2588a;border-radius:6px;background:#fbe7f0;color:#c2588a;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มรายการยา</button>
+    <button onclick="saveIndivMedFam()" style="padding:7px 20px;background:#c2588a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
   </div>`;
 }
 function updateMedFam(i,f,val){if(!_imedfamData[i])_imedfamData[i]={};_imedfamData[i][f]=val;}window.updateMedFam=updateMedFam;
@@ -4136,7 +4136,7 @@ function renderIndivMedRec(){
   const [y,m]=_imedrecMonth.split('-').map(Number);
   const daysInMonth=new Date(y,m,0).getDate();
   const days=Array.from({length:daysInMonth},(_,i)=>i+1);
-  const BFR='#fff8ec',AFT='#edf7f0',BASE='#f0ede8';
+  const BFR='#fff8ec',AFT='#edf7f0',BASE='#f1eef7';
   const rs2=(t,left,w,extra='')=>`<th rowspan="2" style="padding:4px 5px;border:1px solid #ddd;font-size:12px;min-width:${w}px;white-space:nowrap;background:${BASE};${left!==null?`position:sticky;left:${left}px;z-index:3;`:''}${extra}">${t}</th>`;
   // header row 1
   let h1=rs2('ที่',0,24)+rs2('ชื่อยา / รายละเอียด',24,160);
@@ -4155,10 +4155,10 @@ function renderIndivMedRec(){
   h2+=`<th style="padding:3px 2px;border:1px solid #ddd;font-size:9px;text-align:center;min-width:90px;background:#e8eaf6">ครั้งที่ 3</th>`;
   const slotBg={bfr:BFR,aft:AFT,other:BASE};
   const rows=_imedrecData.map((r,i)=>{
-    const bg=i%2===0?'#fff':'#fafaf8';
+    const bg=i%2===0?'#fff':'#f8f7fb';
     let c=`<td style="padding:3px 4px;border:1px solid #eee;text-align:center;color:#888;font-size:12px;position:sticky;left:0;background:${bg};z-index:1">${i+1}</td>
       <td style="padding:2px;border:1px solid #eee;position:sticky;left:24px;background:${bg};z-index:1"><input type="text" value="${(r.name||'').replace(/"/g,'&quot;')}" placeholder="ชื่อยา / รายละเอียด" oninput="updateMedRec(${i},'name',this.value)" style="width:100%;min-width:150px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-family:inherit"></td>`;
-    _MEDREC_SLOTS.forEach(s=>{const chk=(r.slots||{})[s.k];c+=`<td style="padding:2px;border:1px solid #eee;text-align:center;background:${slotBg[s.grp]}"><input type="checkbox" ${chk?'checked':''} onchange="updateMedRecSlot(${i},'${s.k}',this.checked)" style="width:14px;height:14px;cursor:pointer;accent-color:#1a6b4a"></td>`;});
+    _MEDREC_SLOTS.forEach(s=>{const chk=(r.slots||{})[s.k];c+=`<td style="padding:2px;border:1px solid #eee;text-align:center;background:${slotBg[s.grp]}"><input type="checkbox" ${chk?'checked':''} onchange="updateMedRecSlot(${i},'${s.k}',this.checked)" style="width:14px;height:14px;cursor:pointer;accent-color:#c2588a"></td>`;});
     c+=`<td style="padding:3px 2px;border:1px solid #eee;text-align:center;background:#f0f1fa"><div style="display:flex;flex-direction:column;gap:2px;align-items:center"><input type="number" min="0" value="${r.qty||''}" placeholder="-" oninput="updateMedRec(${i},'qty',this.value)" style="width:62px;padding:3px 2px;border:1px solid #ddd;border-radius:4px;font-size:12px;text-align:center"><input type="date" value="${r.countDate||''}" oninput="updateMedRec(${i},'countDate',this.value)" style="padding:2px 3px;border:1px solid #ddd;border-radius:4px;font-size:11px;font-family:inherit;width:88px"></div></td>`;
     c+=`<td style="padding:3px 2px;border:1px solid #eee;text-align:center;background:#eaecf8"><div style="display:flex;flex-direction:column;gap:2px;align-items:center"><input type="number" min="0" value="${r.qty2||''}" placeholder="-" oninput="updateMedRec(${i},'qty2',this.value)" style="width:62px;padding:3px 2px;border:1px solid #ddd;border-radius:4px;font-size:12px;text-align:center"><input type="date" value="${r.countDate2||''}" oninput="updateMedRec(${i},'countDate2',this.value)" style="padding:2px 3px;border:1px solid #ddd;border-radius:4px;font-size:11px;font-family:inherit;width:88px"></div></td>`;
     c+=`<td style="padding:3px 2px;border:1px solid #eee;text-align:center;background:#f0f1fa"><div style="display:flex;flex-direction:column;gap:2px;align-items:center"><input type="number" min="0" value="${r.qty3||''}" placeholder="-" oninput="updateMedRec(${i},'qty3',this.value)" style="width:62px;padding:3px 2px;border:1px solid #ddd;border-radius:4px;font-size:12px;text-align:center"><input type="date" value="${r.countDate3||''}" oninput="updateMedRec(${i},'countDate3',this.value)" style="padding:2px 3px;border:1px solid #ddd;border-radius:4px;font-size:11px;font-family:inherit;width:88px"></div></td>`;
@@ -4166,11 +4166,11 @@ function renderIndivMedRec(){
     c+=`<td style="padding:2px;border:1px solid #eee"><input type="text" value="${(r.time||'').replace(/"/g,'&quot;')}" placeholder="8.00น" oninput="updateMedRec(${i},'time',this.value)" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-family:inherit"></td>`;
     days.forEach(d=>{const v=(r.days||{})[d];const dv=typeof v==='boolean'?(v?'✓':''):(v||'');c+=`<td style="padding:1px;border:1px solid #eee;text-align:center;background:${bg}"><input type="text" value="${String(dv).replace(/"/g,'&quot;')}" oninput="updateMedRecDay(${i},${d},this.value)" style="width:24px;padding:2px 1px;border:1px solid #ddd;border-radius:3px;font-size:12px;text-align:center;font-family:inherit;background:transparent"></td>`;});
     c+=`<td style="padding:2px;border:1px solid #eee"><input type="text" value="${(r.note||'').replace(/"/g,'&quot;')}" placeholder="หมายเหตุ" oninput="updateMedRec(${i},'note',this.value)" style="width:65px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-family:inherit"></td>`;
-    c+=`<td style="padding:2px;border:1px solid #eee;text-align:center"><button onclick="removeMedRec(${i})" style="padding:2px 7px;border:1px solid #f5b8b0;border-radius:4px;background:#fdf0ee;color:#c0392b;cursor:pointer;font-size:13px">ลบ</button></td>`;
+    c+=`<td style="padding:2px;border:1px solid #eee;text-align:center"><button onclick="removeMedRec(${i})" style="padding:2px 7px;border:1px solid #f3b8be;border-radius:4px;background:#fdecec;color:#d7263d;cursor:pointer;font-size:13px">ลบ</button></td>`;
     return `<tr>${c}</tr>`;
   }).join('');
   const inf=_imedrecInfo||{};
-  el.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:8px 14px;background:#f8f5f0;border-bottom:1px solid #e0dbd2;font-size:14px">
+  el.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:8px 14px;background:#f8f5f0;border-bottom:1px solid #e3ddec;font-size:14px">
     <span style="font-weight:700;color:#555;white-space:nowrap">ข้อมูลผู้ป่วย</span>
     <label style="display:flex;align-items:center;gap:4px"><span style="color:#888;white-space:nowrap">อายุ :</span><input type="text" value="${(inf.age||'').replace(/"/g,'&quot;')}" placeholder="95 ปี" oninput="updateMedRecInfo('age',this.value)" style="width:70px;padding:3px 6px;border:1px solid #ddd;border-radius:4px;font-size:14px;font-family:inherit"></label>
     <label style="display:flex;align-items:center;gap:4px"><span style="color:#888;white-space:nowrap">โรคประจำตัว :</span><input type="text" value="${(inf.disease||'').replace(/"/g,'&quot;')}" placeholder="เช่น ความดัน, กระดูกพรุน" oninput="updateMedRecInfo('disease',this.value)" style="width:200px;padding:3px 6px;border:1px solid #ddd;border-radius:4px;font-size:14px;font-family:inherit"></label>
@@ -4180,8 +4180,8 @@ function renderIndivMedRec(){
     <thead><tr style="background:${BASE}">${h1}</tr><tr>${h2}</tr></thead><tbody>${rows}</tbody>
   </table></div>
   <div style="padding:8px 12px;display:flex;gap:8px">
-    <button onclick="addMedRecRow()" style="padding:7px 16px;border:1px solid #1a6b4a;border-radius:6px;background:#e8f5ee;color:#1a6b4a;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มยา</button>
-    <button onclick="saveIndivMedRec()" style="padding:7px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
+    <button onclick="addMedRecRow()" style="padding:7px 16px;border:1px solid #c2588a;border-radius:6px;background:#fbe7f0;color:#c2588a;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มยา</button>
+    <button onclick="saveIndivMedRec()" style="padding:7px 20px;background:#c2588a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
   </div>`;
 }
 function updateMedRec(i,f,val){if(!_imedrecData[i])_imedrecData[i]={};_imedrecData[i][f]=val;}window.updateMedRec=updateMedRec;
@@ -4222,27 +4222,27 @@ function renderIndivADL(){
   const dates=_iadlData.map((r,i)=>`<th style="padding:6px;border:1px solid #ddd;min-width:110px;text-align:center">
     <input type="date" value="${r.date||''}" onchange="updateADLDate(${i},this.value)" style="font-size:13px;border:1px solid #ddd;border-radius:4px;padding:3px;width:105px">
   </th>`).join('');
-  const iadlRows=IADL_Q.map((q,qi)=>`<tr style="background:${qi%2===0?'#fff':'#fafaf8'}">
+  const iadlRows=IADL_Q.map((q,qi)=>`<tr style="background:${qi%2===0?'#fff':'#f8f7fb'}">
     <td style="padding:5px 8px;border:1px solid #eee;font-size:13px">${qi+1}. ${q}</td>
     ${_iadlData.map((r,i)=>`<td style="padding:3px;border:1px solid #eee;text-align:center"><input type="number" min="0" max="2" value="${(r.iadl||[])[qi]||''}" oninput="updateIADLScore(${i},'iadl',${qi},this.value)" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:14px;text-align:center"></td>`).join('')}
   </tr>`).join('');
-  const adlRows=ADL_Q.map((q,qi)=>`<tr style="background:${qi%2===0?'#fff':'#fafaf8'}">
+  const adlRows=ADL_Q.map((q,qi)=>`<tr style="background:${qi%2===0?'#fff':'#f8f7fb'}">
     <td style="padding:5px 8px;border:1px solid #eee;font-size:13px">${qi+1}. ${q}</td>
     ${_iadlData.map((r,i)=>`<td style="padding:3px;border:1px solid #eee;text-align:center"><input type="number" min="0" max="3" value="${(r.adl||[])[qi]||''}" oninput="updateIADLScore(${i},'adl',${qi},this.value)" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px;font-size:14px;text-align:center"></td>`).join('')}
   </tr>`).join('');
-  const totRow=(type,label,max)=>`<tr style="font-weight:700;background:${type==='iadl'?'#e8f0fe':'#e8f5ee'}">
+  const totRow=(type,label,max)=>`<tr style="font-weight:700;background:${type==='iadl'?'#e8f0fe':'#fbe7f0'}">
     <td style="padding:5px 8px;border:1px solid #eee;font-size:13px">${label} (max ${max})</td>
     ${_iadlData.map(r=>`<td style="padding:5px;border:1px solid #eee;text-align:center;font-size:15px">${(r[type]||[]).reduce((s,v)=>s+(parseInt(v)||0),0)}</td>`).join('')}
   </tr>`;
-  const addBtn=_iadlData.length<4?`<button onclick="addADLCol()" style="padding:7px 14px;border:1px solid #1a5c9e;border-radius:6px;background:#e8f0fe;color:#1a5c9e;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มวันที่ประเมิน</button>`:'';
+  const addBtn=_iadlData.length<4?`<button onclick="addADLCol()" style="padding:7px 14px;border:1px solid #4a86bd;border-radius:6px;background:#e8f0fe;color:#4a86bd;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มวันที่ประเมิน</button>`:'';
   el.innerHTML=`<div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:14px;min-width:300px">
     <thead><tr style="background:#e8f0fe"><th style="padding:6px 8px;border:1px solid #ddd;text-align:left;font-size:13px;min-width:220px">IADL</th>${dates}</tr></thead>
     <tbody>${iadlRows}${totRow('iadl','รวม IADL',12)}</tbody>
-    <thead><tr style="background:#e8f5ee"><th style="padding:6px 8px;border:1px solid #ddd;text-align:left;font-size:13px">ADL / Barthel</th>${_iadlData.map(()=>'<th style="border:1px solid #ddd"></th>').join('')}</tr></thead>
+    <thead><tr style="background:#fbe7f0"><th style="padding:6px 8px;border:1px solid #ddd;text-align:left;font-size:13px">ADL / Barthel</th>${_iadlData.map(()=>'<th style="border:1px solid #ddd"></th>').join('')}</tr></thead>
     <tbody>${adlRows}${totRow('adl','รวม ADL',20)}</tbody>
   </table></div>
   <div style="display:flex;gap:8px;margin-top:8px">${addBtn}
-    <button onclick="saveIndivADL()" style="padding:7px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
+    <button onclick="saveIndivADL()" style="padding:7px 20px;background:#c2588a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
   </div>`;
 }
 function updateADLDate(i,val){if(!_iadlData[i])_iadlData[i]={};_iadlData[i].date=val;renderIndivADL();}window.updateADLDate=updateADLDate;
@@ -4291,20 +4291,20 @@ function renderIndivHosp(){
   </th>`).join('');
   let rows='';
   Object.entries(HOSP_PREP).forEach(([section,items])=>{
-    rows+=`<tr><td colspan="${_ihospData.length+1}" style="padding:5px 8px;border:1px solid #ddd;background:#f5e8d0;font-size:13px;font-weight:700;color:#7a4f0d">${section}</td></tr>`;
+    rows+=`<tr><td colspan="${_ihospData.length+1}" style="padding:5px 8px;border:1px solid #ddd;background:#f6ecd9;font-size:13px;font-weight:700;color:#8a5a17">${section}</td></tr>`;
     items.forEach(item=>{
       rows+=`<tr><td style="padding:5px 8px;border:1px solid #eee;font-size:13px">${item}</td>
-        ${_ihospData.map((r,i)=>{const chk=((r.sections||{})[section]||{})[item];return `<td style="padding:3px;border:1px solid #eee;text-align:center"><input type="checkbox" ${chk?'checked':''} onchange="updateHospItem(${i},'${section}','${item.replace(/'/g,"\\'")}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:#1a6b4a"></td>`;}).join('')}
+        ${_ihospData.map((r,i)=>{const chk=((r.sections||{})[section]||{})[item];return `<td style="padding:3px;border:1px solid #eee;text-align:center"><input type="checkbox" ${chk?'checked':''} onchange="updateHospItem(${i},'${section}','${item.replace(/'/g,"\\'")}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:#c2588a"></td>`;}).join('')}
       </tr>`;
     });
   });
-  const addBtn=_ihospData.length<7?`<button onclick="addHospCol()" style="padding:7px 14px;border:1px solid #7a4f0d;border-radius:6px;background:#f5e8d0;color:#7a4f0d;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มนัดวันที่</button>`:'';
+  const addBtn=_ihospData.length<7?`<button onclick="addHospCol()" style="padding:7px 14px;border:1px solid #8a5a17;border-radius:6px;background:#f6ecd9;color:#8a5a17;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มนัดวันที่</button>`:'';
   el.innerHTML=`<div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:14px;min-width:300px">
-    <thead><tr style="background:#f0ede8"><th style="padding:6px 8px;border:1px solid #ddd;text-align:left;min-width:200px;font-size:13px">รายการ</th>${dateCols}</tr></thead>
+    <thead><tr style="background:#f1eef7"><th style="padding:6px 8px;border:1px solid #ddd;text-align:left;min-width:200px;font-size:13px">รายการ</th>${dateCols}</tr></thead>
     <tbody>${rows}</tbody>
   </table></div>
   <div style="display:flex;gap:8px;margin-top:8px">${addBtn}
-    <button onclick="saveIndivHosp()" style="padding:7px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
+    <button onclick="saveIndivHosp()" style="padding:7px 20px;background:#c2588a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
   </div>`;
 }
 function updateHospDate(i,val){if(!_ihospData[i])_ihospData[i]={};_ihospData[i].date=val;renderIndivHosp();}window.updateHospDate=updateHospDate;
@@ -4338,7 +4338,7 @@ function renderIndivHospSum(){
   if(!el)return;
   if(!_indivCustId){el.innerHTML='<div style="text-align:center;padding:20px;color:#bbb">กรุณาเลือกผู้ป่วยก่อน</div>';return;}
   const rows=_ihospsumData.map((r,i)=>{
-    const bg=i%2===0?'#fff':'#fafaf8';
+    const bg=i%2===0?'#fff':'#f8f7fb';
     const inp=(f,ph,w='100%')=>`<input type="text" value="${(r[f]||'').replace(/"/g,'&quot;')}" placeholder="${ph}" oninput="updateHospSum(${i},'${f}',this.value)" style="width:${w};padding:5px 7px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-family:inherit">`;
     return `<tr style="background:${bg}">
       <td style="padding:3px;border:1px solid #eee"><input type="date" value="${r.date||''}" onchange="updateHospSum(${i},'date',this.value)" style="font-size:13px;border:1px solid #ddd;border-radius:4px;padding:3px;width:120px"></td>
@@ -4347,11 +4347,11 @@ function renderIndivHospSum(){
       <td style="padding:3px;border:1px solid #eee"><textarea oninput="updateHospSum(${i},'result',this.value)" placeholder="สรุปผลการตรวจ" style="width:100%;min-width:150px;padding:5px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-family:inherit;resize:vertical;min-height:40px">${r.result||''}</textarea></td>
       <td style="padding:3px;border:1px solid #eee">${inp('next','นัดครั้งต่อไป','110px')}</td>
       <td style="padding:3px;border:1px solid #eee">${inp('transport','การเดินทาง','90px')}</td>
-      <td style="padding:3px;border:1px solid #eee;text-align:center"><button onclick="removeHospSum(${i})" style="padding:2px 8px;border:1px solid #f5b8b0;border-radius:4px;background:#fdf0ee;color:#c0392b;cursor:pointer;font-size:13px">ลบ</button></td>
+      <td style="padding:3px;border:1px solid #eee;text-align:center"><button onclick="removeHospSum(${i})" style="padding:2px 8px;border:1px solid #f3b8be;border-radius:4px;background:#fdecec;color:#d7263d;cursor:pointer;font-size:13px">ลบ</button></td>
     </tr>`;
   }).join('');
   el.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:14px;min-width:700px">
-    <thead><tr style="background:#f0ede8">
+    <thead><tr style="background:#f1eef7">
       <th style="padding:6px;border:1px solid #ddd;min-width:120px">วดป.</th>
       <th style="padding:6px;border:1px solid #ddd;min-width:110px">นัด รพ.</th>
       <th style="padding:6px;border:1px solid #ddd;min-width:100px">แผนก</th>
@@ -4362,8 +4362,8 @@ function renderIndivHospSum(){
     </tr></thead><tbody>${rows}</tbody>
   </table></div>
   <div style="display:flex;gap:8px;margin-top:8px">
-    <button onclick="addHospSumRow()" style="padding:7px 16px;border:1px solid #1a5c9e;border-radius:6px;background:#e8f0fe;color:#1a5c9e;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มรายการนัด</button>
-    <button onclick="saveIndivHospSum()" style="padding:7px 20px;background:#1a6b4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
+    <button onclick="addHospSumRow()" style="padding:7px 16px;border:1px solid #4a86bd;border-radius:6px;background:#e8f0fe;color:#4a86bd;cursor:pointer;font-size:14px;font-family:inherit">+ เพิ่มรายการนัด</button>
+    <button onclick="saveIndivHospSum()" style="padding:7px 20px;background:#c2588a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit;font-weight:600">💾 บันทึก</button>
   </div>`;
 }
 function updateHospSum(i,f,val){if(!_ihospsumData[i])_ihospsumData[i]={};_ihospsumData[i][f]=val;}window.updateHospSum=updateHospSum;
@@ -4496,13 +4496,13 @@ function _ssRenderTable() {
     if (branch !== lastBranch) {
       lastBranch = branch;
       const bLabel = branch==='1'?'🏥 สาขา 1':branch==='2'?'🏥 สาขา 2':branch==='3'?'🏥 สาขา 3':'📋 ยังไม่ระบุสาขา';
-      const bBg    = branch==='1'?'#dbeafe':branch==='2'?'#d1fae5':branch==='3'?'#ffedd5':'#f0ede8';
+      const bBg    = branch==='1'?'#dbeafe':branch==='2'?'#d1fae5':branch==='3'?'#ffedd5':'#f1eef7';
       const bColor = branch==='1'?'#1d4ed8':branch==='2'?'#065f46':branch==='3'?'#c2410c':'#888';
       html += `<tr class="ss-branch-row"><td colspan="${days+5}" style="background:${bBg};color:${bColor}">${bLabel}</td></tr>`;
     }
 
     const nd = _ssData[nid] || {};
-    const rowBg = branch==='1'?'#f0f6ff':branch==='2'?'#f0faf4':branch==='3'?'#fff8f0':'#fafaf8';
+    const rowBg = branch==='1'?'#f0f6ff':branch==='2'?'#f0faf4':branch==='3'?'#fff8f0':'#f8f7fb';
     const countMap = {ช:0,ด:0,ห:0,ล:0};
     let workDays = 0, otNight = 0, cells = '';
 
@@ -4560,15 +4560,15 @@ function staffSchedInit() {
 *{box-sizing:border-box;margin:0;padding:0}
 img,video,canvas,svg,iframe{max-width:100%}
 input,select,textarea{max-width:100%}
-body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a1916;font-size:16px;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+body{font-family:"Sarabun",sans-serif;background:#f8f7fb;color:#2b2733;font-size:16px;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 /* ===== APP LAYOUT ===== */
 .app-layout{display:flex;flex:1;min-height:0;overflow:hidden}
 /* main content */
 .main-wrapper{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .main-content{flex:1;padding:14px 16px;overflow-y:auto;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-width:0;word-break:break-word}
 /* top bar */
-.topbar{background:#fff;border-bottom:1px solid #e8e5e0;padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:15px;flex-shrink:0;z-index:10}
-.topbar .topbar-title{font-weight:600;color:#1a1916;flex:1}
+.topbar{background:linear-gradient(120deg, #fbe9f1 0%, #e3eefa 100%);border-bottom:3px solid #c2588a;padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:15px;flex-shrink:0;z-index:10}
+.topbar .topbar-title{font-weight:600;font-family:"Kanit",sans-serif;color:#2b2733;flex:1}
 .card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
 .card-title{font-size:13px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
 /* ===== RESPONSIVE — Mobile / Tablet / Desktop ===== */
@@ -4634,33 +4634,33 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
 }
 
 
-.branch-btn{padding:8px 16px;border:1px solid #e0dbd2;border-radius:20px;cursor:pointer;font-size:15px;color:#666;background:#fff;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.branch-btn:hover{border-color:#1a6b4a;color:#1a6b4a}
-.branch-btn.active{background:#1a6b4a;color:#fff;border-color:#1a6b4a}
-.search-box{width:100%;padding:8px 12px;border:1px solid #e0dbd2;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-top:8px}
-.search-box:focus{border-color:#1a6b4a}
-.cust-list{max-height:220px;overflow-y:auto;border:1px solid #e0dbd2;border-radius:8px;margin-top:8px}
-.cust-row{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;border-bottom:.5px solid #f0ede8;transition:background .1s;font-size:15px}
+.branch-btn{padding:8px 16px;border:1px solid #e3ddec;border-radius:20px;cursor:pointer;font-size:15px;color:#666;background:#fff;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.branch-btn:hover{border-color:#c2588a;color:#c2588a}
+.branch-btn.active{background:#c2588a;color:#fff;border-color:#c2588a}
+.search-box{width:100%;padding:8px 12px;border:1px solid #e3ddec;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-top:8px}
+.search-box:focus{border-color:#c2588a}
+.cust-list{max-height:220px;overflow-y:auto;border:1px solid #e3ddec;border-radius:8px;margin-top:8px}
+.cust-row{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;border-bottom:.5px solid #f1eef7;transition:background .1s;font-size:15px}
 .cust-row:last-child{border-bottom:none}
 .cust-row:hover{background:#f5fbf7}
-.cust-row.selected{background:#e8f5ee}
+.cust-row.selected{background:#fbe7f0}
 .branch-tag{font-size:12px;padding:1px 7px;border-radius:10px;font-weight:500;white-space:nowrap}
-.b1{background:#deeaf8;color:#1a5c9e}
-.b2{background:#ddf0e8;color:#1a6b4a}
-.b3{background:#f5e8d0;color:#7a4f0d}
-.month-sel{width:100%;padding:8px 12px;border:1px solid #e0dbd2;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-top:6px}
-.month-sel:focus{border-color:#1a6b4a}
+.b1{background:#deeaf8;color:#4a86bd}
+.b2{background:#ddf0e8;color:#c2588a}
+.b3{background:#f6ecd9;color:#8a5a17}
+.month-sel{width:100%;padding:8px 12px;border:1px solid #e3ddec;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-top:6px}
+.month-sel:focus{border-color:#c2588a}
 .cust-banner{background:#f5fbf7;border-radius:8px;padding:8px 12px;font-size:15px;margin-bottom:10px}
 .cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.cat-tab{padding:8px 15px;border:1px solid #e0dbd2;border-radius:20px;cursor:pointer;font-size:15px;color:#666;background:#fff;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.cat-tab:hover{border-color:#1a6b4a;color:#1a6b4a}
-.cat-tab.active{background:#1a6b4a;color:#fff;border-color:#1a6b4a}
-.item-search{width:100%;padding:7px 12px 7px 30px;border:1px solid #e0dbd2;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px}
-.item-search:focus{border-color:#1a6b4a}
+.cat-tab{padding:8px 15px;border:1px solid #e3ddec;border-radius:20px;cursor:pointer;font-size:15px;color:#666;background:#fff;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.cat-tab:hover{border-color:#c2588a;color:#c2588a}
+.cat-tab.active{background:#c2588a;color:#fff;border-color:#c2588a}
+.item-search{width:100%;padding:7px 12px 7px 30px;border:1px solid #e3ddec;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px}
+.item-search:focus{border-color:#c2588a}
 .item-search-wrap{position:relative}
 .item-search-wrap::before{content:"🔍";position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none}
 .items-title{font-size:14px;font-weight:600;color:#555;margin-bottom:8px}
-.save-btn{width:100%;padding:15px;background:#1a6b4a;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
+.save-btn{width:100%;padding:15px;background:#c2588a;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
 .save-btn:hover{background:#155c3e}
 .save-btn:disabled{background:#bbb;cursor:not-allowed}
 #status{padding:9px 14px;border-radius:8px;font-size:15px;border:1px solid;margin-bottom:10px;display:none}
@@ -4671,31 +4671,31 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
 .branch-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden}
 .branch-card-header{padding:10px 14px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}
 .branch-card-header .bc-count{margin-left:auto;font-size:13px;background:rgba(255,255,255,.35);padding:2px 8px;border-radius:10px;font-weight:600}
-.bc-b1{background:linear-gradient(135deg,#1a5c9e,#2471c2);color:#fff}
-.bc-b2{background:linear-gradient(135deg,#1a6b4a,#229960);color:#fff}
-.bc-b3{background:linear-gradient(135deg,#7a4f0d,#b07020);color:#fff}
+.bc-b1{background:linear-gradient(135deg,#4a86bd,#2471c2);color:#fff}
+.bc-b2{background:linear-gradient(135deg,#c2588a,#229960);color:#fff}
+.bc-b3{background:linear-gradient(135deg,#8a5a17,#b07020);color:#fff}
 .branch-card-body{max-height:calc(100vh - 260px);overflow-y:auto;transition:max-height .25s ease;overflow:hidden}
 .branch-card-body.collapsed{max-height:0!important;overflow:hidden}
-.dash-case-row{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:.5px solid #f0ede8;cursor:pointer;transition:background .1s}
+.dash-case-row{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:.5px solid #f1eef7;cursor:pointer;transition:background .1s}
 .dash-case-row:last-child{border-bottom:none}
 .dash-case-row:hover{background:#f5fbf7}
-.dash-case-row.selected{background:#e8f5ee}
+.dash-case-row.selected{background:#fbe7f0}
 .dash-case-num{font-size:12px;color:#ccc;min-width:28px;flex-shrink:0}
 .dash-case-name{flex:1;font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dash-case-due{font-size:12px;background:#f0ede8;color:#888;border-radius:8px;padding:1px 6px;flex-shrink:0;white-space:nowrap}
-.dash-search{width:100%;padding:8px 12px;border:1px solid #e0dbd2;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-bottom:12px}
-.dash-search:focus{border-color:#1a6b4a}
+.dash-case-due{font-size:12px;background:#f1eef7;color:#888;border-radius:8px;padding:1px 6px;flex-shrink:0;white-space:nowrap}
+.dash-search{width:100%;padding:8px 12px;border:1px solid #e3ddec;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-bottom:12px}
+.dash-search:focus{border-color:#c2588a}
 .page-section{display:none}
 .page-section.active{display:block}
 /* vital signs */
 .vital-time-btn{padding:6px 13px;border:1.5px solid #ccc;border-radius:20px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#555;transition:all .15s;font-weight:500}
-.vital-time-btn.active{background:#1a6b4a;color:#fff;border-color:#1a6b4a;font-weight:600}
+.vital-time-btn.active{background:#c2588a;color:#fff;border-color:#c2588a;font-weight:600}
 .vital-input{width:100%;padding:5px 4px;border:1px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;background:#fafafa}
-.vital-input:focus{outline:none;border-color:#1a6b4a;background:#fff}
+.vital-input:focus{outline:none;border-color:#c2588a;background:#fff}
 .vital-row:hover td{background:#f8fff8}
 /* sub-sheet tabs inside ลงบันทึกรวม */
 .vsheet-btn{padding:7px 13px;border:1.5px solid #ddd;border-radius:20px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#555;transition:all .15s;font-weight:500;white-space:nowrap}
-.vsheet-btn.active{background:#1a6b4a;color:#fff;border-color:#1a6b4a;font-weight:600}
+.vsheet-btn.active{background:#c2588a;color:#fff;border-color:#c2588a;font-weight:600}
 .vsheet-panel{display:none}
 .vsheet-panel.active{display:block}
 /* Scroll containers inside panels: cap width to avoid overflow */
@@ -4705,18 +4705,18 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
 /* Safety: all table cells clip content — prevents text visually spilling into adjacent cells */
 .main-content table td,.main-content table th{overflow:hidden}
 #vp-checklist.active{display:flex;flex-direction:column;height:100%}
-.vbranch-btn.active{background:#f0ede8 !important;border-color:#bbb !important;font-weight:700 !important}
+.vbranch-btn.active{background:#f1eef7 !important;border-color:#bbb !important;font-weight:700 !important}
 /* sub-sheet tabs inside ลงบันทึกรายบุคคล */
 /* year/month picker */
 /* thai date wrapper for all date inputs */
 .thai-date-wrap{display:inline-flex;flex-direction:column;align-items:center;gap:0;vertical-align:middle}
-.thai-date-lbl{font-size:12px;color:#1a6b4a;font-weight:600;white-space:nowrap;line-height:1.4;text-align:center}
+.thai-date-lbl{font-size:12px;color:#c2588a;font-weight:600;white-space:nowrap;line-height:1.4;text-align:center}
 #indiv-ym-picker{background:#f8f6f3;border:1px solid #e8e4de;border-radius:12px;padding:10px 12px;margin-bottom:10px}
 .iym-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
 .iym-row:last-child{margin-bottom:0}
 .iym-pill{padding:6px 13px;border:1.5px solid #d8d5d0;border-radius:20px;background:#fff;font-size:15px;font-family:inherit;cursor:pointer;color:#555;font-weight:500;transition:all .15s;white-space:nowrap;-webkit-tap-highlight-color:transparent}
 .iym-pill:active{opacity:.75}
-.iym-active{background:#1a6b4a!important;color:#fff!important;border-color:#1a6b4a!important;font-weight:600}
+.iym-active{background:#c2588a!important;color:#fff!important;border-color:#c2588a!important;font-weight:600}
 .iym-add{color:#2856b8;border-color:#c0cde8;background:#f0f4fe}
 .isheet-btn{padding:7px 13px;border:1.5px solid #ddd;border-radius:20px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#555;transition:all .15s;font-weight:500;white-space:nowrap}
 .isheet-btn.active{background:#2856b8;color:#fff;border-color:#2856b8;font-weight:600}
@@ -4728,60 +4728,60 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
 .ibranch-btn.active{background:#2856b8;color:#fff;border-color:#2856b8;font-weight:600}
 /* indiv customer search */
 #indiv-cust-wrap{position:relative}
-#indiv-cust-search{width:100%;padding:8px 12px 8px 34px;border:1px solid #e0dbd2;border-radius:8px;font-size:15px;font-family:inherit;outline:none;box-sizing:border-box}
+#indiv-cust-search{width:100%;padding:8px 12px 8px 34px;border:1px solid #e3ddec;border-radius:8px;font-size:15px;font-family:inherit;outline:none;box-sizing:border-box}
 #indiv-cust-search:focus{border-color:#2856b8}
 #indiv-cust-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;line-height:1}
 #indiv-cust-list{display:none} /* positioned & styled dynamically via JS (fixed to body) */
-.indiv-srch-item{display:flex;align-items:center;gap:6px;padding:9px 12px;cursor:pointer;border-bottom:.5px solid #f0ede8;font-size:15px;transition:background .1s;-webkit-tap-highlight-color:transparent}
+.indiv-srch-item{display:flex;align-items:center;gap:6px;padding:9px 12px;cursor:pointer;border-bottom:.5px solid #f1eef7;font-size:15px;transition:background .1s;-webkit-tap-highlight-color:transparent}
 .indiv-srch-item:last-child{border-bottom:none}
 .indiv-srch-item:hover,.indiv-srch-item:active{background:#f5fbf7}
-.indiv-srch-sel{background:#e8f5ee!important}
+.indiv-srch-sel{background:#fbe7f0!important}
 .indiv-srch-name{flex:1;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .indiv-srch-id{font-size:13px;color:#aaa;white-space:nowrap;flex-shrink:0}
 /* status toggle buttons */
-.status-toggle-btn{width:100%;padding:13px 16px;border:1.5px solid #e0dbd2;border-radius:12px;cursor:pointer;font-size:16px;font-weight:500;font-family:inherit;text-align:left;transition:all .18s;background:#fff;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.status-toggle-btn{width:100%;padding:13px 16px;border:1.5px solid #e3ddec;border-radius:12px;cursor:pointer;font-size:16px;font-weight:500;font-family:inherit;text-align:left;transition:all .18s;background:#fff;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:12px}
 .status-toggle-btn:last-child{margin-bottom:0}
-.status-toggle-btn:hover{border-color:#bbb;background:#fafaf8}
+.status-toggle-btn:hover{border-color:#bbb;background:#f8f7fb}
 .status-toggle-btn .chk-box{width:22px;height:22px;border-radius:6px;border:2px solid #d0cdc8;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .18s}
 .status-toggle-btn .chk-label{flex:1;line-height:1.3}
 .status-toggle-btn .chk-date{font-size:13px;color:#aaa;font-weight:400;margin-top:2px}
-.status-toggle-btn.active-green{background:#f0faf4;border-color:#1a6b4a}
-.status-toggle-btn.active-green .chk-box{background:#1a6b4a;border-color:#1a6b4a;color:#fff}
-.status-toggle-btn.active-green .chk-label{color:#1a6b4a;font-weight:600}
-.status-toggle-btn.active-blue{background:#edf4fd;border-color:#1a5c9e}
-.status-toggle-btn.active-blue .chk-box{background:#1a5c9e;border-color:#1a5c9e;color:#fff}
-.status-toggle-btn.active-blue .chk-label{color:#1a5c9e;font-weight:600}
+.status-toggle-btn.active-green{background:#f0faf4;border-color:#c2588a}
+.status-toggle-btn.active-green .chk-box{background:#c2588a;border-color:#c2588a;color:#fff}
+.status-toggle-btn.active-green .chk-label{color:#c2588a;font-weight:600}
+.status-toggle-btn.active-blue{background:#edf4fd;border-color:#4a86bd}
+.status-toggle-btn.active-blue .chk-box{background:#4a86bd;border-color:#4a86bd;color:#fff}
+.status-toggle-btn.active-blue .chk-label{color:#4a86bd;font-weight:600}
 .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.dot-green{background:#1a6b4a}
-.dot-blue{background:#1a5c9e}
+.dot-green{background:#c2588a}
+.dot-blue{background:#4a86bd}
 .dot-gray{background:#ccc}
 /* month tabs */
 .month-tabs{margin-bottom:14px;background:#f8f6f3;border:1px solid #e8e4de;border-radius:12px;padding:10px 12px}
 .month-tabs::-webkit-scrollbar{display:none}
-.month-tab-btn{padding:6px 14px;border:1px solid #e0dbd2;border-radius:20px;cursor:pointer;font-size:14px;color:#666;background:#fff;font-family:inherit;transition:all .15s;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent}
-.month-tab-btn:hover{border-color:#1a6b4a;color:#1a6b4a}
-.month-tab-btn.active{background:#1a6b4a;color:#fff;border-color:#1a6b4a}
+.month-tab-btn{padding:6px 14px;border:1px solid #e3ddec;border-radius:20px;cursor:pointer;font-size:14px;color:#666;background:#fff;font-family:inherit;transition:all .15s;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.month-tab-btn:hover{border-color:#c2588a;color:#c2588a}
+.month-tab-btn.active{background:#c2588a;color:#fff;border-color:#c2588a}
 
 /* ===== STAFF SCHEDULE VIEW ===== */
 #page-sched.active{display:flex!important;flex-direction:column}
 .ss-wrap{overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 160px);border-radius:10px;border:1px solid #e8e3dc;box-shadow:0 1px 6px rgba(0,0,0,.07);-webkit-overflow-scrolling:touch}
 .ss-table{border-collapse:collapse;width:100%;min-width:max-content;font-size:14px;font-family:inherit}
-.ss-table th{position:sticky;top:0;z-index:2;background:#f5f3ef;color:#555;font-weight:600;padding:7px 4px;text-align:center;border-bottom:2px solid #e0dbd2;white-space:nowrap;min-width:34px}
-.ss-table td{padding:5px 3px;text-align:center;border-bottom:.5px solid #f0ede8;vertical-align:middle;min-width:34px}
-.ss-name-col{position:sticky;left:0;z-index:3;background:#f5f3ef!important;text-align:left!important;min-width:100px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:10px!important;padding-right:8px!important;border-right:1.5px solid #e0dbd2;font-weight:500}
+.ss-table th{position:sticky;top:0;z-index:2;background:#f8f7fb;color:#555;font-weight:600;padding:7px 4px;text-align:center;border-bottom:2px solid #e3ddec;white-space:nowrap;min-width:34px}
+.ss-table td{padding:5px 3px;text-align:center;border-bottom:.5px solid #f1eef7;vertical-align:middle;min-width:34px}
+.ss-name-col{position:sticky;left:0;z-index:3;background:#f8f7fb!important;text-align:left!important;min-width:100px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:10px!important;padding-right:8px!important;border-right:1.5px solid #e3ddec;font-weight:500}
 .ss-table th.ss-name-col{z-index:4}
 .ss-today-col{background:#f0fdf4!important;color:#16a34a!important;font-weight:700}
 .ss-chip{display:inline-block;padding:2px 5px;border-radius:5px;font-size:13px;font-weight:600;line-height:1.3;white-space:nowrap;margin-bottom:2px}
 .ss-empty{color:#ddd;font-size:12px}
 .ss-branch-row td{font-size:13px;font-weight:700;padding:4px 10px;letter-spacing:.3px;position:sticky;left:0}
 /* Summary columns */
-.ss-sum-col{position:sticky;top:0;z-index:2;font-size:13px;font-weight:600;padding:5px 4px;text-align:center;white-space:nowrap;border-left:2px solid #e0dbd2}
-.ss-wd-col{background:#e8f5ee;color:#1a6b4a;min-width:52px}
+.ss-sum-col{position:sticky;top:0;z-index:2;font-size:13px;font-weight:600;padding:5px 4px;text-align:center;white-space:nowrap;border-left:2px solid #e3ddec}
+.ss-wd-col{background:#fbe7f0;color:#c2588a;min-width:52px}
 .ss-ot-col{background:#f5f3ff;color:#6d28d9;min-width:44px}
 .ss-oth-col{background:#fffbf0;color:#92400e;min-width:54px}
 .ss-total-col{background:#f0f2f5;color:#444;min-width:80px}
-.ss-sum-val{text-align:center;font-size:15px;padding:4px 6px;border-left:2px solid #e0dbd2;vertical-align:middle}
-.ss-wd-val{background:#f0faf5;color:#1a6b4a;font-weight:700}
+.ss-sum-val{text-align:center;font-size:15px;padding:4px 6px;border-left:2px solid #e3ddec;vertical-align:middle}
+.ss-wd-val{background:#f0faf5;color:#c2588a;font-weight:700}
 .ss-ot-val{background:#faf8ff}
 .ss-oth-val{background:#fffdf5}
 .ss-total-val{background:#f8f9fb;font-size:13px;white-space:nowrap}
@@ -4805,13 +4805,13 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
 }
 .home-header-logo{font-size:28px;flex-shrink:0}
 .home-header-text{flex:1;min-width:0}
-.home-header-appname{font-size:16px;font-weight:700;color:#1a6b4a}
+.home-header-appname{font-size:16px;font-weight:700;color:#c2588a}
 .home-header-sub{font-size:13px;color:#999;margin-top:1px}
 .home-user-wrap{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.home-user-photo{width:36px;height:36px;border-radius:50%;object-fit:cover;display:none;border:2px solid #e8f5ee}
+.home-user-photo{width:36px;height:36px;border-radius:50%;object-fit:cover;display:none;border:2px solid #fbe7f0}
 .home-user-name{font-size:13px;color:#666;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .home-signout-btn{
-  padding:5px 10px;background:#fff5f5;color:#c0392b;
+  padding:5px 10px;background:#fff5f5;color:#d7263d;
   border:1px solid #f5c6cb;border-radius:7px;
   font-size:13px;font-family:inherit;cursor:pointer;
   white-space:nowrap;flex-shrink:0
@@ -4856,12 +4856,12 @@ body{font-family:"IBM Plex Sans Thai",sans-serif;background:#f5f3ef;color:#1a191
   display:none;
   align-items:center;justify-content:center;
   width:34px;height:34px;cursor:pointer;
-  border-radius:8px;background:#f5f3ef;
+  border-radius:8px;background:#f8f7fb;
   border:1px solid #e8e5e0;flex-shrink:0;
   font-size:18px;-webkit-tap-highlight-color:transparent;
   touch-action:manipulation
 }
-#topbar-back-btn:hover{background:#e8f5ee;color:#1a6b4a}
+#topbar-back-btn:hover{background:#fbe7f0;color:#c2588a}
 
 /* ซ่อน bottom nav เมื่อใช้ home navigation */
 
@@ -5017,15 +5017,16 @@ if ('serviceWorker' in navigator) {
 <body>
 <style>
 #staff-login-screen {
-  position:fixed;inset:0;background:#f5f3ef;display:flex;align-items:center;
-  justify-content:center;z-index:9999;font-family:"IBM Plex Sans Thai",sans-serif;
+  position:fixed;inset:0;background:linear-gradient(135deg, #fbe0ec 0%, #dbe9fa 100%);display:flex;align-items:center;
+  justify-content:center;z-index:9999;font-family:"Sarabun",sans-serif;
 }
 .staff-login-box {
-  background:#fff;border-radius:16px;padding:36px 32px;width:320px;
-  box-shadow:0 4px 24px rgba(0,0,0,.12);text-align:center;
+  background:#fff;border-radius:14px;padding:36px 32px;width:320px;
+  border-top:4px solid #c2588a;
+  box-shadow:0 12px 40px rgba(90,60,90,.18);text-align:center;
 }
-.staff-login-box h1 { font-size:18px;font-weight:700;color:#c45570;margin-bottom:4px; }
-.staff-login-box p  { font-size:14px;color:#999;margin-bottom:24px; }
+.staff-login-box h1 { font-family:"Kanit",sans-serif; font-size:19px;font-weight:600;color:#2b2733;margin-bottom:4px; }
+.staff-login-box p  { font-size:14px;color:#9f97ab;margin-bottom:24px; }
 .staff-google-btn {
   width:100%;padding:12px 16px;background:#fff;color:#3c4043;border:1px solid #dadce0;
   border-radius:8px;font-size:16px;font-weight:600;font-family:inherit;cursor:pointer;
@@ -5033,7 +5034,7 @@ if ('serviceWorker' in navigator) {
   box-shadow:0 1px 3px rgba(0,0,0,.08);transition:box-shadow .15s,background .15s;
 }
 .staff-google-btn:hover { background:#f8f9fa;box-shadow:0 2px 6px rgba(0,0,0,.12); }
-.staff-login-err { color:#c0392b;font-size:14px;margin-top:10px;display:none; }
+.staff-login-err { color:#d7263d;font-size:14px;margin-top:10px;display:none; }
 </style>
 
 <div id="staff-login-screen">
@@ -5081,7 +5082,7 @@ if ('serviceWorker' in navigator) {
         <!-- Menu grid -->
         <div class="home-grid">
           <button class="home-card" onclick="setPage('dashboard')"
-            style="background:linear-gradient(135deg,#e8f5ee 0%,#c8e6c9 100%);color:#1a5c3c">
+            style="background:linear-gradient(135deg,#fbe7f0 0%,#c8e6c9 100%);color:#1a5c3c">
             <div class="home-card-icon">📋</div>
             <div class="home-card-title">รายชื่อเคส</div>
             <div class="home-card-sub">ดูข้อมูลผู้รับบริการทั้งหมด</div>
@@ -5221,11 +5222,11 @@ if ('serviceWorker' in navigator) {
           <button class="vbranch-btn active" data-branch="" onclick="setVitalBranch('')"
             style="padding:5px 12px;border:1.5px solid #ddd;border-radius:16px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#555;transition:all .15s;font-weight:500">ทั้งหมด</button>
           <button class="vbranch-btn" data-branch="สาขา 1" onclick="setVitalBranch('สาขา 1')"
-            style="padding:5px 12px;border:1.5px solid #ddd;border-radius:16px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#1a5c9e;transition:all .15s;font-weight:500">สาขา 1</button>
+            style="padding:5px 12px;border:1.5px solid #ddd;border-radius:16px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#4a86bd;transition:all .15s;font-weight:500">สาขา 1</button>
           <button class="vbranch-btn" data-branch="สาขา 2" onclick="setVitalBranch('สาขา 2')"
-            style="padding:5px 12px;border:1.5px solid #ddd;border-radius:16px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#1a6b4a;transition:all .15s;font-weight:500">สาขา 2</button>
+            style="padding:5px 12px;border:1.5px solid #ddd;border-radius:16px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#c2588a;transition:all .15s;font-weight:500">สาขา 2</button>
           <button class="vbranch-btn" data-branch="สาขา 3" onclick="setVitalBranch('สาขา 3')"
-            style="padding:5px 12px;border:1.5px solid #ddd;border-radius:16px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#7a4f0d;transition:all .15s;font-weight:500">สาขา 3</button>
+            style="padding:5px 12px;border:1.5px solid #ddd;border-radius:16px;background:#fff;font-size:14px;font-family:inherit;cursor:pointer;color:#8a5a17;transition:all .15s;font-weight:500">สาขา 3</button>
         </div>
 
         <!-- Sub-sheet navigation -->
@@ -5260,7 +5261,7 @@ if ('serviceWorker' in navigator) {
           <div class="card" style="padding:0;overflow:hidden">
             <div style="padding:12px 14px;background:#f8f5f2;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
               <div style="font-weight:600;font-size:15px;color:#333">📋 บันทึกสัญญาณชีพประจำวัน</div>
-              <button id="vital-save-btn" onclick="saveVitalSigns()" style="padding:7px 18px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
+              <button id="vital-save-btn" onclick="saveVitalSigns()" style="padding:7px 18px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
             </div>
             <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
               <table style="border-collapse:collapse;font-size:14px;min-width:900px">
@@ -5290,12 +5291,12 @@ if ('serviceWorker' in navigator) {
           <div class="card" style="padding:0;overflow:hidden">
             <div style="padding:12px 14px;background:#f8f5f2;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
               <div style="font-weight:600;font-size:15px;color:#333">📋 ตารางสรุปข้อมูลการดูแล</div>
-              <button id="summary-save-btn" onclick="saveCaseSummary()" style="padding:7px 18px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
+              <button id="summary-save-btn" onclick="saveCaseSummary()" style="padding:7px 18px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
             </div>
             <div style="overflow-x:auto">
               <table style="width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed;min-width:820px">
                 <thead>
-                  <tr style="background:#f0ede8;text-align:center">
+                  <tr style="background:#f1eef7;text-align:center">
                     <th style="padding:6px 3px;border:1px solid #ddd;width:28px;overflow:hidden">ลำดับ</th>
                     <th style="padding:6px 5px;border:1px solid #ddd;width:110px;text-align:left;overflow:hidden">ชื่อ-นามสกุล</th>
                     <th style="padding:6px 3px;border:1px solid #ddd;width:50px;overflow:hidden">เพศ</th>
@@ -5336,13 +5337,13 @@ if ('serviceWorker' in navigator) {
               <div style="font-weight:600;font-size:15px;color:#333">📝 ทะเบียนผู้รับบริการ</div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span id="registry-status" style="font-size:14px;color:#aaa"></span>
-                <button id="registry-save-btn" onclick="saveRegistry()" style="padding:7px 18px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
+                <button id="registry-save-btn" onclick="saveRegistry()" style="padding:7px 18px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
               </div>
             </div>
             <div style="overflow-x:auto">
               <table style="width:100%;border-collapse:collapse;font-size:14px;table-layout:auto">
                 <thead>
-                  <tr style="background:#f0ede8;text-align:center">
+                  <tr style="background:#f1eef7;text-align:center">
                     <th style="padding:7px 6px;border:1px solid #ddd;white-space:nowrap">ลำดับ</th>
                     <th style="padding:7px 8px;border:1px solid #ddd;white-space:nowrap;text-align:left">ชื่อ-สกุล</th>
                     <th style="padding:7px 6px;border:1px solid #ddd;white-space:nowrap">เลขที่ทั่วไป</th>
@@ -5374,8 +5375,8 @@ if ('serviceWorker' in navigator) {
             <div style="padding:10px 14px;background:#f8f5f2;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;flex-wrap:wrap;gap:6px">
               <div style="font-weight:600;font-size:15px;color:#333">💊 รายชื่อผู้ป่วยแยกตามเวลายา</div>
               <div style="display:flex;align-items:center;gap:6px">
-                <button onclick="showAddMedTimeForm()" style="padding:6px 13px;background:#fff;color:#1a6b4a;border:1.5px solid #1a6b4a;border-radius:7px;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600">➕ เพิ่มเวลาให้ยา</button>
-                <button id="medcheck-save-btn" onclick="saveMedCheckNotes()" style="padding:6px 16px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
+                <button onclick="showAddMedTimeForm()" style="padding:6px 13px;background:#fff;color:#c2588a;border:1.5px solid #c2588a;border-radius:7px;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600">➕ เพิ่มเวลาให้ยา</button>
+                <button id="medcheck-save-btn" onclick="saveMedCheckNotes()" style="padding:6px 16px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
               </div>
             </div>
             <!-- inline add-time form -->
@@ -5384,13 +5385,13 @@ if ('serviceWorker' in navigator) {
               <input id="medcheck-add-inp" type="text" placeholder="เช่น หลังอาหารกลางคืน" maxlength="40"
                 onkeydown="_medcheckAddKeydown(event)"
                 style="flex:1;padding:6px 10px;border:1.5px solid #81c784;border-radius:7px;font-size:15px;font-family:inherit;outline:none;min-width:0" />
-              <button onclick="confirmAddMedTime()" style="padding:6px 14px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600;white-space:nowrap">✓ เพิ่ม</button>
+              <button onclick="confirmAddMedTime()" style="padding:6px 14px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600;white-space:nowrap">✓ เพิ่ม</button>
               <button onclick="showAddMedTimeForm()" style="padding:6px 10px;background:#eee;color:#666;border:none;border-radius:7px;font-size:14px;font-family:inherit;cursor:pointer;white-space:nowrap">ยกเลิก</button>
             </div>
             <div id="medcheck-table-wrap" style="overflow-y:auto;overflow-x:auto;flex:1">
               <table style="width:100%;border-collapse:collapse;font-size:15px">
                 <thead>
-                  <tr style="background:#f0ede8;position:sticky;top:0;z-index:1">
+                  <tr style="background:#f1eef7;position:sticky;top:0;z-index:1">
                     <th style="padding:8px 12px;border:1px solid #ddd;text-align:left;white-space:nowrap">เวลาให้ยา</th>
                     <th style="padding:8px 12px;border:1px solid #ddd;text-align:left;width:99%">รายชื่อผู้ป่วย / บันทึก</th>
                   </tr>
@@ -5415,7 +5416,7 @@ if ('serviceWorker' in navigator) {
           <div class="card" style="padding:0;overflow:hidden">
             <div style="padding:12px 14px;background:#f8f5f2;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between">
               <div style="font-weight:600;font-size:15px;color:#333">🗒️ ใบตรวจสอบยาแต่ละวัน</div>
-              <button id="meddaily-save-btn" onclick="saveMedDaily()" style="padding:7px 18px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
+              <button id="meddaily-save-btn" onclick="saveMedDaily()" style="padding:7px 18px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
             </div>
             <div style="overflow-x:auto">
               <table style="min-width:100%;border-collapse:collapse;font-size:14px">
@@ -5427,7 +5428,7 @@ if ('serviceWorker' in navigator) {
                   <col style="min-width:44px"><col style="min-width:44px"><col style="min-width:44px">   <!-- ก่อนนอน / ยารายสัปดาห์ / อื่นๆ -->
                 </colgroup>
                 <thead>
-                  <tr style="background:#f0ede8;text-align:center">
+                  <tr style="background:#f1eef7;text-align:center">
                     <th rowspan="2" style="padding:6px 4px;border:1px solid #ddd">ลำดับ</th>
                     <th rowspan="2" style="padding:6px 8px;border:1px solid #ddd;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ชื่อ</th>
                     <th colspan="3" style="padding:6px 4px;border:1px solid #ddd">ก่อนอาหาร</th>
@@ -5436,7 +5437,7 @@ if ('serviceWorker' in navigator) {
                     <th rowspan="2" style="padding:6px 4px;border:1px solid #ddd">ยารายสัปดาห์</th>
                     <th rowspan="2" style="padding:6px 4px;border:1px solid #ddd">อื่นๆ</th>
                   </tr>
-                  <tr style="background:#f0ede8;text-align:center">
+                  <tr style="background:#f1eef7;text-align:center">
                     <th style="padding:5px 4px;border:1px solid #ddd">เช้า</th>
                     <th style="padding:5px 4px;border:1px solid #ddd">เที่ยง</th>
                     <th style="padding:5px 4px;border:1px solid #ddd">เย็น</th>
@@ -5455,12 +5456,12 @@ if ('serviceWorker' in navigator) {
         <div id="vp-caseinfo" class="vsheet-panel">
           <div class="card" style="margin-bottom:8px">
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-              <b style="font-size:16px;color:#1a6b4a">📋 ข้อมูลเคส</b>
+              <b style="font-size:16px;color:#c2588a">📋 ข้อมูลเคส</b>
               <input type="date" id="caseinfo-date" style="padding:5px 10px;border:1px solid #ddd;border-radius:7px;font-size:15px;font-family:inherit">
               <button id="caseinfo-prev" onclick="_ciPrevPage()" style="padding:5px 14px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:18px;cursor:pointer;line-height:1">‹</button>
               <span id="caseinfo-page-info" style="font-size:15px;color:#555;white-space:nowrap">หน้า 1 / 1</span>
               <button id="caseinfo-next" onclick="_ciNextPage()" style="padding:5px 14px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:18px;cursor:pointer;line-height:1">›</button>
-              <button id="caseinfo-save-btn" onclick="saveCaseInfo()" style="padding:6px 16px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
+              <button id="caseinfo-save-btn" onclick="saveCaseInfo()" style="padding:6px 16px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
               <span id="caseinfo-status" style="font-size:14px;color:#aaa"></span>
             </div>
           </div>
@@ -5475,12 +5476,12 @@ if ('serviceWorker' in navigator) {
         <div id="vp-feedtable" class="vsheet-panel">
           <div class="card" style="margin-bottom:8px">
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-              <b style="font-size:16px;color:#1a6b4a">🍽️ ตารางฟีดอาหารและน้ำ</b>
+              <b style="font-size:16px;color:#c2588a">🍽️ ตารางฟีดอาหารและน้ำ</b>
               <input type="date" id="feedtable-date" style="padding:5px 10px;border:1px solid #ddd;border-radius:7px;font-size:15px;font-family:inherit">
               <button id="feedtable-prev" onclick="_feedPrevPage()" style="padding:5px 14px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:18px;cursor:pointer;line-height:1">‹</button>
               <span id="feedtable-page-info" style="font-size:15px;color:#555;white-space:nowrap">หน้า 1</span>
               <button id="feedtable-next" onclick="_feedNextPage()" style="padding:5px 14px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:18px;cursor:pointer;line-height:1">›</button>
-              <button id="feedtable-save-btn" onclick="saveFeedTable()" style="padding:6px 16px;background:#1a6b4a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
+              <button id="feedtable-save-btn" onclick="saveFeedTable()" style="padding:6px 16px;background:#c2588a;color:#fff;border:none;border-radius:7px;font-size:15px;font-family:inherit;cursor:pointer;font-weight:600">💾 บันทึก</button>
               <span id="feedtable-status" style="font-size:14px;color:#aaa"></span>
             </div>
           </div>
@@ -5496,7 +5497,7 @@ if ('serviceWorker' in navigator) {
                   <col style="width:52px">   <!-- หมายเหตุ -->
                 </colgroup>
                 <thead style="position:sticky;top:0;z-index:2">
-                  <tr style="background:#f0ede8;text-align:center">
+                  <tr style="background:#f1eef7;text-align:center">
                     <th style="padding:6px 4px;border:1px solid #ddd;white-space:nowrap">ลำดับ</th>
                     <th style="padding:6px 4px;border:1px solid #ddd;white-space:nowrap">Bed</th>
                     <th style="padding:6px 6px;border:1px solid #ddd;white-space:nowrap">ชื่อ</th>
@@ -5524,9 +5525,9 @@ if ('serviceWorker' in navigator) {
             <!-- shift table -->
             <div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">
               <div style="display:flex;align-items:center;border-bottom:1px solid #ddd">
-                <div style="flex:1;background:#e8f5ee;padding:8px 14px;text-align:center;font-size:16px;font-weight:700;color:#1a6b4a;border-right:2px solid #1a6b4a">☀️ เวรเช้า (06.00–18.00น.)</div>
+                <div style="flex:1;background:#fbe7f0;padding:8px 14px;text-align:center;font-size:16px;font-weight:700;color:#c2588a;border-right:2px solid #c2588a">☀️ เวรเช้า (06.00–18.00น.)</div>
                 <div style="flex:1;background:#e8eaf6;padding:8px 14px;text-align:center;font-size:16px;font-weight:700;color:#3949ab">🌙 เวรดึก (18.00–06.00น.)</div>
-                <div id="shift-branch-badge" style="padding:4px 10px;font-size:14px;font-weight:600;border-left:1px solid #ddd;white-space:nowrap;background:#e8f5ee;color:#1a6b4a;border:1px solid #a5d6a7;border-radius:4px;margin:4px 8px">สาขา 1 (DD1)</div>
+                <div id="shift-branch-badge" style="padding:4px 10px;font-size:14px;font-weight:600;border-left:1px solid #ddd;white-space:nowrap;background:#fbe7f0;color:#c2588a;border:1px solid #a5d6a7;border-radius:4px;margin:4px 8px">สาขา 1 (DD1)</div>
               </div>
               <div style="overflow-x:auto">
                 <table style="width:100%;border-collapse:collapse;font-size:16px;table-layout:auto">
@@ -5535,7 +5536,7 @@ if ('serviceWorker' in navigator) {
                     <col style="width:100px"><col>
                   </colgroup>
                   <thead>
-                    <tr style="background:#f0ede8">
+                    <tr style="background:#f1eef7">
                       <th style="padding:6px 8px;border:1px solid #ddd;white-space:nowrap;font-size:15px;text-align:center">เวลา</th>
                       <th style="padding:6px 10px;border:1px solid #ddd;font-size:15px;text-align:left">กิจกรรมเวรเช้า</th>
                       <th style="padding:6px 8px;border:1px solid #ddd;white-space:nowrap;font-size:15px;text-align:center">เวลา</th>
@@ -5547,16 +5548,16 @@ if ('serviceWorker' in navigator) {
               </div>
             </div>
             <!-- Quick Round note -->
-            <div class="card" style="margin-bottom:10px;padding:8px 14px;font-size:16px;color:#444;border-left:3px solid #1a6b4a;background:#f5f3ef">
-              <b style="color:#1a6b4a">Quick Round</b> = การตรวจเยี่ยมเคสแบบรวดเร็วและมีแบบแผนเยี่ยมชัดเจน
+            <div class="card" style="margin-bottom:10px;padding:8px 14px;font-size:16px;color:#444;border-left:3px solid #c2588a;background:#f8f7fb">
+              <b style="color:#c2588a">Quick Round</b> = การตรวจเยี่ยมเคสแบบรวดเร็วและมีแบบแผนเยี่ยมชัดเจน
             </div>
             <!-- cleaning table -->
             <div class="card" style="padding:0;overflow:hidden">
-              <div id="clean-title" style="background:#7a4f0d;color:#fff;padding:9px 14px;font-size:17px;font-weight:600">🧹 ตารางการทำความสะอาด DD 1</div>
+              <div id="clean-title" style="background:#8a5a17;color:#fff;padding:9px 14px;font-size:17px;font-weight:600">🧹 ตารางการทำความสะอาด DD 1</div>
               <div style="overflow-x:auto">
                 <table style="min-width:100%;border-collapse:collapse;font-size:16px">
                   <thead>
-                    <tr style="background:#f5e8d0;text-align:center">
+                    <tr style="background:#f6ecd9;text-align:center">
                       <th style="padding:6px 7px;border:1px solid #ddd;font-size:15px;white-space:nowrap;width:32px">ที่</th>
                       <th style="padding:6px 10px;border:1px solid #ddd;font-size:15px;text-align:left;min-width:120px">รายการ</th>
                       <th style="padding:6px 7px;border:1px solid #ddd;font-size:15px;white-space:nowrap;min-width:60px">ทุกวัน</th>
@@ -5580,8 +5581,8 @@ if ('serviceWorker' in navigator) {
             <!-- control bar -->
             <div class="card" style="margin-bottom:8px;padding:8px 14px">
               <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-                <b style="font-size:16px;color:#1a6b4a">📋 มาตรฐานงานดูแล</b>
-                <div id="care-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#e8f5ee;color:#1a6b4a;white-space:nowrap">ทั้งหมด</div>
+                <b style="font-size:16px;color:#c2588a">📋 มาตรฐานงานดูแล</b>
+                <div id="care-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#fbe7f0;color:#c2588a;white-space:nowrap">ทั้งหมด</div>
                 <label style="font-size:15px;color:#555">วันที่ประเมิน:</label>
                 <input type="date" id="carestandard-date"
                   style="padding:4px 8px;border:1px solid #ccc;border-radius:6px;font-size:15px;font-family:inherit">
@@ -5599,7 +5600,7 @@ if ('serviceWorker' in navigator) {
                     <col style="width:62px">
                   </colgroup>
                   <thead>
-                    <tr style="background:#f0ede8">
+                    <tr style="background:#f1eef7">
                       <th style="padding:7px 8px;border:1px solid #ddd;font-size:14px;text-align:center">ที่</th>
                       <th style="padding:7px 14px;border:1px solid #ddd;font-size:15px;text-align:left">มาตรฐานกิจกรรมการดูแล</th>
                       <th style="padding:7px 6px;border:1px solid #ddd;font-size:14px;text-align:center">ประเมินผล<br><span style="font-weight:400;color:#666;font-size:13px">✓ทำ ✕ไม่ทำ</span></th>
@@ -5617,8 +5618,8 @@ if ('serviceWorker' in navigator) {
           <!-- control bar: flex-shrink:0 ไม่หด -->
           <div class="card" style="flex-shrink:0;margin-bottom:8px;padding:8px 14px">
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-              <b style="font-size:16px;color:#1a6b4a">🔧 รายการตรวจเช็คและบำรุงรักษาเครื่องมือทางการแพทย์</b>
-              <div id="chk-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#e8f5ee;color:#1a6b4a;white-space:nowrap">ทั้งหมด</div>
+              <b style="font-size:16px;color:#c2588a">🔧 รายการตรวจเช็คและบำรุงรักษาเครื่องมือทางการแพทย์</b>
+              <div id="chk-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#fbe7f0;color:#c2588a;white-space:nowrap">ทั้งหมด</div>
               <label style="font-size:15px;color:#555">เดือน:</label>
               <input type="month" id="chk-month" style="padding:4px 8px;border:1px solid #ccc;border-radius:6px;font-size:15px;font-family:inherit">
               <span id="checklist-status" style="font-size:14px;color:#888;margin-left:4px"></span>
@@ -5639,8 +5640,8 @@ if ('serviceWorker' in navigator) {
           <!-- control bar -->
           <div class="card" style="flex-shrink:0;margin-bottom:8px;padding:8px 14px">
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-              <b style="font-size:16px;color:#1a6b4a">🏥 รายการตรวจสอบ สบส</b>
-              <div id="sbs-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#e8f5ee;color:#1a6b4a;white-space:nowrap">ทั้งหมด</div>
+              <b style="font-size:16px;color:#c2588a">🏥 รายการตรวจสอบ สบส</b>
+              <div id="sbs-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#fbe7f0;color:#c2588a;white-space:nowrap">ทั้งหมด</div>
               <label style="font-size:15px;color:#555">วันที่ตรวจ:</label>
               <input type="date" id="sbs-date" style="padding:4px 8px;border:1px solid #ccc;border-radius:6px;font-size:15px;font-family:inherit">
               <span id="sbs-status" style="font-size:14px;color:#888;margin-left:4px"></span>
@@ -5651,7 +5652,7 @@ if ('serviceWorker' in navigator) {
           <div id="sbs-scroll" style="overflow:auto;height:clamp(200px,calc(100dvh - 300px),800px);border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.07)">
 
             <!-- ── Section 1: รายการตรวจสอบสบส ── -->
-            <div style="background:#1a6b4a;color:#fff;font-weight:600;padding:8px 14px;font-size:15px;position:sticky;top:0;z-index:3;letter-spacing:.3px">
+            <div style="background:#c2588a;color:#fff;font-weight:600;padding:8px 14px;font-size:15px;position:sticky;top:0;z-index:3;letter-spacing:.3px">
               📋 รายการตรวจสอบแบบประเมิน สบส &nbsp;<span style="font-weight:400;font-size:13px;opacity:.8">(25 รายการ)</span>
             </div>
             <table style="width:100%;border-collapse:collapse;table-layout:fixed">
@@ -5692,8 +5693,8 @@ if ('serviceWorker' in navigator) {
         <div id="vp-timesheet" class="vsheet-panel">
           <div class="card" style="flex-shrink:0;margin-bottom:8px;padding:8px 14px">
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-              <b style="font-size:16px;color:#1a6b4a">📅 ใบลงเวลาการทำงาน</b>
-              <div id="ts-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#e8f5ee;color:#1a6b4a;white-space:nowrap">ทั้งหมด</div>
+              <b style="font-size:16px;color:#c2588a">📅 ใบลงเวลาการทำงาน</b>
+              <div id="ts-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#fbe7f0;color:#c2588a;white-space:nowrap">ทั้งหมด</div>
               <label style="font-size:15px;color:#555">เดือน:</label>
               <input type="month" id="ts-month" style="padding:4px 8px;border:1px solid #ccc;border-radius:6px;font-size:15px;font-family:inherit">
               <span id="ts-status" style="font-size:14px;color:#888;margin-left:4px"></span>
@@ -5709,17 +5710,17 @@ if ('serviceWorker' in navigator) {
               </colgroup>
               <thead style="position:sticky;top:0;z-index:2">
                 <tr>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">วันที่</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">เวร</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">เวลา</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">พนักงาน 1</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">พนักงาน 2</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">พนักงาน 3</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">พนักงาน 4</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">พนักงาน 5</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">พนักงาน 6</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">พนักงาน 7</th>
-                  <th style="background:#1a6b4a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #155c3a;text-align:center">หมายเหตุ</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">วันที่</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">เวร</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">เวลา</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">พนักงาน 1</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">พนักงาน 2</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">พนักงาน 3</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">พนักงาน 4</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">พนักงาน 5</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">พนักงาน 6</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">พนักงาน 7</th>
+                  <th style="background:#c2588a;color:#fff;padding:8px 4px;font-size:14px;border:1px solid #a04270;text-align:center">หมายเหตุ</th>
                 </tr>
               </thead>
               <tbody id="ts-tbody"></tbody>
@@ -5731,8 +5732,8 @@ if ('serviceWorker' in navigator) {
         <div id="vp-branchwork" class="vsheet-panel">
           <div class="card" style="flex-shrink:0;margin-bottom:8px;padding:8px 14px">
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-              <b style="font-size:16px;color:#1a6b4a">📋 ตารางตรวจเช็คงานหัวหน้าสาขาประจำวัน</b>
-              <div id="bw-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#e8f5ee;color:#1a6b4a;white-space:nowrap">ทั้งหมด</div>
+              <b style="font-size:16px;color:#c2588a">📋 ตารางตรวจเช็คงานหัวหน้าสาขาประจำวัน</b>
+              <div id="bw-branch-badge" style="padding:3px 10px;font-size:14px;font-weight:600;border-radius:4px;border:1px solid #a5d6a7;background:#fbe7f0;color:#c2588a;white-space:nowrap">ทั้งหมด</div>
               <label style="font-size:15px;color:#555">เดือน:</label>
               <input type="month" id="bw-month" style="padding:4px 8px;border:1px solid #ccc;border-radius:6px;font-size:15px;font-family:inherit">
               <span id="bw-status" style="font-size:14px;color:#888;margin-left:4px"></span>
@@ -5827,12 +5828,12 @@ if ('serviceWorker' in navigator) {
         <!-- Header controls -->
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
           <button onclick="staffSchedPrevMonth()"
-            style="padding:6px 12px;border:1px solid #e0dbd2;border-radius:20px;background:#fff;font-size:15px;cursor:pointer;font-family:inherit;color:#555;transition:all .15s"
-            onmouseover="this.style.borderColor='#1a6b4a';this.style.color='#1a6b4a'" onmouseout="this.style.borderColor='#e0dbd2';this.style.color='#555'">◀</button>
-          <span id="ss-month-label" style="font-size:17px;font-weight:700;color:#1a1916;min-width:90px;text-align:center">—</span>
+            style="padding:6px 12px;border:1px solid #e3ddec;border-radius:20px;background:#fff;font-size:15px;cursor:pointer;font-family:inherit;color:#555;transition:all .15s"
+            onmouseover="this.style.borderColor='#c2588a';this.style.color='#c2588a'" onmouseout="this.style.borderColor='#e3ddec';this.style.color='#555'">◀</button>
+          <span id="ss-month-label" style="font-size:17px;font-weight:700;color:#2b2733;min-width:90px;text-align:center">—</span>
           <button onclick="staffSchedNextMonth()"
-            style="padding:6px 12px;border:1px solid #e0dbd2;border-radius:20px;background:#fff;font-size:15px;cursor:pointer;font-family:inherit;color:#555;transition:all .15s"
-            onmouseover="this.style.borderColor='#1a6b4a';this.style.color='#1a6b4a'" onmouseout="this.style.borderColor='#e0dbd2';this.style.color='#555'">▶</button>
+            style="padding:6px 12px;border:1px solid #e3ddec;border-radius:20px;background:#fff;font-size:15px;cursor:pointer;font-family:inherit;color:#555;transition:all .15s"
+            onmouseover="this.style.borderColor='#c2588a';this.style.color='#c2588a'" onmouseout="this.style.borderColor='#e3ddec';this.style.color='#555'">▶</button>
           <span style="font-size:13px;color:#aaa;margin-left:4px">สาขาหลัก · ดูได้อย่างเดียว</span>
         </div>
         <!-- Legend -->
@@ -5869,7 +5870,7 @@ if ('serviceWorker' in navigator) {
          border-radius:14px;padding:12px;
          box-shadow:0 8px 32px rgba(0,0,0,.16),0 2px 8px rgba(0,0,0,.08);
          border:1px solid #e8e3dc;
-         font-family:'IBM Plex Sans Thai',sans-serif">
+         font-family:'Sarabun',sans-serif">
   <div id="tdp-calendar"></div>
 </div>
 
@@ -5889,10 +5890,10 @@ if ('serviceWorker' in navigator) {
       el=document.createElement('div');
       el.id='_au_toast';
       el.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%);'+
-        'background:#1a6b4a;color:#fff;padding:11px 24px;border-radius:50px;'+
+        'background:#c2588a;color:#fff;padding:11px 24px;border-radius:50px;'+
         'font-size:15px;font-weight:600;z-index:999999;'+
         'box-shadow:0 4px 24px rgba(0,0,0,.3);white-space:nowrap;'+
-        'font-family:"IBM Plex Sans Thai",sans-serif;'+
+        'font-family:"Sarabun",sans-serif;'+
         'animation:_au_in .35s ease;pointer-events:none';
       const st=document.createElement('style');
       st.textContent='@keyframes _au_in{from{opacity:0;transform:translateX(-50%) translateY(14px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
