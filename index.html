@@ -8380,8 +8380,12 @@ function addRfDiffRow(item) {
   row.id = rid;
   row.style.cssText = 'display:flex;gap:6px;margin-bottom:5px;align-items:center';
   row.innerHTML = `
-    <input type="text" placeholder="ชื่อรายการ" value="${name}"
-      style="flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+    <div style="position:relative;flex:1">
+      <input type="text" placeholder="ชื่อรายการ" value="${name}" autocomplete="off"
+        oninput="filterRfItemDropdown('${rid}', this.value)" onfocus="filterRfItemDropdown('${rid}', this.value)"
+        style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+      <div id="${rid}_dd" style="display:none;position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:60;max-height:180px;overflow-y:auto"></div>
+    </div>
     <input type="number" min="0" value="${qty}" placeholder="จำนวน" oninput="updateRfDiffTotal('${rid}');calcActualFromDiff()"
       style="width:65px;padding:5px 6px;border:1px solid var(--border);border-radius:5px;font-size:12px;text-align:center">
     <input type="number" min="0" value="${price}" placeholder="ราคา/หน่วย" oninput="updateRfDiffTotal('${rid}');calcActualFromDiff()"
@@ -8390,6 +8394,49 @@ function addRfDiffRow(item) {
     <button onclick="document.getElementById('${rid}').remove();calcActualFromDiff()"
       style="width:24px;height:24px;border:1px solid #f5b8b0;border-radius:5px;cursor:pointer;font-size:13px;color:var(--danger);background:var(--danger-light)">×</button>`;
   document.getElementById('rf-diff-rows').appendChild(row);
+  calcActualFromDiff();
+}
+
+// ค้นหารายการสินค้าจาก catalog (เบิกของ) ให้เลือกใส่ใน "ชื่อรายการ" ของค่าส่วนต่าง
+function filterRfItemDropdown(rid, q) {
+  const dropdown = document.getElementById(rid + '_dd');
+  if (!dropdown) return;
+  const term = (q || '').trim().toLowerCase();
+  const list = term ? catalog.filter(it => it.name.toLowerCase().includes(term)) : catalog;
+
+  if (!list.length) {
+    dropdown.innerHTML = `<div style="padding:9px 10px;font-size:12px;color:var(--text3)">${catalog.length ? 'ไม่พบรายการ' : 'ยังไม่มีรายการสินค้าในระบบ'}</div>`;
+  } else {
+    dropdown.innerHTML = list.slice(0, 20).map(it =>
+      `<div onclick="selectRfItem('${rid}', '${it.id}')"
+        style="padding:7px 10px;cursor:pointer;font-size:12px;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between;gap:8px"
+        onmouseover="this.style.background='var(--accent-light)'"
+        onmouseout="this.style.background=''">
+        <span>${highlight(it.name, term)}</span>
+        <span style="color:var(--text3);white-space:nowrap">฿${fmt(it.price)}/${it.unit}</span>
+      </div>`
+    ).join('');
+  }
+  dropdown.style.display = 'block';
+  if (!dropdown._rfListener) {
+    dropdown._rfListener = true;
+    document.addEventListener('click', e => {
+      const input = dropdown.previousElementSibling;
+      if (!dropdown.contains(e.target) && e.target !== input) dropdown.style.display = 'none';
+    });
+  }
+}
+
+function selectRfItem(rid, itemId) {
+  const item = catalog.find(it => it.id === itemId);
+  const row  = document.getElementById(rid);
+  if (!item || !row) return;
+  const nameInput = row.querySelector('input[type=text]');
+  const numInputs = row.querySelectorAll('input[type=number]');
+  nameInput.value = item.name;
+  if (numInputs[1] && !parseFloat(numInputs[1].value)) numInputs[1].value = item.price;
+  document.getElementById(rid + '_dd').style.display = 'none';
+  updateRfDiffTotal(rid);
   calcActualFromDiff();
 }
 
