@@ -4413,9 +4413,10 @@ function buildBillingReminders() {
   const prevDate = new Date(curYear, curMo - 2, 1);
   const prevMo   = prevDate.getMonth() + 1; // 1-based
 
-  // กรองลูกค้า active + ยังไม่จ่าย + branch filter + ต้องเริ่มบริการแล้ว
+  // กรองลูกค้า active + ยังไม่จ่าย + branch filter + ต้องเริ่มบริการแล้ว + ไม่ใช่เคสที่ย้ายสาขาไปแล้ว
+  // (ลูกค้าที่ย้ายสาขา จะมีรหัสใหม่ในสาขาปลายทางอยู่แล้ว เรคคอร์ดรหัสเดิมต้องไม่นับซ้ำ)
   const activeAll = customers.filter(c =>
-    !isInactive(c.id) && (!_reminderBranch || c.branch === _reminderBranch) && !isBeforeStart(c, currentMonth)
+    !isInactive(c.id) && !isTransferred(c.id) && (!_reminderBranch || c.branch === _reminderBranch) && !isBeforeStart(c, currentMonth)
   );
 
   /*
@@ -5894,7 +5895,7 @@ function _revenueFromHistory(months, branch) {
 
 let chart1, chart2;
 function updateDashboard(){
-  const allActiveCusts = customers.filter(c=>!isInactive(c.id));
+  const allActiveCusts = customers.filter(c=>!isInactive(c.id) && !isTransferred(c.id));
   const activeCusts    = _dashBranch ? allActiveCusts.filter(c=>c.branch===_dashBranch) : allActiveCusts;
   const total       = activeCusts.length;
   const dcCount     = Object.keys(discharged).length;
@@ -6032,7 +6033,7 @@ let _reqCustList = []; // cached sorted list for dropdown
 function initReqSelects() {
   // Build sorted customer list for search dropdown
   _reqCustList = customers
-    .filter(c => !isInactive(c.id))
+    .filter(c => !isInactive(c.id) && !isTransferred(c.id))
     .sort((a,b) => a.name.localeCompare(b.name, 'th'));
 
   // Reset search box & hidden value
@@ -6438,7 +6439,7 @@ function renderReqSummary() {
   const branch = document.getElementById('rsum-branch')?.value || '';
   const srch   = (document.getElementById('rsum-search')?.value || '').trim().toLowerCase();
 
-  let custList = customers.filter(c => !isInactive(c.id));
+  let custList = customers.filter(c => !isInactive(c.id) && !isTransferred(c.id));
   if (branch) custList = custList.filter(c => c.branch === branch);
   if (srch)   custList = custList.filter(c =>
     c.name.toLowerCase().includes(srch) || c.id.toLowerCase().includes(srch)
@@ -6619,7 +6620,7 @@ function exportReqCSV() {
   const month  = document.getElementById('rsum-month')?.value || currentMonth;
   const branch = document.getElementById('rsum-branch')?.value || '';
   const rows   = [];
-  customers.filter(c => !isInactive(c.id) && (!branch || c.branch===branch)).forEach(c => {
+  customers.filter(c => !isInactive(c.id) && !isTransferred(c.id) && (!branch || c.branch===branch)).forEach(c => {
     const list = requisitions[reqKey(c.id, month)] || [];
     list.forEach(e => {
       const item = catalog.find(x => x.id === e.itemId);
@@ -8396,7 +8397,7 @@ function openRefundModal(refundId, prefillCustId) {
 function filterRfCustDropdown(q) {
   const dropdown = document.getElementById('rf-cust-dropdown');
   const term = q.trim().toLowerCase();
-  const list = customers.filter(c => !isInactive(c.id));
+  const list = customers.filter(c => !isInactive(c.id) && !isTransferred(c.id));
   const filtered = term ? list.filter(c =>
     c.name.toLowerCase().includes(term) || c.id.toLowerCase().includes(term)
   ) : list;
@@ -9685,7 +9686,7 @@ function bedMapOpenEdit(idx) {
 
 function _bedMapPopulateCusts(selectedId) {
   const sel = document.getElementById('bedmap-edit-cust');
-  const branchCusts = customers.filter(c => c.branch === _bedMapBranch && !isInactive(c.id));
+  const branchCusts = customers.filter(c => c.branch === _bedMapBranch && !isInactive(c.id) && !isTransferred(c.id));
   sel.innerHTML = '<option value="">— ไม่ระบุ / เตียงว่าง —</option>' +
     branchCusts.map(c => `<option value="${c.id}" ${c.id===selectedId?'selected':''}>${c.name} (${c.id})</option>`).join('');
 }
